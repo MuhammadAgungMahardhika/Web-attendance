@@ -80,7 +80,7 @@
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton"
                     style="min-width: 11rem;">
                     <li>
-                        <h6 class="dropdown-header">Hello, John!</h6>
+                        <h6 class="dropdown-header">Hello, {{ Auth::user()->name }}</h6>
                     </li>
                     <li><a class="dropdown-item" href="#"><i class="icon-mid bi bi-person me-2"></i> My
                             Profile</a></li>
@@ -91,10 +91,33 @@
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item" href="#"><i class="icon-mid bi bi-box-arrow-left me-2"></i>
+                    <li><a class="dropdown-item" onclick="logout()"><i class="icon-mid bi bi-box-arrow-left me-2"></i>
                             Logout</a></li>
                 </ul>
             </div>
         </div>
     </div>
 </nav>
+<script>
+    function logout() {
+        $.ajax({
+            type: "POST",
+            url: '{{ url('logout') }}',
+            contentType: "application/json",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(r) {
+                let messageStatus = r.status
+                if (messageStatus == 200) {
+                    Swal.fire("You are loged out")
+                    window.location = "{{ url('login') }}";
+                }
+            },
+            error: function(e) {
+                console.log("keluar sini")
+                console.log(e.responseText)
+            }
+        })
+    }
+</script>

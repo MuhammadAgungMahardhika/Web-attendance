@@ -8,8 +8,8 @@
     <meta name="keywords" content="App">
     <meta name="author" content="Muhammad Agung Mahardhika">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="shortcut icon" href="{{ url('images/LOGO-POKDARWIS.png') }}">
-
+    <link rel="shortcut icon" href="{{ url('') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     {{--  --}}
     <link rel="shortcut icon" href="{{ asset('assets/compiled/svg/favicon.svg') }}" type="image/x-icon">
     <link rel="shortcut icon"
@@ -17,6 +17,10 @@
         type="image/png">
     <link rel="stylesheet" href="{{ asset('assets/compiled/css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/compiled/css/app-dark.css') }}">
+    {{-- Datatable CSS --}}
+    <link rel="stylesheet" href="{{ asset('assets/extensions/datatables.net-bs5/css/dataTables.bootstrap5.css') }}">
+    {{-- Jquery --}}
+    <script src="{{ url('https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js') }}"></script>
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/9d17737383.js" crossorigin="anonymous"></script>
 
@@ -24,14 +28,42 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/ScrollTrigger.min.js"></script>
 
-    {{-- Jquery --}}
-    <script src="{{ url('https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js') }}"></script>
-    <title>aa</title>
+    {{-- Swet Alert --}}
+    <script src="{{ asset('assets/extensions/sweetalert2/sweetalert2.all.min.js') }}"></script>
+    {{-- Datatable --}}
+    <script src="{{ asset('assets/extensions/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/extensions/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
+    <title>Attendance</title>
 </head>
 
 <body class="light">
     <script src="assets/static/js/initTheme.js"></script>
     <div id="app">
+        {{-- Modal --}}
+        <div class="modal fade text-left" id="default" tabindex="-1" aria-labelledby="myModalLabel1"
+            style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalTitle"></h5>
+                        <button type="button" class="close rounded-pill" data-bs-dismiss="modal" aria-label="Close">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-x">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="modalBody">
+
+                    </div>
+                    <div class="modal-footer" id="modalFooter">
+
+                    </div>
+                </div>
+            </div>
+        </div>
         {{-- Sidebar --}}
         @include('template.layout-vertical.sidebar')
         <div id="main" class="layout-navbar navbar-fixed">
@@ -41,24 +73,6 @@
             </header>
             <div id="main-content">
                 <div class="page-heading">
-                    <div class="page-title">
-                        <div class="row">
-                            <div class="col-12 col-md-6 order-md-1 order-last">
-                                <h3>Vertical Layout with Navbar</h3>
-                                <p class="text-subtitle text-muted">Navbar will appear on the top of the page.</p>
-                            </div>
-                            <div class="col-12 col-md-6 order-md-2 order-first">
-                                <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                                    <ol class="breadcrumb">
-                                        <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-                                        <li class="breadcrumb-item active" aria-current="page">Layout Vertical Navbar
-                                        </li>
-                                    </ol>
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
-
                     {{-- Main Content --}}
                     <div class="page-content">
                         @yield('container')
@@ -71,6 +85,7 @@
 
         </div>
     </div>
+
 
 
     <script src="{{ asset('assets/static/js/components/dark.js') }} "></script>

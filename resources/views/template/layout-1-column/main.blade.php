@@ -8,8 +8,8 @@
     <meta name="keywords" content="App">
     <meta name="author" content="Muhammad Agung Mahardhika">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="shortcut icon" href="{{ url('images/LOGO-POKDARWIS.png') }}">
-
+    <link rel="shortcut icon" href="{{ url('') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     {{--  --}}
     <link rel="shortcut icon" href="{{ asset('assets/compiled/svg/favicon.svg') }}" type="image/x-icon">
     <link rel="shortcut icon"
@@ -17,15 +17,20 @@
         type="image/png">
     <link rel="stylesheet" href="{{ asset('assets/compiled/css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/compiled/css/app-dark.css') }}">
-    <!-- Font Awesome -->
-    <script src="https://kit.fontawesome.com/9d17737383.js" crossorigin="anonymous"></script>
-
-    <!-- Gsap -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/ScrollTrigger.min.js"></script>
 
     {{-- Jquery --}}
     <script src="{{ url('https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js') }}"></script>
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/9d17737383.js" crossorigin="anonymous"></script>
+    <!-- Gsap -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/ScrollTrigger.min.js"></script>
+    {{-- Parsley --}}
+    <script src="{{ asset('assets/extensions/parsleyjs/parsley.min.js') }}"></script>
+
+    {{-- Swet Alert --}}
+    <script src="{{ asset('assets/extensions/sweetalert2/sweetalert2.all.min.js') }}"></script>
+
     <title>aa</title>
 </head>
 

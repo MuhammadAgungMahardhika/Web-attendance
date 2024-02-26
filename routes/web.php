@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -8,20 +10,39 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 |
 | Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
 |
 */
 
-// index side-menu
+
 Route::get('/', function () {
-    return view('index-vertical');
+    return ['Laravel' => app()->version()];
 });
-// index side-horizonta-menu
-Route::get('/h', function () {
-    return view('index-horizontal');
+
+require __DIR__ . '/auth.php';
+
+// Error pages
+Route::get('error/403', function () {
+    return view('error/403');
 });
-// index side-horizonta-menu
-Route::get('/c', function () {
-    return view('index-1-column');
+
+// Authentication
+Route::middleware('guest')->group(function () {
+    Route::get('/', function () {
+        return view('auth/login');
+    });
+    Route::get('/login', function () {
+        return view('auth/login');
+    });
 });
+
+// Menu
+Route::get('/dashboard', [PageController::class, 'dashboard'])->middleware('auth');
+Route::get('/users', [PageController::class, 'user'])->middleware(['auth', 'check.role:1,2']);
+Route::get('/main-company', function () {
+    return view('pages/main-company');
+})->middleware('auth');
+Route::get('/outsource-company', function () {
+    return view('pages/outsource-company');
+})->middleware('auth');

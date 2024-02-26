@@ -8,7 +8,8 @@
     <meta name="keywords" content="App">
     <meta name="author" content="Muhammad Agung Mahardhika">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="shortcut icon" href="{{ url('images/LOGO-POKDARWIS.png') }}">
+    <link rel="shortcut icon" href="{{ url('') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
 
     {{--  --}}
     <link rel="shortcut icon" href="{{ asset('assets/compiled/svg/favicon.svg') }}" type="image/x-icon">
@@ -74,17 +75,11 @@
                 <nav class="main-navbar">
                     <div class="container">
                         <ul>
-
-
-
                             <li class="menu-item  ">
                                 <a href="index.html" class="menu-link">
                                     <span><i class="bi bi-grid-fill"></i> Dashboard</span>
                                 </a>
                             </li>
-
-
-
                             <li class="menu-item  has-sub">
                                 <a href="#" class="menu-link">
                                     <span><i class="bi bi-stack"></i> Components</span>
@@ -92,7 +87,6 @@
                                 <div class="submenu ">
                                     <!-- Wrap to submenu-group-wrapper if you want 3-level submenu. Otherwise remove it. -->
                                     <div class="submenu-group-wrapper">
-
 
                                         <ul class="submenu-group">
 
