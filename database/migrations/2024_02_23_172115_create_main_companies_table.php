@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('main_companies', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('contact');
-            $table->string('address');
-            $table->geometryCollection('location_radius');
+            $table->string('contact')->nullable();
+            $table->string('address')->nullable();
+            $table->geometry('location_radius')->nullable();
             $table->timestamps();
         });
     }

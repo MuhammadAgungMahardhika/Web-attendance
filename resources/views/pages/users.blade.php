@@ -1,12 +1,12 @@
 @extends('template.layout-vertical.main')
 @section('container')
     <section class="section">
-        <div class="card">
+        <div class="card shadow-sm">
             <div class="card-header text-center">
                 <div class="card-title">User List</div>
             </div>
 
-            <div class="card-body table-responsive  p-4 rounded">
+            <div class="card-body table-responsive">
                 <div class="text-start mb-4" id="addButton">
                     <a title="tambah" class="btn btn-success btn-sm block" data-bs-toggle="modal" data-bs-target="#default"
                         onclick="addModal()"><i class="fa fa-plus"></i> </a>

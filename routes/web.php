@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MainCompanyController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -40,9 +41,8 @@ Route::middleware('guest')->group(function () {
 // Menu
 Route::get('/dashboard', [PageController::class, 'dashboard'])->middleware('auth');
 Route::get('/users', [PageController::class, 'user'])->middleware(['auth', 'check.role:1,2']);
-Route::get('/main-company', function () {
-    return view('pages/main-company');
-})->middleware('auth');
+Route::get('/main-company', [PageController::class, 'mainCompany'])->middleware('auth');
+Route::post('update/main-company', [MainCompanyController::class, 'update'])->middleware('auth');
 Route::get('/outsource-company', function () {
     return view('pages/outsource-company');
 })->middleware('auth');
