@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\MainCompanyController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\UserController;
+use App\Models\MainCompany;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,5 +32,9 @@ Route::name('api')->group(function () {
 
     // role
     Route::get('roles', [RolesController::class, 'index']);
+    Route::get('roles/{id}', [RolesController::class, 'index']);
+
+    // Main company 
+    Route::put('main-company/{id}', [MainCompanyController::class, 'update']);
     Route::get('roles/{id}', [RolesController::class, 'index']);
 });

@@ -14,7 +14,7 @@ class CheckRole
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, $accessRole1, $accessRole2): Response
+    public function handle(Request $request, Closure $next, $accessRole1, $accessRole2 = null): Response
     {
         $loggedUserRole = strval(Auth::user()->role_id);
 

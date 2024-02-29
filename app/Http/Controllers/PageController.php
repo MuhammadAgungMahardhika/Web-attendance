@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\MainCompany;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PageController extends Controller
 {
@@ -24,7 +25,10 @@ class PageController extends Controller
     }
     public function mainCompany()
     {
-        $data =  MainCompany::first();
+        $data = DB::table('main_companies')
+            ->selectRaw('id, name, contact, address, ST_AsGeoJSON(location_radius) AS location_radius')
+            ->first();
+        $data = (array) $data;
         $send = [
             'data' => $data
         ];

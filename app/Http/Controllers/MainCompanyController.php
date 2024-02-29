@@ -7,6 +7,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class MainCompanyController extends Controller
@@ -65,26 +66,71 @@ class MainCompanyController extends Controller
             $request->validate([
                 'name' => 'required',
             ]);
+
+            DB::beginTransaction();
             $mainCompany = $this->model::where('id', $id)->update([
                 'name' => $request->name,
                 'contact' => $request->contact,
                 'address' => $request->address,
-                "location_radius" => $request->location_radius,
-                "created_by" => Auth::user()->name,
+                "updated_by" => Auth::user()->name,
             ]);
+            $geojson = $request->geojson;
+            if (!$geojson) {
+                $geojson = 'null';
+            }
 
-            return response()->json([
-                'message' => 'success update account',
-                'data' => $mainCompany
-            ], Response::HTTP_OK);
+            $updateGeom = $this->model::where('id', $id)
+                ->update([
+                    'location_radius' => DB::raw("ST_GeomFromGeoJSON('{$geojson}')")
+                ]);
+
+            DB::commit();
+
+            return redirect(url('/main-company'));
         } catch (ValidationException $e) {
+            DB::rollBack();
             return response()->json([
                 'message' => 'Validation Error',
                 'errors' => $e->errors()
             ], 422);
         } catch (QueryException $th) {
-            return $th->getMessage();
+            DB::rollBack();
+            return response()->json([
+                'message' => 'failed update main company',
+                'data' => $th->getMessage()
+            ], 422);
         }
+
+        // 
+        // ---------------------Data request-----------------------------
+
+        $updateRequest = [
+            'name' => $request->getPost('name'),
+            'category_atraction_id' => $request->getPost('category'),
+            'open' => $request->getPost('open'),
+            'close' => $request->getPost('close'),
+            'employe' => $request->getPost('employe'),
+            'price' => $request->getPost('price'),
+            'contact_person' => $request->getPost('contact_person'),
+            'description' => $request->getPost('description')
+        ];
+
+
+        $lat = $request->getPost('latitude');
+        $lng = $request->getPost('longitude');
+
+
+
+
+        // unset empty value
+        foreach ($updateRequest as $key => $value) {
+            if (empty($value)) {
+                unset($updateRequest[$key]);
+            }
+        }
+
+        // ---------------------------------Update---------------------
+        $update =  $this->model->updateAtraction($id, $updateRequest, floatval($lng), floatval($lat), $geojson);
     }
 
     public function delete($id)

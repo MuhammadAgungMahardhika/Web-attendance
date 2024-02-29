@@ -16,7 +16,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('contact')->nullable();
             $table->string('address')->nullable();
-            $table->geometry('location_radius')->nullable();
+            $table->polygon('location_radius')->nullable();
+            $table->string('created_by')->nullable();
+            $table->string('updated_by')->nullable();
             $table->timestamps();
         });
     }
