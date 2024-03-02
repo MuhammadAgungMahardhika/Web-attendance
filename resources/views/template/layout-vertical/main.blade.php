@@ -23,6 +23,8 @@
     <script src="{{ url('https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js') }}"></script>
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/9d17737383.js" crossorigin="anonymous"></script>
+    {{-- Swet Alert --}}
+    <script src="{{ asset('assets/extensions/sweetalert2/sweetalert2.all.min.js') }}"></script>
 
     <!-- Icon materialize -->
     <link rel="stylesheet"
@@ -31,11 +33,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/ScrollTrigger.min.js"></script>
 
-    {{-- Swet Alert --}}
-    <script src="{{ asset('assets/extensions/sweetalert2/sweetalert2.all.min.js') }}"></script>
     {{-- Datatable --}}
     <script src="{{ asset('assets/extensions/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/extensions/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
+    {{-- Costume js --}}
+    <script src="{{ asset('assets/costume/app-costume.js') }}"></script>
     <title>Attendance</title>
 </head>
 
@@ -94,6 +96,7 @@
     <script src="{{ asset('assets/static/js/components/dark.js') }} "></script>
     <script src="{{ asset('assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ asset('assets/compiled/js/app.js') }} "></script>
+
 </body>
 
 </html>

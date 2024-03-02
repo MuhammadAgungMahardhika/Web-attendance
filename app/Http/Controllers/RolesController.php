@@ -20,7 +20,7 @@ class RolesController extends Controller
         $this->model = $role;
     }
 
-    public function index($id = null)
+    public function get($id = null)
     {
         if ($id != null) {
             $items = $this->model::findOrFail($id);

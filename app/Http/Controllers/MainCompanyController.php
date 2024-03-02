@@ -86,7 +86,7 @@ class MainCompanyController extends Controller
 
             DB::commit();
 
-            return redirect(url('/main-company'));
+            return redirect(url('/main-company'))->with("success", "Success added data");
         } catch (ValidationException $e) {
             DB::rollBack();
             return response()->json([

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\MainCompanyController;
+use App\Http\Controllers\OutsourceCompanyController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -44,7 +45,6 @@ Route::get('/users', [PageController::class, 'user'])->middleware(['auth', 'chec
 // Main company 
 Route::get('/main-company', [PageController::class, 'mainCompany'])->middleware('auth');
 Route::put('main-company/{id}', [MainCompanyController::class, 'update'])->middleware(['auth', 'check.role:1']);
-
-Route::get('/outsource-company', function () {
-    return view('pages/outsource-company');
-})->middleware('auth');
+// Outsource company 
+Route::get('/outsource-company', [PageController::class, 'outsourceCompany'])->middleware('auth');
+Route::put('outsource-company/{id}', [OutsourceCompanyController::class, 'update'])->middleware(['auth', 'check.role:1']);

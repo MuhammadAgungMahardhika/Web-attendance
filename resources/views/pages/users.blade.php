@@ -69,11 +69,12 @@
     </section>
     <script>
         initDataTable('table')
+        let baseUrl = '{{ url('') }}'
 
         function showTable() {
             $.ajax({
                 type: "GET",
-                url: `api/users`,
+                url: baseUrl + '/' + 'api/users',
                 success: function(response) {
                     let userData = response.data
 
@@ -156,24 +157,24 @@
         }
 
         function addModal() {
-            $.ajax({
-                type: "GET",
-                url: `api/roles`,
-                contentType: "application/json",
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    let roles = response.data
-                    let roleData = ''
+            // get roles data
+            let roles = getRoles()
+            let roleData = ''
+            roles.forEach(r => {
+                roleData +=
+                    `<option value="${r.id}">${r.role}</option>`
+            });
 
-                    roles.forEach(role => {
-                        roleData +=
-                            `<option value="${role.id}">${role.role}</option>`
-                    });
+            // get oursource company data
+            let outsourceCompany = getOutsourcedCompany()
+            let outsourceCompanyData = ''
+            outsourceCompany.forEach(r => {
+                outsourceCompanyData +=
+                    `<option value="${r.id}">${r.name}</option>`
+            });
 
-                    $('#modalTitle').html("Add User ")
-                    $('#modalBody').html(`
+            $('#modalTitle').html("Add User ")
+            $('#modalBody').html(`
                     <form class="form form-horizontal">
                     <div class="form-body"> 
                         <div class="row">
@@ -183,6 +184,15 @@
                             <div class="col-md-8 form-group">
                                 <select class="form-select" id="role">
                                 ${roleData}
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="role">Outsource Company</label>
+                            </div>
+                            <div class="col-md-8 form-group">
+                                <select class="form-select" id="outsourceCompany">
+                                    <option></option>
+                                ${outsourceCompanyData}
                                 </select>
                             </div>
                             <div class="col-md-4">
@@ -233,24 +243,40 @@
                 </form>
             `)
 
-                    $('#modalFooter').html(`<a class="btn btn-success btn-sm" onclick="save()">Submit</a>`)
+            $('#modalFooter').html(`<a class="btn btn-success btn-sm" onclick="save()">Submit</a>`)
+        }
+
+        function getOutsourcedCompany() {
+            let result
+            $.ajax({
+                type: "GET",
+                url: baseUrl + `/api/outsource-company`,
+                async: false,
+                contentType: "application/json",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    result = response.data
+                    console.log(result)
                 },
                 error: function(err) {
-                    console.log(err.responseText)
+                    return console.log(err.responseText)
                 }
-            })
-
+            });
+            return result
         }
 
         function editModal(id) {
             $.ajax({
                 type: "GET",
-                url: `api/user/${id}`,
+                url: baseUrl + `/api/user/${id}`,
                 success: function(response) {
                     console.log(response)
                     let {
                         role_id,
-                        roles,
+                        main_company_id,
+                        outsource_company_id,
                         name,
                         email,
                         departmen,
@@ -259,16 +285,24 @@
                         status,
                     } = response.data
 
-
-                    let allRole = getRoles()
-
-                    let roleData = ""
                     // Roles data
+                    let allRole = getRoles()
+                    let roleData = ""
                     allRole.forEach(r => {
-                        console.log(r.id)
-                        console.log(role_id)
                         roleData +=
                             `<option ${role_id == r.id ? 'selected' : ''} value="${r.id }">${r.role}</option>`
+                    });
+
+
+                    // Outsource company data
+                    let allOutsourceCompany = getOutsourcedCompany()
+                    let outsourceCompanyData = ""
+
+                    allOutsourceCompany.forEach(r => {
+                        console.log(r.id)
+                        console.log(role_id)
+                        outsourceCompanyData +=
+                            `<option ${outsource_company_id == r.id ? 'selected' : ''} value="${r.id }">${r.name}</option>`
                     });
 
                     $('#modalTitle').html("Edit User")
@@ -282,6 +316,15 @@
                             <div class="col-md-8 form-group">
                                 <select class="form-select" id="role">
                                 ${roleData}
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="role">Outsource Company</label>
+                            </div>
+                            <div class="col-md-8 form-group">
+                                <select class="form-select" id="outsourceCompany">
+                                    <option></option>
+                                    ${outsourceCompanyData}
                                 </select>
                             </div>
                             <div class="col-md-4">
@@ -323,7 +366,8 @@
                                    <option ${status == "inactive" ? 'selected' : ''} value="inactive">inactive</option>
                                 </select>
                             </div>
-                          
+                            <input type="hidden" id="mainCompany" value="${main_company_id}" class="form-control">
+
                         </div>
                     </div>
                 </form>
@@ -348,13 +392,13 @@
             let item
             $.ajax({
                 type: "GET",
-                url: `api/roles`,
+                url: baseUrl + `/api/roles`,
                 async: false,
                 success: function(response) {
                     item = response.data
                 },
                 error: function(err) {
-                    console.log(err.responseText)
+                    return console.log(err.responseText)
                 }
             })
             return item
@@ -363,6 +407,7 @@
         // API
         function save() {
             let roleId = $('#role').val()
+            let outsourceCompanyId = $('#outsourceCompany').val()
             let name = $('#name').val()
             let email = $('#email').val()
             let departmen = $('#departmen').val()
@@ -440,6 +485,7 @@
 
             let data = {
                 role_id: roleId,
+                outsource_company_id: outsourceCompanyId,
                 name: name,
                 email: email,
                 departmen: departmen,
@@ -450,7 +496,7 @@
 
             $.ajax({
                 type: "POST",
-                url: `api/user`,
+                url: baseUrl + `/api/user`,
                 contentType: "application/json",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -480,6 +526,8 @@
 
         function update(id) {
             let roleId = $('#role').val()
+            let mainCompanyId = $('#mainCompany').val()
+            let outsourceCompanyId = $('#outsourceCompany').val()
             let name = $('#name').val()
             let email = $('#email').val()
             let departmen = $('#departmen').val()
@@ -532,6 +580,8 @@
 
             let data = {
                 role_id: roleId,
+                main_company_id: mainCompanyId,
+                outsource_company_id: outsourceCompanyId,
                 name: name,
                 email: email,
                 departmen: departmen,
@@ -542,7 +592,7 @@
 
             $.ajax({
                 type: "PUT",
-                url: `api/user/${id}`,
+                url: baseUrl + `/api/user/${id}`,
                 data: JSON.stringify(data),
                 contentType: "application/json",
                 headers: {
@@ -571,7 +621,7 @@
         function deleteItem(id) {
             $.ajax({
                 type: "DELETE",
-                url: `api/user/${id}`,
+                url: baseUrl + `/api/user/${id}`,
                 contentType: "application/json",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

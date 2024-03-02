@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\MainCompany;
+use App\Models\OutsourceCompany;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -25,7 +26,7 @@ class PageController extends Controller
     }
     public function mainCompany()
     {
-        $data = DB::table('main_companies')
+        $data = DB::table('main_company')
             ->selectRaw('id, name, contact, address, ST_AsGeoJSON(location_radius) AS location_radius')
             ->first();
         $data = (array) $data;
@@ -33,5 +34,14 @@ class PageController extends Controller
             'data' => $data
         ];
         return view('pages/main-company', $send);
+    }
+    public function outsourceCompany()
+    {
+        $data = OutsourceCompany::withCount("users")->orderBy("outsource_company.id", "ASC")->get();
+        // dd($data);
+        $send = [
+            'data' => $data
+        ];
+        return view('pages/outsource-company', $send);
     }
 }

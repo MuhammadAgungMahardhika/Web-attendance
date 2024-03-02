@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('outsource_companies', function (Blueprint $table) {
+        Schema::table('outsource_company', function (Blueprint $table) {
             $table->foreign('main_company_id', 'fk_outsource_company_main_company')
                 ->references('id')
-                ->on('main_companies')
+                ->on('main_company')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
         });
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('outsource_companies', function (Blueprint $table) {
-            $table->dropForeign('fk_outsource_companies_main_company');
+        Schema::table('outsource_company', function (Blueprint $table) {
+            $table->dropForeign('fk_outsource_company_main_company');
         });
     }
 };

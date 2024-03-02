@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\MainCompanyController;
+use App\Http\Controllers\OutsourceCompanyController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\UserController;
 use App\Models\MainCompany;
@@ -23,18 +24,25 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 });
 Route::name('api')->group(function () {
     // user
-    Route::get('users', [UserController::class, 'index']);
-    Route::get('user/{id}', [UserController::class, 'index']);
+    Route::get('users', [UserController::class, 'get']);
+    Route::get('user/{id}', [UserController::class, 'get']);
     Route::post('user', [UserController::class, 'store']);
     Route::put('user/{id}', [UserController::class, 'update']);
     Route::delete('user/{id}', [UserController::class, 'delete']);
 
 
     // role
-    Route::get('roles', [RolesController::class, 'index']);
-    Route::get('roles/{id}', [RolesController::class, 'index']);
+    Route::get('roles', [RolesController::class, 'get']);
+    Route::get('roles/{id}', [RolesController::class, 'get']);
 
     // Main company 
     Route::put('main-company/{id}', [MainCompanyController::class, 'update']);
-    Route::get('roles/{id}', [RolesController::class, 'index']);
+    Route::get('main-company/{id}', [MainCompanyController::class, 'get']);
+
+    // Main company 
+    Route::get('outsource-company', [OutsourceCompanyController::class, 'get']);
+    Route::get('outsource-company/{id}', [OutsourceCompanyController::class, 'get']);
+    Route::post('outsource-company', [OutsourceCompanyController::class, 'store']);
+    Route::put('outsource-company/{id}', [OutsourceCompanyController::class, 'update']);
+    Route::delete('outsource-company/{id}', [OutsourceCompanyController::class, 'delete']);
 });

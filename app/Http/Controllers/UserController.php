@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MainCompany;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -22,10 +22,10 @@ class UserController extends Controller
         $this->model = $user;
     }
 
-    public function index($id = null)
+    public function get($id = null)
     {
         if ($id != null) {
-            $items = $this->model::with('roles')->where('id', $id)->first();
+            $items = $this->model->where('id', $id)->first();
         } else {
             $items = $this->model::with('roles')->orderBy('id', 'ASC')->get();
         }
@@ -44,6 +44,8 @@ class UserController extends Controller
             ]);
             $user = $this->model::create([
                 'role_id' => $request->role_id,
+                'main_company_id' => MainCompany::first()->id,
+                'outsource_company_id' => $request->outsource_company_id,
                 'name' => $request->name,
                 'email' => $request->email,
                 "departmen" => $request->departmen,
@@ -80,6 +82,8 @@ class UserController extends Controller
 
             $user = $this->model::where('id', $id)->update([
                 'role_id' => $request->role_id,
+                'main_company_id' => $request->main_company_id,
+                'outsource_company_id' => $request->outsource_company_id,
                 'name' => $request->name,
                 'email' => $request->email,
                 "departmen" => $request->departmen,

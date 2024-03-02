@@ -13,7 +13,7 @@ class MainCompanySeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('main_companies')->insert([
+        DB::table('main_company')->insert([
             'name' => 'Main Company',
             'contact' => '08123456789',
             'address' => 'Jln.Kebenaran',

@@ -91,6 +91,11 @@
 
             </div>
         </form>
+        @if (Session::has('success'))
+            <script>
+                showSuccessAlert("Success update data!")
+            </script>
+        @endif
     </section>
 
     <script>
@@ -176,7 +181,7 @@
             content.push(
                 `<p><img src="https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi.png" width="15"></img> You</p>`
             )
-            content.push(`<p><img src="${legendIcon}main_company.png" width="15"></img> Company</p>`)
+
 
 
             legend.innerHTML = content.join('')
@@ -373,7 +378,8 @@
             let latitude = parseFloat($('#latitude').val())
             let langtitude = parseFloat($('#longitude').val())
             if (!latitude || !longitude) {
-                return swal.fire('Please input the coordinate')
+                return showErrorAlert("Please input the coordinate!")
+
             }
             $('#default').modal('hide')
             const pos = {
