@@ -66,11 +66,23 @@
                         <span>Outsource Company</span>
                     </a>
                 </li>
+                <li class="sidebar-item {{ request()->is('shift') ? 'active' : '' }}">
+                    <a href="{{ url('shift') }}" class="sidebar-link">
+                        <i class="bi bi-grid-fill"></i>
+                        <span>Shift</span>
+                    </a>
+                </li>
+                <li class="sidebar-item {{ request()->is('attendance') ? 'active' : '' }}">
+                    <a href="{{ url('attendance') }}" class="sidebar-link">
+                        <i class="bi bi-grid-fill"></i>
+                        <span>Attendance</span>
+                    </a>
+                </li>
 
-                <li class="sidebar-item  has-sub">
+                {{-- <li class="sidebar-item  has-sub">
                     <a href="#" class="sidebar-link">
                         <i class="bi bi-stack"></i>
-                        <span>Components</span>
+                        <span>Attendance</span>
                     </a>
 
                     <ul class="submenu submenu-closed" style="--submenu-height: 731px;">
@@ -163,7 +175,7 @@
                     </ul>
 
 
-                </li>
+                </li> --}}
 
             </ul>
         </div>

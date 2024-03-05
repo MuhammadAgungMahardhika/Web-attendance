@@ -3,7 +3,7 @@
     <section class="section">
         <div class="card shadow-sm">
             <div class="card-header text-center">
-                <div class="card-title">Outsource Companies List</div>
+                <div class="card-title">Shift </div>
             </div>
 
             <div class="card-body table-responsive">
@@ -23,7 +23,7 @@
         function showTable() {
             $.ajax({
                 type: "GET",
-                url: baseUrl + `/api/outsource-company`,
+                url: baseUrl + `/api/shift`,
                 success: function(response) {
                     let outsourceCompanyData = response.data
 
@@ -141,7 +141,7 @@
         function editModal(id) {
             $.ajax({
                 type: "GET",
-                url: baseUrl + `/api/outsource-company/${id}`,
+                url: baseUrl + `/api/shift/${id}`,
                 success: function(response) {
                     let {
                         id,
@@ -232,7 +232,7 @@
 
             $.ajax({
                 type: "POST",
-                url: `api/outsource-company`,
+                url: `api/shift`,
                 contentType: "application/json",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -272,7 +272,7 @@
 
             $.ajax({
                 type: "PUT",
-                url: baseUrl + `/api/outsource-company/${id}`,
+                url: baseUrl + `/api/shift/${id}`,
                 data: JSON.stringify(data),
                 contentType: "application/json",
                 headers: {
@@ -300,7 +300,7 @@
         function deleteItem(id) {
             $.ajax({
                 type: "DELETE",
-                url: baseUrl + `/api/outsource-company/${id}`,
+                url: baseUrl + `/api/shift/${id}`,
                 contentType: "application/json",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

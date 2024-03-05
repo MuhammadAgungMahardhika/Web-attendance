@@ -49,6 +49,7 @@ class UserController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 "departmen" => $request->departmen,
+                "position" => $request->position,
                 "phone_number" => $request->phone_number,
                 "address" => $request->address,
                 "status" => "active",
@@ -58,7 +59,7 @@ class UserController extends Controller
 
             return response()->json([
                 'message' => 'success created account',
-                'user' => $user
+                'data' => $user
             ], Response::HTTP_CREATED);
         } catch (ValidationException $e) {
             return response()->json([
@@ -87,6 +88,7 @@ class UserController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 "departmen" => $request->departmen,
+                "position" => $request->position,
                 "phone_number" => $request->phone_number,
                 "address" => $request->address,
                 "status" => $request->status,
@@ -95,7 +97,7 @@ class UserController extends Controller
 
             return response()->json([
                 'message' => 'success update account',
-                'user' => $user
+                'data' => $user
             ], Response::HTTP_OK);
         } catch (ValidationException $e) {
             return response()->json([
@@ -113,7 +115,7 @@ class UserController extends Controller
             $user = $this->model::where('id', $id)->delete();
             return response()->json([
                 'message' => 'success delete account',
-                'user' => $user
+                'data' => $user
             ], Response::HTTP_OK);
         } catch (QueryException $th) {
             return $th->getMessage();

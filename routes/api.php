@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\MainCompanyController;
 use App\Http\Controllers\OutsourceCompanyController;
 use App\Http\Controllers\RolesController;
+use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\UserController;
 use App\Models\MainCompany;
 use Illuminate\Http\Request;
@@ -36,13 +38,32 @@ Route::name('api')->group(function () {
     Route::get('roles/{id}', [RolesController::class, 'get']);
 
     // Main company 
-    Route::put('main-company/{id}', [MainCompanyController::class, 'update']);
+    Route::get('main-company', [MainCompanyController::class, 'get']);
     Route::get('main-company/{id}', [MainCompanyController::class, 'get']);
+    Route::post('main-company', [MainCompanyController::class, 'store']);
+    Route::put('main-company/{id}', [MainCompanyController::class, 'update']);
+    Route::delete('main-company/{id}', [MainCompanyController::class, 'delete']);
 
-    // Main company 
+    // Outsource company 
     Route::get('outsource-company', [OutsourceCompanyController::class, 'get']);
     Route::get('outsource-company/{id}', [OutsourceCompanyController::class, 'get']);
     Route::post('outsource-company', [OutsourceCompanyController::class, 'store']);
     Route::put('outsource-company/{id}', [OutsourceCompanyController::class, 'update']);
     Route::delete('outsource-company/{id}', [OutsourceCompanyController::class, 'delete']);
-});
+
+    // Shift  
+    Route::get('shift', [ShiftController::class, 'get']);
+    Route::get('shift/{id}', [ShiftController::class, 'get']);
+    Route::post('shift', [ShiftController::class, 'store']);
+    Route::put('shift/{id}', [ShiftController::class, 'update']);
+    Route::delete('shift/{id}', [ShiftController::class, 'delete']);
+
+    // Attendance  
+    Route::get('attendance', [AttendanceController::class, 'get']);
+    Route::get('attendance/{id}', [AttendanceController::class, 'get']);
+    Route::get('attendance-by-date/{date}', [AttendanceController::class, 'getAttendanceByDate']);
+    Route::get('attendance-by-user/{id}', [AttendanceController::class, 'getAttendanceByUserId']);
+    Route::post('attendance', [AttendanceController::class, 'store']);
+    Route::put('attendance/{id}', [AttendanceController::class, 'update']);
+    Route::delete('attendance/{id}', [AttendanceController::class, 'delete']);
+})->middleware('auth');

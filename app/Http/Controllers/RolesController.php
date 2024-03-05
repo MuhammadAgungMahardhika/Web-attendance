@@ -74,7 +74,7 @@ class RolesController extends Controller
             // event(new AddKandangEvent( $this->model->get() ));
             return response()->json([
                 'message' => 'success update account',
-                'role' => $role
+                'data' => $role
             ], Response::HTTP_OK);
         } catch (ValidationException $e) {
             return response()->json([
@@ -92,7 +92,7 @@ class RolesController extends Controller
             $role = $this->model->deleteRole($id);
             return response()->json([
                 'message' => 'success delete account',
-                'role' => $role
+                'data' => $role
             ], Response::HTTP_OK);
         } catch (QueryException $th) {
             return $th->getMessage();

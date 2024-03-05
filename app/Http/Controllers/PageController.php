@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\MainCompany;
 use App\Models\OutsourceCompany;
+use App\Models\Shift;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,12 +18,7 @@ class PageController extends Controller
     }
     public function user()
     {
-        $data =  User::with('roles')->get();
-        $send = [
-            'data' => $data
-        ];
-
-        return view('pages/users', $send);
+        return view('pages/users');
     }
     public function mainCompany()
     {
@@ -37,11 +33,14 @@ class PageController extends Controller
     }
     public function outsourceCompany()
     {
-        $data = OutsourceCompany::withCount("users")->orderBy("outsource_company.id", "ASC")->get();
-        // dd($data);
-        $send = [
-            'data' => $data
-        ];
-        return view('pages/outsource-company', $send);
+        return view('pages/outsource-company');
+    }
+    public function shift()
+    {
+        return view('pages/shift');
+    }
+    public function attendance()
+    {
+        return view('pages/attendance');
     }
 }

@@ -42,9 +42,7 @@ Route::middleware('guest')->group(function () {
 // Menu
 Route::get('/dashboard', [PageController::class, 'dashboard'])->middleware('auth');
 Route::get('/users', [PageController::class, 'user'])->middleware(['auth', 'check.role:1,2']);
-// Main company 
-Route::get('/main-company', [PageController::class, 'mainCompany'])->middleware('auth');
-Route::put('main-company/{id}', [MainCompanyController::class, 'update'])->middleware(['auth', 'check.role:1']);
-// Outsource company 
-Route::get('/outsource-company', [PageController::class, 'outsourceCompany'])->middleware('auth');
-Route::put('outsource-company/{id}', [OutsourceCompanyController::class, 'update'])->middleware(['auth', 'check.role:1']);
+Route::get('/main-company', [PageController::class, 'mainCompany'])->middleware(['auth', 'check.role:1,2']);
+Route::get('/outsource-company', [PageController::class, 'outsourceCompany'])->middleware(['auth', 'check.role:1,2']);
+Route::get('/shift', [PageController::class, 'shift'])->middleware(['auth', 'check.role:1,2']);
+Route::get('/attendance', [PageController::class, 'attendance'])->middleware('auth');

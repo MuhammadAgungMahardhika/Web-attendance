@@ -21,10 +21,11 @@ return new class extends Migration
             $table->string('address', 255)->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('position')->nullable();
             $table->string('departmen')->nullable();
             $table->string('password');
             $table->enum('status', ['active', 'inactive']);
-            $table->geometry('location')->nullable();
+            $table->point('location')->nullable();
             $table->rememberToken();
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();

@@ -55,8 +55,11 @@ class MainCompanyController extends Controller
                 'message' => 'Validation Error',
                 'errors' => $e->errors()
             ], 422);
-        } catch (\Throwable $th) {
-            return $th->getMessage();
+        } catch (QueryException $e) {
+            return response()->json([
+                'message' => 'Query Error',
+                'errors' => $e->getMessage()
+            ], 422);
         }
     }
 
@@ -93,44 +96,13 @@ class MainCompanyController extends Controller
                 'message' => 'Validation Error',
                 'errors' => $e->errors()
             ], 422);
-        } catch (QueryException $th) {
+        } catch (QueryException $e) {
             DB::rollBack();
             return response()->json([
                 'message' => 'failed update main company',
-                'data' => $th->getMessage()
+                'data' => $e->getMessage()
             ], 422);
         }
-
-        // 
-        // ---------------------Data request-----------------------------
-
-        $updateRequest = [
-            'name' => $request->getPost('name'),
-            'category_atraction_id' => $request->getPost('category'),
-            'open' => $request->getPost('open'),
-            'close' => $request->getPost('close'),
-            'employe' => $request->getPost('employe'),
-            'price' => $request->getPost('price'),
-            'contact_person' => $request->getPost('contact_person'),
-            'description' => $request->getPost('description')
-        ];
-
-
-        $lat = $request->getPost('latitude');
-        $lng = $request->getPost('longitude');
-
-
-
-
-        // unset empty value
-        foreach ($updateRequest as $key => $value) {
-            if (empty($value)) {
-                unset($updateRequest[$key]);
-            }
-        }
-
-        // ---------------------------------Update---------------------
-        $update =  $this->model->updateAtraction($id, $updateRequest, floatval($lng), floatval($lat), $geojson);
     }
 
     public function delete($id)
@@ -141,8 +113,11 @@ class MainCompanyController extends Controller
                 'message' => 'success delete main company',
                 'data' => $mainCompany
             ], Response::HTTP_OK);
-        } catch (QueryException $th) {
-            return $th->getMessage();
+        } catch (QueryException $e) {
+            return response()->json([
+                'message' => 'Query Error',
+                'errors' => $e->getMessage()
+            ], 422);
         }
     }
 }

@@ -2,31 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MainCompany;
-use App\Models\OutsourceCompany;
+use App\Models\Shift;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
-class OutsourceCompanyController extends Controller
+class ShiftController extends Controller
 {
     protected $model;
     /**
      * Create a new controller instance.
      */
-    public function __construct(OutsourceCompany $outsourceCompany)
+    public function __construct(Shift $shift)
     {
-        $this->model = $outsourceCompany;
+        $this->model = $shift;
     }
 
     public function get($id = null)
     {
         if ($id != null) {
-            $items = $this->model::withCount("users")->orderBy("outsource_company.id", "ASC")->where('id', $id)->first();
+            $items = $this->model->orderBy("id", "ASC")->where('id', $id)->first();
         } else {
-            $items = $this->model::withCount('users')->orderBy('id', 'ASC')->get();
+            $items = $this->model->orderBy('id', 'ASC')->get();
         }
         return response(['data' => $items, 'status' => 200]);
     }
@@ -35,19 +34,20 @@ class OutsourceCompanyController extends Controller
     {
         try {
             $request->validate([
-                'name' => 'required'
+                'name' => 'required|string',
+                'start' => 'required|time',
+                'end' => 'required|end',
             ]);
-            $outsourceCompany = $this->model::create([
-                'main_company_id' => MainCompany::first()->id,
+            $shift = $this->model::create([
                 'name' => $request->name,
-                "contact" => $request->contact,
-                "address" => $request->address,
+                'start' => $request->start,
+                'end' => $request->end,
                 "created_by" => Auth::user()->name,
             ]);
 
             return response()->json([
-                'message' => 'success created outsource company',
-                'data' => $outsourceCompany
+                'message' => 'success created data',
+                'data' => $shift
             ], Response::HTTP_CREATED);
         } catch (ValidationException $e) {
             return response()->json([
@@ -66,20 +66,21 @@ class OutsourceCompanyController extends Controller
     {
         try {
             $request->validate([
-                'name' => 'required'
+                'name' => 'required|string',
+                'start' => 'required|time',
+                'end' => 'required|end',
             ]);
 
-            $outsourceCompany = $this->model::where('id', $id)->update([
-                'main_company_id' => $request->main_company_id,
+            $shift = $this->model::where('id', $id)->update([
                 'name' => $request->name,
-                "contact" => $request->contact,
-                "address" => $request->address,
+                'start' => $request->start,
+                'end' => $request->end,
                 "updated_by" => Auth::user()->name,
             ]);
 
             return response()->json([
-                'message' => 'success update outsource company',
-                'data' => $outsourceCompany
+                'message' => 'success update data',
+                'data' => $shift
             ], Response::HTTP_OK);
         } catch (ValidationException $e) {
             return response()->json([
@@ -97,10 +98,10 @@ class OutsourceCompanyController extends Controller
     public function delete($id)
     {
         try {
-            $outsourceCompany = $this->model::where('id', $id)->delete();
+            $shift = $this->model::where('id', $id)->delete();
             return response()->json([
-                'message' => 'success delete outsource company',
-                'user' => $outsourceCompany
+                'message' => 'success delete data',
+                'data' => $shift
             ], Response::HTTP_OK);
         } catch (QueryException $e) {
             return response()->json([

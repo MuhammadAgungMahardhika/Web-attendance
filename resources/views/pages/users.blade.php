@@ -8,68 +8,17 @@
 
             <div class="card-body table-responsive">
                 <div class="text-start mb-4" id="addButton">
-                    <a title="tambah" class="btn btn-success btn-sm block" data-bs-toggle="modal" data-bs-target="#default"
-                        onclick="addModal()"><i class="fa fa-plus"></i> </a>
+                    <a title="add" class="btn btn-success btn-sm block" onclick="addModal()"><i class="fa fa-plus"></i> </a>
                 </div>
                 <div id="tableData">
-                    <table class="table dataTable no-footer" id="table" aria-describedby="table1_info">
-                        <thead>
-                            <tr>
-                                <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                    aria-label="No: activate to sort column ascending">No
-                                </th>
-                                <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                    aria-label="Role: activate to sort column ascending">Role
-                                </th>
-                                <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                    aria-label="Name: activate to sort column ascending">
-                                    Name
-                                </th>
-                                <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                    aria-label="Email: activate to sort column ascending">
-                                    Email
-                                </th>
-                                <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                    aria-label="Status: activate to sort column ascending">
-                                    Status
-                                </th>
-                                <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                    aria-label="Action: activate to sort column ascending">
-                                    Action
-                                </th>
 
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @php
-                                $no = 1;
-                            @endphp
-                            @foreach ($data as $user)
-                                <tr>
-                                    <td>{{ $no++ }}</td>
-                                    <td>{{ $user->roles->role }}</td>
-                                    <td>{{ $user->name }}</td>
-                                    <td>{{ $user->email }}</td>
-                                    <td>{{ $user->status }}</td>
-                                    <td>
-                                        <a title="mengubah" class="btn btn-outline-primary btn-sm me-1"
-                                            data-bs-toggle="modal" data-bs-target="#default"
-                                            onclick="editModal('{{ $user->id }}')"><i class="fa fa-edit"></i> </a>
-                                        <a title="hapus" class="btn btn-outline-danger btn-sm me-1" data-bs-toggle="modal"
-                                            data-bs-target="#default" onclick="deleteModal('{{ $user->id }}')"><i
-                                                class="fa fa-trash"></i></a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>
     </section>
     <script>
-        initDataTable('table')
         let baseUrl = '{{ url('') }}'
+        showTable()
 
         function showTable() {
             $.ajax({
@@ -82,12 +31,18 @@
                     for (let i = 0; i < userData.length; i++) {
                         let {
                             id,
+                            role_id,
                             roles,
                             name,
                             email,
                             status
                         } = userData[i]
 
+                        let historyButton = ''
+                        if (role_id === 3) {
+                            historyButton =
+                                `<a title="Attendance History" class="btn btn-outline-primary btn-sm me-1" onclick="showAttendanceHistory('${id}')"><i class="fa fa-history"></i></a>`;
+                        }
                         data += `
                         <tr>
                         <td>${i+1}</td>
@@ -96,8 +51,9 @@
                         <td>${email}</td>
                         <td>${status}</td>
                         <td>
-                            <a title="mengubah" class="btn btn-outline-primary btn-sm me-1" data-bs-toggle="modal" data-bs-target="#default" onclick="editModal('${id}')"><i class="fa fa-edit"></i> </a>
-                            <a title="hapus" class="btn btn-outline-danger btn-sm me-1" data-bs-toggle="modal" data-bs-target="#default" onclick="deleteModal('${id}')"><i class="fa fa-trash"></i></a>
+                            ${historyButton}
+                            <a title="Edit" class="btn btn-outline-primary btn-sm me-1" onclick="editModal('${id}')"><i class="fa fa-edit"></i> </a>
+                            <a title="Delete" class="btn btn-outline-danger btn-sm me-1" onclick="deleteModal('${id}')"><i class="fa fa-trash"></i></a>
                         </td>
                         </tr>
                         `
@@ -156,6 +112,12 @@
             });
         }
 
+        function showAttendanceHistory(id) {
+
+            showModal(`<h4 class="modal-title" id="myModalLabel20">Users Attendance History</h4>`, "", "")
+
+        }
+
         function addModal() {
             // get roles data
             let roles = getRoles()
@@ -173,8 +135,8 @@
                     `<option value="${r.id}">${r.name}</option>`
             });
 
-            $('#modalTitle').html("Add User ")
-            $('#modalBody').html(`
+            const modalHeader = "Add User"
+            const modalBody = `
                     <form class="form form-horizontal">
                     <div class="form-body"> 
                         <div class="row">
@@ -225,6 +187,12 @@
                             <div class="col-md-8 form-group">
                                 <input type="text" id="departmen" class="form-control" placeholder="Departmen">
                             </div>
+                            <div class="col-md-4">
+                                <label for="position">Position</label>
+                            </div>
+                            <div class="col-md-8 form-group">
+                                <input type="text" id="position" class="form-control" placeholder="Position">
+                            </div>
                           
                             <div class="col-md-4">
                                 <label for="password">Password</label>
@@ -241,9 +209,9 @@
                         </div>
                     </div>
                 </form>
-            `)
-
-            $('#modalFooter').html(`<a class="btn btn-success btn-sm" onclick="save()">Submit</a>`)
+            `
+            const modalFooter = `<a class="btn btn-success btn-sm" onclick="save()">Submit</a>`
+            showModal(modalHeader, modalBody, modalFooter)
         }
 
         function getOutsourcedCompany() {
@@ -258,7 +226,7 @@
                 },
                 success: function(response) {
                     result = response.data
-                    console.log(result)
+
                 },
                 error: function(err) {
                     return console.log(err.responseText)
@@ -272,7 +240,6 @@
                 type: "GET",
                 url: baseUrl + `/api/user/${id}`,
                 success: function(response) {
-                    console.log(response)
                     let {
                         role_id,
                         main_company_id,
@@ -280,6 +247,7 @@
                         name,
                         email,
                         departmen,
+                        position,
                         phone_number,
                         address,
                         status,
@@ -299,81 +267,86 @@
                     let outsourceCompanyData = ""
 
                     allOutsourceCompany.forEach(r => {
-                        console.log(r.id)
-                        console.log(role_id)
                         outsourceCompanyData +=
                             `<option ${outsource_company_id == r.id ? 'selected' : ''} value="${r.id }">${r.name}</option>`
                     });
 
-                    $('#modalTitle').html("Edit User")
-                    $('#modalBody').html(`
-            <form class="form form-horizontal">
-                    <div class="form-body">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="role">Role</label>
-                            </div>
-                            <div class="col-md-8 form-group">
-                                <select class="form-select" id="role">
-                                ${roleData}
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="role">Outsource Company</label>
-                            </div>
-                            <div class="col-md-8 form-group">
-                                <select class="form-select" id="outsourceCompany">
-                                    <option></option>
-                                    ${outsourceCompanyData}
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="name">name</label>
-                            </div>
-                            <div class="col-md-8 form-group">
-                                <input type="text" id="name" value="${name}" class="form-control">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="email">Email</label>
-                            </div>
-                            <div class="col-md-8 form-group">
-                                <input type="text" id="email" value="${email}" class="form-control">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="departmen">Departmen</label>
-                            </div>
-                            <div class="col-md-8 form-group">
-                                <input type="text" id="departmen" value="${departmen == null ? '' : departmen}" class="form-control">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="phoneNumber">Phone Number</label>
-                            </div>
-                            <div class="col-md-8 form-group">
-                                <input type="number" id="phoneNumber" value="${phone_number}" class="form-control">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="address">Address</label>
-                            </div>
-                            <div class="col-md-8 form-group">
-                                <input type="text" id="address" value="${address == null ? '' : address}" class="form-control">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="status">Status</label>
-                            </div>
-                            <div class="col-md-8 form-group">
-                               <select class="form-select" id="status">
-                                   <option ${status == "active" ? 'selected' : ''} value="active">active</option>
-                                   <option ${status == "inactive" ? 'selected' : ''} value="inactive">inactive</option>
-                                </select>
-                            </div>
-                            <input type="hidden" id="mainCompany" value="${main_company_id}" class="form-control">
+                    const modalHeader = "Edit User"
+                    const modalBody = `
+                    <form class="form form-horizontal">
+                            <div class="form-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="role">Role</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <select class="form-select" id="role">
+                                        ${roleData}
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="role">Outsource Company</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <select class="form-select" id="outsourceCompany">
+                                            <option></option>
+                                            ${outsourceCompanyData}
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="name">name</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <input type="text" id="name" value="${name}" class="form-control">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="email">Email</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <input type="text" id="email" value="${email}" class="form-control">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="departmen">Departmen</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <input type="text" id="departmen" value="${departmen == null ? '' : departmen}" class="form-control">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="position">Position</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <input type="text" id="position" value="${position == null ? '' : position}" class="form-control">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="phoneNumber">Phone Number</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <input type="number" id="phoneNumber" value="${phone_number}" class="form-control">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="address">Address</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <input type="text" id="address" value="${address == null ? '' : address}" class="form-control">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="status">Status</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                    <select class="form-select" id="status">
+                                        <option ${status == "active" ? 'selected' : ''} value="active">active</option>
+                                        <option ${status == "inactive" ? 'selected' : ''} value="inactive">inactive</option>
+                                        </select>
+                                    </div>
+                                    <input type="hidden" id="mainCompany" value="${main_company_id}" class="form-control">
 
-                        </div>
-                    </div>
-                </form>
-            `)
-                    $('#modalFooter').html(
-                        `<a class="btn btn-success btn-sm" onclick="update('${id}')">Ubah</a>`)
+                                </div>
+                            </div>
+                        </form>
+                    `
+                    const modalFooter = `<a class="btn btn-success btn-sm" onclick="update('${id}')">Edit</a>`
+                    showModal(modalHeader, modalBody, modalFooter)
+
                 },
                 error: function(err) {
                     console.log(err.responseText)
@@ -383,9 +356,10 @@
         }
 
         function deleteModal(id) {
-            $('#modalTitle').html("Delete User")
-            $('#modalBody').html(`Are you sure to delete this user`)
-            $('#modalFooter').html(`<a class="btn btn-danger btn-sm" onclick="deleteItem('${id}')">Delete</a>`)
+            const modalHeader = "Delete User"
+            const modalBody = 'Are you sure to delete this user'
+            const modalFooter = `<a class="btn btn-danger btn-sm" onclick="deleteItem('${id}')">Delete</a>`
+            showModal(modalHeader, modalBody, modalFooter)
         }
 
         function getRoles() {
@@ -411,6 +385,7 @@
             let name = $('#name').val()
             let email = $('#email').val()
             let departmen = $('#departmen').val()
+            let position = $('#position').val()
             let phoneNumber = $('#phoneNumber').val()
             let address = $('#address').val()
             let password = $('#password').val()
@@ -438,8 +413,6 @@
                     timer: 1500
                 })
             }
-
-
 
             // validasi nomor telfon
             if (!phoneNumber) {
@@ -489,6 +462,7 @@
                 name: name,
                 email: email,
                 departmen: departmen,
+                position: position,
                 phone_number: phoneNumber,
                 address: address,
                 password: password,
@@ -503,7 +477,6 @@
                 },
                 data: JSON.stringify(data),
                 success: function(response) {
-
                     Swal.fire({
                         position: "top-end",
                         icon: "success",
@@ -511,7 +484,7 @@
                         showConfirmButton: false,
                         timer: 1500
                     }).then(() => {
-                        $('#default').modal('hide')
+                        // closeModal()
                         showTable()
                     })
                 },
@@ -531,6 +504,7 @@
             let name = $('#name').val()
             let email = $('#email').val()
             let departmen = $('#departmen').val()
+            let position = $('#position').val()
             let phoneNumber = $('#phoneNumber').val()
             let status = $('#status').val()
             let address = $('#address').val()
@@ -585,6 +559,7 @@
                 name: name,
                 email: email,
                 departmen: departmen,
+                position: position,
                 phone_number: phoneNumber,
                 status: status,
                 address: address
@@ -599,7 +574,6 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
-                    console.log(response)
                     Swal.fire({
                         position: "top-end",
                         icon: "success",
@@ -607,7 +581,7 @@
                         showConfirmButton: false,
                         timer: 1500
                     }).then(() => {
-                        $('#default').modal('hide')
+                        closeModal()
                         showTable()
                     })
 
@@ -634,7 +608,7 @@
                         showConfirmButton: false,
                         timer: 1500
                     }).then(() => {
-                        $('#default').modal('hide')
+                        closeModal()
                         showTable()
                     })
                 },
