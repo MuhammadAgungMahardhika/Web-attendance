@@ -12,6 +12,7 @@
                     <div class="col-12 col-md-8 col-lg-8">
                         <div class="text-start p-2 shadow-sm border-circle" id="filterMenu">
                             <p>Filter Data</p>
+                            {{-- Filter by date --}}
                             <div class="btn-group me-2 mb-2">
                                 <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"
                                     id="dateDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
@@ -22,6 +23,21 @@
                                     <div class="row p-2">
                                         <div class="col-12 form-group">
                                             <input type="text" id="dateFilter" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {{-- Filter by Shift --}}
+                            <div class="btn-group me-2 mb-2">
+                                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"
+                                    id="shiftDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                    onclick="">
+                                    <i class="fa fa-calendar"></i> Filter By Shift
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="shiftDropdown">
+                                    <div class="row p-2">
+                                        <div class="col-12 form-group">
+                                            <input type="text" id="shiftFilter" class="form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -39,7 +55,8 @@
 
             <div class="card-body table-responsive">
                 {{-- <div class="text-start mb-4" id="addButton">
-                    <a title="tambah" class="btn btn-success btn-sm block" onclick="addModal()"><i class="fa fa-plus"></i> </a>
+                    <a title="tambah" class="btn btn-success btn-sm block" onclick="addModal()"><i class="fa fa-plus"></i>
+                    </a>
                 </div> --}}
                 <div id="tableData">
 
@@ -225,6 +242,7 @@
                 type: "GET",
                 url: baseUrl + `/api/attendance-by-date/${dateNow()}`,
                 success: function(response) {
+                    console.log(response)
                     let attendanceData = response.data
 
                     let data = ''
@@ -233,6 +251,7 @@
                             id,
                             user_id,
                             user,
+                            shift,
                             checkin,
                             checkout,
                             date,
@@ -244,6 +263,7 @@
                         <tr>
                         <td>${i+1}</td>
                         <td>${user.name}</td>
+                        <td>${shift.name}</td>
                         <td>${checkin != null ? checkin : ''}</td>
                         <td>${checkout  != null ? checkout : ''}</td>
                         <td>${date  != null ? date : ''}</td>
@@ -266,6 +286,9 @@
                                 </th>
                                 <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                                     aria-label="Name: activate to sort column ascending">Name 
+                                </th>
+                                <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                                    aria-label="Shift: activate to sort column ascending">Shift 
                                 </th>
                                 <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                                     aria-label="checkin: activate to sort column ascending">
@@ -319,37 +342,6 @@
             });
         }
 
-        function addModal() {
-            const modalHeader = "Add Outsource Company "
-            const modalBody = `
-                    <form class="form form-horizontal">
-                    <div class="form-body"> 
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="name">Name</label>
-                            </div>
-                            <div class="col-md-8 form-group">
-                                <input type="text" id="name" class="form-control" placeholder="name" autocomplete="off">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="contact">contact</label>
-                            </div>
-                            <div class="col-md-8 form-group">
-                                <input type="text" id="contact" class="form-control" placeholder="contact">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="address">Address</label>
-                            </div>
-                            <div class="col-md-8 form-group">
-                                <input type="text" id="address" class="form-control" placeholder="Address">
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            `
-            const modalFooter = `<a class="btn btn-success btn-sm" onclick="save()">Submit</a>`
-            showModal(modalHeader, modalBody, modalFooter)
-        }
 
         function editModal(id) {
             $.ajax({
@@ -452,7 +444,7 @@
                 },
                 data: JSON.stringify(data),
                 success: function(response) {
-                    showSuccessAlert("New Outsource Company Added!")
+                    showSuccessAlert("New Attendance Company Added!")
                     closeModal()
                     return showTable()
                 },

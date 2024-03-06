@@ -11,4 +11,9 @@ class Shift extends Model
     protected $table = "shift";
     protected $primaryKey = "id";
     protected $guarded = [];
+
+    public function shift()
+    {
+        return $this->hasMany(Attendance::class, "shift_id");
+    }
 }

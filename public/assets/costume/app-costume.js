@@ -47,3 +47,13 @@ function dateNow(){
     let day = String(currentDate.getDate()).padStart(2, '0'); // Tambahkan '0' di depan jika tanggal < 10
     return `${year}-${month}-${day}`
 }
+
+function convertTimeToHiFormat(string){
+    let parts = string.split(":"); // Membagi string berdasarkan karakter ':'
+    let hour = parseInt(parts[0]); // Mengambil jam (bagian pertama)
+    let minute = parseInt(parts[1]); // Mengambil menit (bagian kedua)
+
+    // Membentuk string waktu dengan format HH:mm
+    let formattedTime = hour.toString().padStart(2, '0') + ":" + minute.toString().padStart(2, '0');
+    return formattedTime 
+}

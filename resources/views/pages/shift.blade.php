@@ -25,25 +25,23 @@
                 type: "GET",
                 url: baseUrl + `/api/shift`,
                 success: function(response) {
-                    let outsourceCompanyData = response.data
+                    let shiftData = response.data
 
                     let data = ''
-                    for (let i = 0; i < outsourceCompanyData.length; i++) {
+                    for (let i = 0; i < shiftData.length; i++) {
                         let {
                             id,
                             name,
-                            contact,
-                            address,
-                            users_count
-                        } = outsourceCompanyData[i]
+                            start,
+                            end,
+                        } = shiftData[i]
 
                         data += `
                         <tr>
                         <td>${i+1}</td>
                         <td>${name}</td>
-                        <td>${contact != null ? contact : ''}</td>
-                        <td>${address  != null ? address : ''}</td>
-                        <td>${users_count}</td>
+                        <td>${start != null ? start : ''}</td>
+                        <td>${end  != null ? end : ''}</td>
                         <td>
                             <a title="Edit" class="btn btn-outline-primary btn-sm me-1"  onclick="editModal('${id}')"><i class="fa fa-edit"></i> </a>
                             <a title="Delete" class="btn btn-outline-danger btn-sm me-1"  onclick="deleteModal('${id}')"><i class="fa fa-trash"></i></a>
@@ -64,15 +62,11 @@
                                 </th>
                                 <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                                     aria-label="contact: activate to sort column ascending">
-                                                    contact
+                                                    start
                                 </th>
                                 <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                                     aria-label="address: activate to sort column ascending">
-                                                    address
-                                </th>
-                                <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                                    aria-label="Outsourced Workers: activate to sort column ascending">
-                                                    Outsourced Workers
+                                                    end
                                 </th>
                                 <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                                     aria-label="Action: activate to sort column ascending">
@@ -107,7 +101,7 @@
         }
 
         function addModal() {
-            const modalHeader = "Add Outsource Company "
+            const modalHeader = "Add Shift"
             const modalBody = `
                     <form class="form form-horizontal">
                     <div class="form-body"> 
@@ -119,16 +113,16 @@
                                 <input type="text" id="name" class="form-control" placeholder="name" autocomplete="off">
                             </div>
                             <div class="col-md-4">
-                                <label for="contact">contact</label>
+                                <label for="start">start</label>
                             </div>
                             <div class="col-md-8 form-group">
-                                <input type="text" id="contact" class="form-control" placeholder="contact">
+                                <input type="time" id="start" class="form-control" placeholder="start">
                             </div>
                             <div class="col-md-4">
-                                <label for="address">Address</label>
+                                <label for="end">end</label>
                             </div>
                             <div class="col-md-8 form-group">
-                                <input type="text" id="address" class="form-control" placeholder="Address">
+                                <input type="time" id="end" class="form-control" placeholder="end">
                             </div>
                         </div>
                     </div>
@@ -145,14 +139,16 @@
                 success: function(response) {
                     let {
                         id,
-                        main_company_id,
                         name,
-                        contact,
-                        address,
-                        users_count
+                        start,
+                        end,
                     } = response.data
+                    // convert string json to time format H:I
+                    start = convertTimeToHiFormat(start)
+                    end = convertTimeToHiFormat(end)
 
-                    const modalHeader = "Edit User"
+                    console.log(typeof start)
+                    const modalHeader = "Edit Shift"
                     const modalBody = `
                     <form class="form form-horizontal">
                             <div class="form-body">
@@ -164,18 +160,18 @@
                                         <input type="text" id="name" value="${name}" class="form-control">
                                     </div>
                                     <div class="col-md-4">
-                                        <label for="contact">contact</label>
+                                        <label for="start">start</label>
                                     </div>
                                     <div class="col-md-8 form-group">
-                                        <input type="text" id="contact" value="${contact != null ? contact : ''}" class="form-control">
+                                        <input type="time" id="start" value="${start != null ? start : ''}" class="form-control">
                                     </div>
                                     <div class="col-md-4">
-                                        <label for="address">Address</label>
+                                        <label for="end">end</label>
                                     </div>
                                     <div class="col-md-8 form-group">
-                                        <input type="text" id="address" value="${address == null ? '' : address}" class="form-control">
+                                        <input type="time" id="end" value="${end != null ? end : ''}" class="form-control">
                                     </div>
-                                    <input type="hidden" id="mainCompanyId" value="${main_company_id}">
+                            
                                 </div>
                             </div>
                         </form>
@@ -191,8 +187,8 @@
         }
 
         function deleteModal(id) {
-            const modalHeader = "Delete User"
-            const modalBody = `Are you sure to delete this user`
+            const modalHeader = "Delete Shift"
+            const modalBody = `Are you sure to delete this shift`
             const modalFooter = `<a class="btn btn-danger btn-sm" onclick="deleteItem('${id}')">Delete</a>`
             showModal(modalHeader, modalBody, modalFooter)
         }
@@ -216,18 +212,26 @@
         // API
         function save() {
             let name = $('#name').val()
-            let contact = $('#contact').val()
-            let address = $('#address').val()
+            let start = $('#start').val()
+            let end = $('#end').val()
 
             // validasi nama
             if (!name) {
                 return showErrorAlert("name cannot be empty")
             }
+            // validasi start time
+            if (!start) {
+                return showErrorAlert("start time cannot be empty")
+            }
+            // validasi nama
+            if (!end) {
+                return showErrorAlert("end time cannot be empty")
+            }
 
             let data = {
                 name: name,
-                contact: contact,
-                address: address,
+                start: start,
+                end: end,
             }
 
             $.ajax({
@@ -239,7 +243,7 @@
                 },
                 data: JSON.stringify(data),
                 success: function(response) {
-                    showSuccessAlert("New Outsource Company Added!")
+                    showSuccessAlert("New Shift dded!")
                     closeModal()
                     return showTable()
                 },
@@ -253,21 +257,29 @@
         }
 
         function update(id) {
-            let mainCompanyId = $('#mainCompanyId').val()
             let name = $('#name').val()
-            let contact = $('#contact').val()
-            let address = $('#address').val()
+            let start = $('#start').val()
+            let end = $('#end').val()
+
             // validasi nama
             if (!name) {
-                return showErrorAlert("Name cannot be empty")
+                return showErrorAlert("name cannot be empty")
+            }
+            // validasi start time
+            if (!start) {
+                return showErrorAlert("start time cannot be empty")
+            }
+            // validasi nama
+            if (!end) {
+                return showErrorAlert("end time cannot be empty")
             }
 
 
+
             let data = {
-                main_company_id: mainCompanyId,
                 name: name,
-                contact: contact,
-                address: address
+                start: start,
+                end: end
             }
 
             $.ajax({

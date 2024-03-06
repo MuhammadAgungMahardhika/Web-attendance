@@ -35,8 +35,8 @@ class ShiftController extends Controller
         try {
             $request->validate([
                 'name' => 'required|string',
-                'start' => 'required|time',
-                'end' => 'required|end',
+                'start' => 'required|date_format:H:i',
+                'end' => 'required|date_format:H:i',
             ]);
             $shift = $this->model::create([
                 'name' => $request->name,
@@ -67,8 +67,8 @@ class ShiftController extends Controller
         try {
             $request->validate([
                 'name' => 'required|string',
-                'start' => 'required|time',
-                'end' => 'required|end',
+                'start' => 'required|date_format:H:i',
+                'end' => 'required|date_format:H:i',
             ]);
 
             $shift = $this->model::where('id', $id)->update([

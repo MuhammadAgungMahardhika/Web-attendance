@@ -14,15 +14,17 @@ return new class extends Migration
         Schema::create('attendance', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('user_id', false, true);
-            $table->time('checkin')->nullable();
-            $table->time('checkout')->nullable();
-            $table->date('date')->nullable();
+            $table->bigInteger('shift_id', false, true)->nullable();
+            $table->time('checkin');
+            $table->time('checkout');
+            $table->date('date');
             $table->enum("status", ["in", "out", "late"])->nullable();
             $table->enum("work_from", ["office", "home"])->nullable();
             $table->point("location")->nullable();
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();
             $table->timestamps();
+            $table->unique(['date', 'user_id']);
         });
     }
 

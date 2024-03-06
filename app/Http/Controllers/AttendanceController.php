@@ -6,7 +6,7 @@ use App\Models\Attendance;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class AttendanceController extends Controller
@@ -23,11 +23,11 @@ class AttendanceController extends Controller
     public function get($id = null)
     {
         if ($id != null) {
-            $items = $this->model::with("user")->whereHas('user', function ($query) {
+            $items = $this->model::with(["user", "shift"])->whereHas('user', function ($query) {
                 $query->where('role_id', 3);
             })->orderBy("attendance.id", "ASC")->where('attendance.id', $id)->first();
         } else {
-            $items = $this->model::with('user')->whereHas('user', function ($query) {
+            $items = $this->model::with(["user", "shift"])->whereHas('user', function ($query) {
                 $query->where('role_id', 3);
             })->orderBy('attendance.id', 'ASC')->get();
         }
@@ -37,12 +37,23 @@ class AttendanceController extends Controller
 
     public function getAttendanceByDate($date)
     {
-        $items = $this->model::with('user')->whereHas('user', function ($query) {
-            $query->where('role_id', 3);
-        })->where('date', $date)->orderBy('attendance.id', 'ASC')->get();
+
+        $items = $this->model::with(['user', 'shift'])
+            ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status', 'work_from')
+            ->whereHas('user', function ($query) {
+                $query->where('role_id', 3);
+            })->where('date', $date)->orderBy('attendance.id', 'ASC')->get();
 
         if ($items) {
-            return response(['data' => $items, 'status' => 200]);
+            return response()->json([
+                'message' => 'success getting data',
+                'data' => $items
+            ], Response::HTTP_ACCEPTED);
+        } else {
+            return response()->json([
+                'message' => 'failed getting data',
+                'data' => $items
+            ], Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -61,20 +72,23 @@ class AttendanceController extends Controller
     {
         try {
             $request->validate([
-                'checkin' => 'required|time',
-                'checkout' => 'required|time',
+                'user_id' => 'required',
+                'checkin' => 'required|date_format:H:i',
+                'checkout' => 'required|date_format:H:i',
                 'date' => 'required|date',
                 'status' => 'required|in:in,out,late',
                 'work_from' => 'required|in:office,home',
             ]);
             $attendance = $this->model::create([
+                'user_id' => $request->user_id,
+                'shift_id' => $request->shift_id,
                 'checkin' => $request->checkin,
                 'checkout' => $request->checkout,
                 'date' => $request->date,
                 "status" => $request->status,
                 "work_from" => $request->work_from,
-                "location" => $request->location,
-                "created_by" => Auth::user()->name,
+                "location" =>  DB::raw("ST_PointFromText('$request->location')"),
+                "created_by" => $request->created_by,
             ]);
 
             return response()->json([
@@ -98,22 +112,25 @@ class AttendanceController extends Controller
     {
         try {
             $request->validate([
-                'checkin' => 'required|time',
-                'checkout' => 'required|time',
+                // 'checkin' => 'required|date_format:H:i',
+                // 'checkout' => 'required|date_format:H:i',
                 'date' => 'required|date',
                 'status' => 'required|in:in,out,late',
                 'work_from' => 'required|in:office,home',
             ]);
 
             $attendance = $this->model::where('id', $id)->update([
+                'user_id' => $request->user_id,
+                'shift_id' => $request->shift_id,
                 'checkin' => $request->checkin,
                 'checkout' => $request->checkout,
                 'date' => $request->date,
                 "status" => $request->status,
                 "work_from" => $request->work_from,
-                "location" => $request->location,
-                "updated_by" => Auth::user()->name,
+                "location" => DB::raw("ST_PointFromText('$request->location')"),
+                "updated_by" => $request->updated_by,
             ]);
+
 
             return response()->json([
                 'message' => 'success update data',
