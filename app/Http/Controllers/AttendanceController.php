@@ -35,15 +35,20 @@ class AttendanceController extends Controller
     }
 
 
-    public function getAttendanceByDate($date)
+    public function getAttendanceByDate(Request $request)
     {
+        $from = $request->from;
+        $to = $request->to;
+
 
         $items = $this->model::with(['user', 'shift'])
             ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status', 'work_from')
             ->whereHas('user', function ($query) {
                 $query->where('role_id', 3);
-            })->where('date', $date)->orderBy('attendance.id', 'ASC')->get();
-
+            })
+            ->whereRaw('DATE(checkin) >= ? AND DATE(checkin) <= ?', [$from, $to])
+            ->orderBy('id', 'ASC')
+            ->get();
         if ($items) {
             return response()->json([
                 'message' => 'success getting data',

@@ -14,10 +14,9 @@
                     <span class="material-symbols-outlined">visibility</span>
                 </a>
             </span>
-            <span id="legendButton">
-                <a data-bs-placement="bottom" data-bs-toggle="modal" data-bs-target="#default"
-                    title="Search your center" class="btn icon btn-primary mx-1 " id="legend-map"
-                    onclick="searchCenterModal()">
+            <span id="searchButton">
+                <a data-bs-placement="bottom" title="Search your center" class="btn icon btn-primary mx-1 "
+                    id="legend-map" onclick="searchCenterModal()">
                     <span class="material-symbols-outlined">search</span>
                 </a>
             </span>

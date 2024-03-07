@@ -1,5 +1,8 @@
 @extends('template.layout-vertical.main')
 @section('container')
+    <style>
+
+    </style>
     <section class="section">
         <div class="card shadow-sm">
             <div class="card-header text-center">
@@ -16,7 +19,7 @@
                             <div class="btn-group me-2 mb-2">
                                 <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"
                                     id="dateDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                    onclick="">
+                                    onclick="filterByDate()">
                                     <i class="fa fa-calendar"></i> Filter By Date
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dateDropdown">
@@ -93,33 +96,20 @@
 
                 // check jika from date kosong
                 if (!startDate) {
-                    return Swal.fire({
-                        position: "top-end",
-                        icon: "error",
-                        title: "Please fill the from date",
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
+                    return showToastErrorAlert("Please fill the from date")
                 }
                 // check jika to date kosong
                 if (!endDate) {
-                    return Swal.fire({
-                        position: "top-end",
-                        icon: "error",
-                        title: "Please fill the end date",
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
+                    return showToastErrorAlert("Please fill the end date")
                 }
 
                 let data = {
-                    id_kandang: idKandang,
                     from: startDate,
                     to: endDate
                 }
                 $.ajax({
                     type: "POST",
-                    url: `/data-kandang/date`,
+                    url: baseUrl + `/attendance-by-date`,
                     contentType: "application/json",
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -127,6 +117,7 @@
                     data: JSON.stringify(data),
                     success: function(response) {
 
+                        console.log(response)
                         // asign value
                         let kandangs = response.data
                         let data = ''
@@ -426,7 +417,7 @@
 
             // validasi nama
             if (!name) {
-                return showErrorAlert("name cannot be empty")
+                return showToastErrorAlert("name cannot be empty")
             }
 
             let data = {
@@ -444,7 +435,7 @@
                 },
                 data: JSON.stringify(data),
                 success: function(response) {
-                    showSuccessAlert("New Attendance Company Added!")
+                    showToastSuccessAlert("New Attendance Company Added!")
                     closeModal()
                     return showTable()
                 },
@@ -464,7 +455,7 @@
             let address = $('#address').val()
             // validasi nama
             if (!name) {
-                return showErrorAlert("Name cannot be empty")
+                return showToastErrorAlert("Name cannot be empty")
             }
 
 
@@ -511,7 +502,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
-                    showSuccessAlert("Data deleted")
+                    showToastSuccessAlert("Data deleted")
                     closeModal()
                     return showTable()
                 },

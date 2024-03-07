@@ -61,6 +61,7 @@ Route::name('api')->group(function () {
     // Attendance  
     Route::get('attendance', [AttendanceController::class, 'get']);
     Route::get('attendance/{id}', [AttendanceController::class, 'get']);
+    Route::post('attendance-by-date', [AttendanceController::class, 'getAttendanceByDate']);
     Route::get('attendance-by-date/{date}', [AttendanceController::class, 'getAttendanceByDate']);
     Route::get('attendance-by-user/{id}', [AttendanceController::class, 'getAttendanceByUserId']);
     Route::post('attendance', [AttendanceController::class, 'store']);

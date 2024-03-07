@@ -116,8 +116,8 @@
         }
 
         function searchCenterModal() {
-            $('#modalTitle').html('Input latitude and longtitude to search your location')
-            $('#modalBody').html(`<table class="table table-responsive">
+            const modalHeader = 'Input latitude and longtitude to search your location'
+            const modalBody = `<table class="table table-responsive">
                 <tbody>
                     <tr>
                       <td>Latitude</td>
@@ -134,11 +134,12 @@
                         </td>
                       </tr>
                  </tbody>
-                </table>`)
-            $('#modalFooter').html(`<a onclick="searchLatLang()" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                </table>`
+            const modalFooter = `<a onclick="searchLatLang()" data-bs-toggle="tooltip" data-bs-placement="bottom"
                                                 title="search latlng" class="btn icon btn-outline-primary"> 
                           <i class="fa fa-search"></i>
-                         </a>`)
+                         </a>`
+            showModal(modalHeader, modalBody, modalFooter)
 
         }
 
@@ -381,7 +382,7 @@
                 return showErrorAlert("Please input the coordinate!")
 
             }
-            $('#default').modal('hide')
+            closeModal()
             const pos = {
                 lat: latitude,
                 lng: langtitude
