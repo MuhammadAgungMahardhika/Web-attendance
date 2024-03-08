@@ -109,115 +109,96 @@
                 }
                 $.ajax({
                     type: "POST",
-                    url: baseUrl + `/attendance-by-date`,
+                    url: baseUrl + `/api/attendance-by-date-range`,
                     contentType: "application/json",
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     data: JSON.stringify(data),
                     success: function(response) {
-
                         console.log(response)
-                        // asign value
-                        let kandangs = response.data
+                        let attendanceData = response.data
+
                         let data = ''
-                        // adding data kandang data
-                        for (let i = 0; i < kandangs.length; i++) {
+                        for (let i = 0; i < attendanceData.length; i++) {
                             let {
+                                id,
+                                user_id,
+                                user,
+                                shift,
+                                checkin,
+                                checkout,
                                 date,
-                                hari_ke,
-                                nama_kandang,
-                                alamat_kandang,
-                                pakan,
-                                minum,
-                                bobot,
-                                populasi_awal,
-                                riwayat_populasi,
-                                luas_kandang,
-                                classification
-                            } = kandangs[i]
+                                status,
+                                work_from,
+                            } = attendanceData[i]
 
                             data += `
-                    <tr>
-                    <td>${i+1}</td>
-                    <td>${date}</td>
-                    <td>${hari_ke}</td>
-                    <td>${nama_kandang}</td>
-                    <td>${alamat_kandang}</td>
-                    <td>${luas_kandang}</td>
-                    <td>${populasi_awal}</td>
-                    <td>${riwayat_populasi}</td>
-                    <td>${pakan}</td>
-                    <td>${minum}</td>
-                    <td>${bobot}</td>
-                    <td>${classification}</td>
-                    </tr>
-                    `
+                        <tr>
+                        <td>${i+1}</td>
+                        <td>${user.name}</td>
+                        <td>${shift.name}</td>
+                        <td>${checkin != null ? checkin : ''}</td>
+                        <td>${checkout  != null ? checkout : ''}</td>
+                        <td>${date  != null ? date : ''}</td>
+                        <td>${status  != null ? status : ''}</td>
+                        <td>${work_from}</td>
+                        <td>
+                            <a title="Edit" class="btn btn-outline-primary btn-sm me-1"  onclick="editModal('${id}')"><i class="fa fa-edit"></i> </a>
+                            <a title="Delete" class="btn btn-outline-danger btn-sm me-1"  onclick="deleteModal('${id}')"><i class="fa fa-trash"></i></a>
+                        </td>
+                        </tr>
+                        `
                         }
 
-                        // construct table
                         let table = `
-                <table class="table dataTable no-footer" id="table" aria-describedby="table1_info">
-                    <thead>
+                    <table class="table dataTable no-footer" id="table" aria-describedby="table1_info">
+                        <thead>
                             <tr>
                                 <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                    aria-label="Name: activate to sort column ascending" style="width: 30px;">No
+                                                    aria-label="No: activate to sort column ascending">No
                                 </th>
                                 <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                    aria-label="Phone: activate to sort column ascending" style="width: 223.344px;">Date
+                                                    aria-label="Name: activate to sort column ascending">Name 
                                 </th>
                                 <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                    aria-label="Phone: activate to sort column ascending" style="width: 223.344px;">Day
+                                                    aria-label="Shift: activate to sort column ascending">Shift 
                                 </th>
                                 <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                    aria-label="Phone: activate to sort column ascending" style="width: 223.344px;">House
-                                    Name
+                                                    aria-label="checkin: activate to sort column ascending">
+                                                    checkin
                                 </th>
                                 <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                    aria-label="City: activate to sort column ascending" style="width: 239.078px;">
-                                    House Address
+                                                    aria-label="checkout: activate to sort column ascending">
+                                                    checkout
                                 </th>
                                 <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                    aria-label="Status: activate to sort column ascending" style="width: 239.078px;">House
-                                    Area (M<sup>2</sup>)
+                                                    aria-label="date: activate to sort column ascending">
+                                                    date
                                 </th>
                                 <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                    aria-label="Status: activate to sort column ascending" style="width: 239.078px;">
-                                    Initial Population (Head)
+                                                    aria-label="status: activate to sort column ascending">
+                                                    status
                                 </th>
                                 <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                    aria-label="Status: activate to sort column ascending" style="width: 239.078px;">
-                                    Remaining Population (Head)
+                                                    aria-label="work_from: activate to sort column ascending">
+                                                    work_from
                                 </th>
                                 <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                    aria-label="Status: activate to sort column ascending" style="width: 223.344px;">
-                                    Feed (G)
+                                                    aria-label="Action: activate to sort column ascending">
+                                                    Action
                                 </th>
-                                <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1"
-                                    colspan="1" aria-label="Status: activate to sort column ascending"
-                                    style="width: 223.344px;">
-                                    Watering (L)
-                                </th>
-                                <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1"
-                                    colspan="1" aria-label="Status: activate to sort column ascending"
-                                    style="width: 223.344px;">
-                                    Weight (Kg)
-                                </th>
-
-                                <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1"
-                                    colspan="1" aria-label="Status: activate to sort column ascending"
-                                    style="width: 117.891px;">Classification
-                                </th>
-
+                            
                             </tr>
-                    </thead>
-                    <tbody>
-                        ${data}
-                    </tbody>
-                </table>
-                `
+                        </thead>
+                        <tbody>
+                            ${data}
+                        </tbody>
+                    </table>
+                    `
                         $('#tableData').html(table)
                         initDataTable('table')
+
                     }
                 })
             });
@@ -250,6 +231,14 @@
                             work_from,
                         } = attendanceData[i]
 
+                        let statusBadge = ""
+                        if (status == "in") {
+                            statusBadge = "badge bg-success"
+                        } else if (status == "out") {
+                            statusBadge = "badge bg-danger"
+                        } else if (status == "late") {
+                            statusBadge = "badge bg-warning"
+                        }
                         data += `
                         <tr>
                         <td>${i+1}</td>
@@ -258,7 +247,7 @@
                         <td>${checkin != null ? checkin : ''}</td>
                         <td>${checkout  != null ? checkout : ''}</td>
                         <td>${date  != null ? date : ''}</td>
-                        <td>${status  != null ? status : ''}</td>
+                        <td><span class="${statusBadge}">${status  != null ? status : ''} </span></td>
                         <td>${work_from}</td>
                         <td>
                             <a title="Edit" class="btn btn-outline-primary btn-sm me-1"  onclick="editModal('${id}')"><i class="fa fa-edit"></i> </a>

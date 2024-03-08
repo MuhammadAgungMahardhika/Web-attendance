@@ -41,7 +41,6 @@ Route::name('api')->group(function () {
     Route::get('main-company', [MainCompanyController::class, 'get']);
     Route::get('main-company/{id}', [MainCompanyController::class, 'get']);
     Route::post('main-company', [MainCompanyController::class, 'store']);
-    Route::put('main-company/{id}', [MainCompanyController::class, 'update']);
     Route::delete('main-company/{id}', [MainCompanyController::class, 'delete']);
 
     // Outsource company 
@@ -61,8 +60,8 @@ Route::name('api')->group(function () {
     // Attendance  
     Route::get('attendance', [AttendanceController::class, 'get']);
     Route::get('attendance/{id}', [AttendanceController::class, 'get']);
-    Route::post('attendance-by-date', [AttendanceController::class, 'getAttendanceByDate']);
     Route::get('attendance-by-date/{date}', [AttendanceController::class, 'getAttendanceByDate']);
+    Route::post('attendance-by-date-range', [AttendanceController::class, 'getAttendanceByDateRange']);
     Route::get('attendance-by-user/{id}', [AttendanceController::class, 'getAttendanceByUserId']);
     Route::post('attendance', [AttendanceController::class, 'store']);
     Route::put('attendance/{id}', [AttendanceController::class, 'update']);

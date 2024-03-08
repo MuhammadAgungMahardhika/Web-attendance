@@ -93,7 +93,7 @@
         </form>
         @if (Session::has('success'))
             <script>
-                showSuccessAlert("Success update data!")
+                showToastSuccessAlert("Success update data!")
             </script>
         @endif
     </section>
@@ -152,9 +152,9 @@
                 zoom: 6.8,
                 clickableIcons: false
             });
-            map.setOptions({
-                styles: mapStyles
-            })
+            // map.setOptions({
+            //     styles: mapStyles
+            // })
         }
 
         // add mata angin 
@@ -287,15 +287,43 @@
 
     <script>
         let selectedShape, selectedMarker, drawingManager, geomData
-        let locationRadius = '<?= $data['location_radius'] ?>';
+        let locationRadius = JSON.parse('<?= $data['location_radius'] ?>')
 
         $(document).ready(function() {
             initDrawingManager()
             if (locationRadius) {
-                console.log(locationRadius)
-                addGeom(JSON.parse(locationRadius))
+                addGeom(locationRadius)
+                let locationRadiusCoordinates = parsePolygonCoordinates(locationRadius)
+                let locationRadiusCenter = calculatePolygonCenter(locationRadiusCoordinates)
+                map.panTo(locationRadiusCenter)
             }
         });
+
+
+
+        // Fungsi untuk memparsing koordinat poligon dari GeoJSON
+        function parsePolygonCoordinates(geojsonPolygon) {
+            let polygonCoordinates = [];
+            let coordinates = geojsonPolygon.coordinates[0]; // Ambil koordinat dari properti "coordinates"
+
+            // Iterasi melalui koordinat dan buat objek LatLng untuk setiap titik
+            for (let i = 0; i < coordinates.length; i++) {
+                let latLng = new google.maps.LatLng(coordinates[i][1], coordinates[i][0]);
+                polygonCoordinates.push(latLng);
+            }
+
+            return polygonCoordinates;
+        }
+
+
+        // Fungsi untuk menghitung pusat poligon
+        function calculatePolygonCenter(polygonCoordinates) {
+            let bounds = new google.maps.LatLngBounds();
+            for (let i = 0; i < polygonCoordinates.length; i++) {
+                bounds.extend(polygonCoordinates[i]);
+            }
+            return bounds.getCenter();
+        }
 
         function addGeom(geoJson) {
             // Construct the polygon.

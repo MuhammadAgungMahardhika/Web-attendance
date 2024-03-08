@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('user_id', false, true);
             $table->bigInteger('shift_id', false, true)->nullable();
-            $table->time('checkin');
-            $table->time('checkout');
+            $table->time('checkin')->nullable();
+            $table->time('checkout')->nullable();
             $table->date('date');
             $table->enum("status", ["in", "out", "late"])->nullable();
             $table->enum("work_from", ["office", "home"])->nullable();

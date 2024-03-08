@@ -66,6 +66,7 @@ class MainCompanyController extends Controller
     public function update(Request $request, $id)
     {
         try {
+
             $request->validate([
                 'name' => 'required',
             ]);
