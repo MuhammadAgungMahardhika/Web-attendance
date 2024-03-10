@@ -107,34 +107,58 @@ class AttendanceController extends Controller
                 'work_from' => 'required|in:office,home',
             ]);
 
+            $userId = $request->user_id;
+            $shiftId = $request->shift_id;
+            $checkIn = $request->checkin;
+            $date = $request->date;
+            $status = $request->status;
             $workFrom = $request->work_from;
             $location = $request->location;
-            $isLocationInside = false;
+            $createdBy = $request->created_by;
+
             // jika ambil absen dari kantor, lakukan pengecheckan lokasi
             if ($workFrom == "office") {
                 $mainCompanyData = MainCompany::selectRaw("{$this->geom_area}")->first();
                 $companyWkt = $mainCompanyData->wkt;
                 $isInsideCompany = MainCompany::whereRaw("ST_Contains(ST_GeomFromText('$companyWkt'), ST_GeomFromText('$location'))")->exists();
-                dd($isInsideCompany);
+                if ($isInsideCompany) {
+                    $attendance = $this->model::create([
+                        'user_id' => $userId,
+                        'shift_id' =>  $shiftId,
+                        'checkin' => $checkIn,
+                        'date' => $date,
+                        "status" =>  $status,
+                        "work_from" =>  $workFrom,
+                        "location" =>  DB::raw("ST_PointFromText('$location')"),
+                        "created_by" => $createdBy,
+                    ]);
+                    return  response()->json([
+                        'message' => 'success to take attendance',
+                        'data' => $attendance
+                    ], Response::HTTP_CREATED);
+                } else {
+                    return response()->json([
+                        'message' => 'failed not inside main company',
+                        'data' => null
+                    ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                }
+            } else {
+                // Jika absen wfh langsung masukan data
+                $attendance = $this->model::create([
+                    'user_id' =>  $userId,
+                    'shift_id' => $shiftId,
+                    'checkin' => $checkIn,
+                    'date' => $date,
+                    "status" => $status,
+                    "work_from" =>  $workFrom,
+                    "location" =>  DB::raw("ST_PointFromText('$location')"),
+                    "created_by" => $createdBy,
+                ]);
+                return  response()->json([
+                    'message' => 'success to take attendance',
+                    'data' => $attendance
+                ], Response::HTTP_CREATED);
             }
-
-
-            $attendance = $this->model::create([
-                'user_id' => $request->user_id,
-                'shift_id' => $request->shift_id,
-                'checkin' => $request->checkin,
-                'checkout' => $request->checkout,
-                'date' => $request->date,
-                "status" => $request->status,
-                "work_from" =>  $workFrom,
-                "location" =>  DB::raw("ST_PointFromText('$location')"),
-                "created_by" => $request->created_by,
-            ]);
-
-            return response()->json([
-                'message' => 'success created data',
-                'data' => $attendance
-            ], Response::HTTP_CREATED);
         } catch (ValidationException $e) {
             return response()->json([
                 'message' => 'Validation Error',
@@ -152,30 +176,41 @@ class AttendanceController extends Controller
     {
         try {
             $request->validate([
-                'checkin' => 'required|date_format:H:i',
                 'checkout' => 'required|date_format:H:i',
-                'date' => 'required|date',
-                'status' => 'required|in:in,out,late',
-                'work_from' => 'required|in:office,home',
             ]);
 
-            $attendance = $this->model::where('id', $id)->update([
-                'user_id' => $request->user_id,
-                'shift_id' => $request->shift_id,
-                'checkin' => $request->checkin,
-                'checkout' => $request->checkout,
-                'date' => $request->date,
-                "status" => $request->status,
-                "work_from" => $request->work_from,
-                "location" => DB::raw("ST_PointFromText('$request->location')"),
-                "updated_by" => $request->updated_by,
-            ]);
-
-
-            return response()->json([
-                'message' => 'success update data',
-                'data' => $attendance
-            ], Response::HTTP_OK);
+            $checkOut = $request->checkout;
+            $updatedBy = $request->updated_by;
+            $location = $request->location;
+            $attendance = $this->model::find($id);
+            $workFrom = $attendance->work_from;
+            if ($workFrom == "office") {
+                $mainCompanyData = MainCompany::selectRaw("{$this->geom_area}")->first();
+                $companyWkt = $mainCompanyData->wkt;
+                $isInsideCompany = MainCompany::whereRaw("ST_Contains(ST_GeomFromText('$companyWkt'), ST_GeomFromText('$location'))")->exists();
+                if ($isInsideCompany) {
+                    $attendance->checkout = $checkOut;
+                    $attendance->updated_by = $updatedBy;
+                    $attendance->save();
+                    return response()->json([
+                        'message' => 'success update data',
+                        'data' => $attendance
+                    ], Response::HTTP_OK);
+                } else {
+                    return response()->json([
+                        'message' => 'Not in main company location',
+                        'data' => null
+                    ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                }
+            } else {
+                $attendance->checkout = $checkOut;
+                $attendance->updated_by = $updatedBy;
+                $attendance->save();
+                return response()->json([
+                    'message' => 'success update data',
+                    'data' => $attendance
+                ], Response::HTTP_OK);
+            }
         } catch (ValidationException $e) {
             return response()->json([
                 'message' => 'Validation Error',
