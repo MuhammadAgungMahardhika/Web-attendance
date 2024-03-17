@@ -49,134 +49,40 @@
                         <span>Dashboard</span>
                     </a>
                 </li>
-                <li class="sidebar-item {{ request()->is('users') ? 'active' : '' }}">
-                    <a href="{{ url('users') }}" class="sidebar-link">
-                        <i class="bi bi-grid-fill"></i>
-                        <span>Users</span>
-                    </a>
-                </li>
-                <li class="sidebar-item {{ request()->is('main-company') ? 'active' : '' }}">
-                    <a href="{{ url('main-company') }}" class="sidebar-link">
-                        <i class="bi bi-grid-fill"></i>
-                        <span>Main Company</span>
-                    </a>
-                </li>
-                <li class="sidebar-item {{ request()->is('outsource-company') ? 'active' : '' }}">
-                    <a href="{{ url('outsource-company') }}" class="sidebar-link">
-                        <i class="bi bi-grid-fill"></i>
-                        <span>Outsource Company</span>
-                    </a>
-                </li>
-                <li class="sidebar-item {{ request()->is('shift') ? 'active' : '' }}">
-                    <a href="{{ url('shift') }}" class="sidebar-link">
-                        <i class="bi bi-grid-fill"></i>
-                        <span>Shift</span>
-                    </a>
-                </li>
-                <li class="sidebar-item {{ request()->is('attendance') ? 'active' : '' }}">
-                    <a href="{{ url('attendance') }}" class="sidebar-link">
-                        <i class="bi bi-grid-fill"></i>
-                        <span>Attendance</span>
-                    </a>
-                </li>
-
-                {{-- <li class="sidebar-item  has-sub">
-                    <a href="#" class="sidebar-link">
-                        <i class="bi bi-stack"></i>
-                        <span>Attendance</span>
-                    </a>
-
-                    <ul class="submenu submenu-closed" style="--submenu-height: 731px;">
-
-                        <li class="submenu-item  ">
-                            <a href="component-accordion.html" class="submenu-link">Accordion</a>
-
-                        </li>
-
-                        <li class="submenu-item  ">
-                            <a href="component-alert.html" class="submenu-link">Alert</a>
-
-                        </li>
-
-                        <li class="submenu-item  ">
-                            <a href="component-badge.html" class="submenu-link">Badge</a>
-
-                        </li>
-
-                        <li class="submenu-item  ">
-                            <a href="component-breadcrumb.html" class="submenu-link">Breadcrumb</a>
-
-                        </li>
-
-                        <li class="submenu-item  ">
-                            <a href="component-button.html" class="submenu-link">Button</a>
-
-                        </li>
-
-                        <li class="submenu-item  ">
-                            <a href="component-card.html" class="submenu-link">Card</a>
-
-                        </li>
-
-                        <li class="submenu-item  ">
-                            <a href="component-carousel.html" class="submenu-link">Carousel</a>
-
-                        </li>
-
-                        <li class="submenu-item  ">
-                            <a href="component-collapse.html" class="submenu-link">Collapse</a>
-
-                        </li>
-
-                        <li class="submenu-item  ">
-                            <a href="component-dropdown.html" class="submenu-link">Dropdown</a>
-
-                        </li>
-
-                        <li class="submenu-item  ">
-                            <a href="component-list-group.html" class="submenu-link">List Group</a>
-
-                        </li>
-
-                        <li class="submenu-item  ">
-                            <a href="component-modal.html" class="submenu-link">Modal</a>
-
-                        </li>
-
-                        <li class="submenu-item  ">
-                            <a href="component-navs.html" class="submenu-link">Navs</a>
-
-                        </li>
-
-                        <li class="submenu-item  ">
-                            <a href="component-pagination.html" class="submenu-link">Pagination</a>
-
-                        </li>
-
-                        <li class="submenu-item  ">
-                            <a href="component-progress.html" class="submenu-link">Progress</a>
-
-                        </li>
-
-                        <li class="submenu-item  ">
-                            <a href="component-spinner.html" class="submenu-link">Spinner</a>
-
-                        </li>
-
-                        <li class="submenu-item  ">
-                            <a href="component-toasts.html" class="submenu-link">Toasts</a>
-
-                        </li>
-
-                        <li class="submenu-item  ">
-                            <a href="component-tooltip.html" class="submenu-link">Tooltip</a>
-
-                        </li>
-
-                    </ul>
-
-
-                </li> --}}
+                @if (Auth::user()->role_id == '1')
+                    <li class="sidebar-item {{ request()->is('main-company') ? 'active' : '' }}">
+                        <a href="{{ url('main-company') }}" class="sidebar-link">
+                            <i class="bi bi-grid-fill"></i>
+                            <span>Main Company</span>
+                        </a>
+                    </li>
+                @endif
+                @if (Auth::user()->role_id == '1' || Auth::user()->role_id == '2')
+                    <li class="sidebar-item {{ request()->is('outsource-company') ? 'active' : '' }}">
+                        <a href="{{ url('outsource-company') }}" class="sidebar-link">
+                            <i class="bi bi-grid-fill"></i>
+                            <span>Outsource Company</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item {{ request()->is('users') ? 'active' : '' }}">
+                        <a href="{{ url('users') }}" class="sidebar-link">
+                            <i class="bi bi-grid-fill"></i>
+                            <span>Users</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item {{ request()->is('shift') ? 'active' : '' }}">
+                        <a href="{{ url('shift') }}" class="sidebar-link">
+                            <i class="bi bi-grid-fill"></i>
+                            <span>Shift</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item {{ request()->is('attendance') ? 'active' : '' }}">
+                        <a href="{{ url('attendance') }}" class="sidebar-link">
+                            <i class="bi bi-grid-fill"></i>
+                            <span>Attendance</span>
+                        </a>
+                    </li>
+                @endif
 
             </ul>
         </div>

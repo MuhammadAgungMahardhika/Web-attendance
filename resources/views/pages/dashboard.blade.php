@@ -1,5 +1,15 @@
 @extends('template.layout-vertical.main')
 @section('container')
+    <style>
+        .daftarMenu {
+            transition: transform 0.3s ease;
+        }
+
+        .daftarMenu:hover {
+            transform: scale(1.1);
+            opacity: 0.9;
+        }
+    </style>
     <section class="section">
         <div class="card">
             <div class="card-body">
@@ -72,11 +82,11 @@
                     @if (Auth::user()->role_id == '3')
                         <div class="col-12 col-md-3 col-lg-4">
                             <div class="card shadow-sm daftarMenu">
-                                <a href="/dailyInput">
+                                <a href="{{ url('attendance') }}">
                                     <div class="card-body">
-                                        <img src="/images/menu/inputHarian.jpg" class="card-img-top img-fluid"
-                                            alt="singleminded">
-                                        <h5 class="card-title mt-4">Daily Input</h5>
+                                        <img src="{{ asset('assets/images/menu/attendance.jpg') }}"
+                                            class="card-img-top img-fluid" alt="singleminded">
+                                        <h5 class="card-title mt-4">Attendance History</h5>
                                     </div>
                                 </a>
                             </div>
