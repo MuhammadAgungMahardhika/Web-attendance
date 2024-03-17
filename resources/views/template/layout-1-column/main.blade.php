@@ -30,7 +30,8 @@
 
     {{-- Swet Alert --}}
     <script src="{{ asset('assets/extensions/sweetalert2/sweetalert2.all.min.js') }}"></script>
-
+    {{-- Costume js --}}
+    <script src="{{ asset('assets/costume/app-costume.js') }}"></script>
     <title>aa</title>
 </head>
 
