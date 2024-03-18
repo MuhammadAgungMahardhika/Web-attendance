@@ -291,9 +291,9 @@
     <script>
         let selectedShape, selectedMarker, drawingManager, geomData
 
-        let locationRadius = '{{ $data['location_radius'] }}'
+        let locationRadius = JSON.parse('{!! $data['location_radius'] !!}')
         console.log(locationRadius)
-        // let locationRadius = JSON.parse('<?= $data['location_radius'] ?>')
+
 
         $(document).ready(function() {
             initDrawingManager()
@@ -333,6 +333,7 @@
 
         function addGeom(geoJson) {
             // Construct the polygon.
+
             let color = '#C45A55'
             const a = {
                 type: 'Feature',

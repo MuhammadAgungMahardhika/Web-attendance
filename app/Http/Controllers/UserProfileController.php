@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MainCompany;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -10,7 +9,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
-class ProfileController extends Controller
+class UserProfileController extends Controller
 {
     protected $model;
     /**
@@ -41,6 +40,8 @@ class ProfileController extends Controller
             $request->validate([
                 'name' => 'required',
                 'email' => 'required|string',
+                'phone_number' => 'required|string',
+                'status' => 'required|string',
             ]);
 
             $user = $this->model::findOrFail($id);

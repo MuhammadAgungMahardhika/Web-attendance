@@ -8,7 +8,7 @@
 
             <div class="card-body table-responsive">
                 <div class="row">
-                    <div class="col-md-6 col-lg-6 col-12">
+                    <div class="col-md-6 col-lg-6 col-12 shadow-sm p-4 bg-light-success">
                         <form class="form form-horizontal">
                             <div class="form-body">
                                 <div class="row">
@@ -25,10 +25,10 @@
                                         <input type="text" class="form-control" id="email" placeholder="Email">
                                     </div>
                                     <div class="col-md-4">
-                                        <label for="phone_number">Phone Number</label>
+                                        <label for="phoneNumber">Phone Number</label>
                                     </div>
                                     <div class="col-md-8 form-group">
-                                        <input type="number" class="form-control" id="phone_number"
+                                        <input type="number" class="form-control" id="phoneNumber"
                                             placeholder="Phone Number">
                                     </div>
                                     <div class="col-md-4">
@@ -38,18 +38,19 @@
                                         <input type="text" class="form-control" id="address" placeholder="address">
                                     </div>
 
-                                    <div class="col-md-4">
-                                        <label for="status">Status</label>
-                                    </div>
-                                    <div class="col-md-8 form-group">
-                                        <input type="text" id="status" class="form-control" placeholder="text"
-                                            readonly>
+                                    <div class="col-sm-12 d-flex justify-content-end">
+                                        <button type="submit" class="btn btn-primary me-1 mb-1"><i class="fa fa-key"></i>
+                                            Change
+                                            password</button>
+                                        <button type="submit" class="btn btn-success me-1 mb-1" onclick="update()"><i
+                                                class="fa fa-save"></i>
+                                            Save</button>
                                     </div>
                                 </div>
                             </div>
                         </form>
                     </div>
-                    <div class="col-md-6 col-lg-6 col-12">
+                    <div class="col-md-6 col-lg-6 col-12 shadow-sm bg-light-primary p-4">
                         <form class="form form-horizontal">
                             <div class="form-body">
                                 <div class="row">
@@ -81,20 +82,20 @@
                                         <input type="text" class="form-control" id="outsource_company"
                                             placeholder="Outsource company" readonly>
                                     </div>
+                                    <div class="col-md-4">
+                                        <label for="status">Status</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <input type="text" id="status" class="form-control" placeholder="text"
+                                            readonly>
+                                    </div>
                                 </div>
                             </div>
                         </form>
                     </div>
 
                 </div>
-                <div class="row">
-                    <div class="col-sm-12 d-flex justify-content-end">
-                        <button type="submit" class="btn btn-primary me-1 mb-1"><i class="fa fa-key"></i> Change
-                            password</button>
-                        <button type="submit" class="btn btn-success me-1 mb-1"><i class="fa fa-save"></i>
-                            Save</button>
-                    </div>
-                </div>
+
             </div>
 
         </div>
@@ -128,9 +129,10 @@
                         // profile info
                         $('#name').val(name)
                         $('#email').val(email)
-                        $('#phone_number').val(phone_number)
+                        $('#phoneNumber').val(phone_number)
                         $('#address').val(address)
                         $('#status').val(status)
+
 
                         // company info
                         if (main_company) {
@@ -626,14 +628,9 @@
 
         }
 
-        function update(id) {
-            let roleId = $('#role').val()
-            let mainCompanyId = $('#mainCompany').val()
-            let outsourceCompanyId = $('#outsourceCompany').val()
+        function update() {
             let name = $('#name').val()
             let email = $('#email').val()
-            let departmen = $('#departmen').val()
-            let position = $('#position').val()
             let phoneNumber = $('#phoneNumber').val()
             let status = $('#status').val()
             let address = $('#address').val()
@@ -681,14 +678,20 @@
                 })
             }
 
+            // validasi status
+            if (!status) {
+                return Swal.fire({
+                    position: "top-end",
+                    icon: "error",
+                    title: "Status cannot be empty",
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
+
             let data = {
-                role_id: roleId,
-                main_company_id: mainCompanyId,
-                outsource_company_id: outsourceCompanyId,
                 name: name,
                 email: email,
-                departmen: departmen,
-                position: position,
                 phone_number: phoneNumber,
                 status: status,
                 address: address
@@ -696,7 +699,7 @@
 
             $.ajax({
                 type: "PUT",
-                url: baseUrl + `/api/user/${id}`,
+                url: baseUrl + `/api/profile/` + '{{ Auth::user()->id }}',
                 data: JSON.stringify(data),
                 contentType: "application/json",
                 headers: {
