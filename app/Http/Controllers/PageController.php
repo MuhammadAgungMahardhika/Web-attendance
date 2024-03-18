@@ -29,6 +29,7 @@ class PageController extends Controller
         $send = [
             'data' => $data
         ];
+        // dd($data);
         return view('pages/main-company', $send);
     }
     public function outsourceCompany()

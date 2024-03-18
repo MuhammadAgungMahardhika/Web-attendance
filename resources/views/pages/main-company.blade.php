@@ -287,7 +287,10 @@
 
     <script>
         let selectedShape, selectedMarker, drawingManager, geomData
-        let locationRadius = JSON.parse('<?= $data['location_radius'] ?>')
+
+        let locationRadius = '{{ $data['location_radius'] }}'
+        console.log(locationRadius)
+        // let locationRadius = JSON.parse('<?= $data['location_radius'] ?>')
 
         $(document).ready(function() {
             initDrawingManager()

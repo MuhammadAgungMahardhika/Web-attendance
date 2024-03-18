@@ -29,6 +29,7 @@ class MainCompanyController extends Controller
         } else {
             $items = $this->model::orderBy('id', 'ASC')->get();
         }
+
         return response(['data' => $items, 'status' => 200]);
     }
 
