@@ -11,10 +11,13 @@ use Illuminate\Support\Facades\DB;
 
 class PageController extends Controller
 {
+    public function profile()
+    {
+        return view('pages/profile');
+    }
     public function dashboard()
     {
-        $send = ['oke'];
-        return view('pages/dashboard', $send);
+        return view('pages/dashboard');
     }
     public function user()
     {

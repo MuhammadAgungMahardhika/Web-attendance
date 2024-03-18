@@ -12,6 +12,8 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    public $table = "users";
+    public $primaryKey = "id";
     /**
      * The attributes that are mass assignable.
      *
@@ -45,6 +47,10 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class, 'role_id');
     }
 
+    public function mainCompany()
+    {
+        return $this->belongsTo(MainCompany::class, 'main_company_id');
+    }
     public function outsourceCompany()
     {
         return $this->belongsTo(OutsourceCompany::class, 'outsource_company_id');

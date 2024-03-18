@@ -36,7 +36,8 @@
                     <li>
                         <h6 class="dropdown-header">Hello, {{ Auth::user()->name }}</h6>
                     </li>
-                    <li><a class="dropdown-item" href="{{ url('profile') }}"><i class="icon-mid bi bi-person me-2"></i>
+                    <li><a class="dropdown-item sidebar-item {{ request()->is('profile') ? 'active' : '' }}"
+                            href="{{ url('profile') }}"><i class="icon-mid bi bi-person me-2"></i>
                             My
                             Profile</a>
                     </li>

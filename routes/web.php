@@ -47,3 +47,4 @@ Route::put('main-company/{id}', [MainCompanyController::class, 'update']);
 Route::get('/outsource-company', [PageController::class, 'outsourceCompany'])->middleware(['auth', 'check.role:1,2']);
 Route::get('/shift', [PageController::class, 'shift'])->middleware(['auth', 'check.role:1,2']);
 Route::get('/attendance', [PageController::class, 'attendance'])->middleware('auth');
+Route::get('/profile', [PageController::class, 'profile'])->middleware('auth');
