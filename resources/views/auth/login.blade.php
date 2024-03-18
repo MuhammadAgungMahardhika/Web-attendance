@@ -3,12 +3,9 @@
     <div class="container">
         <div class="row">
             <div class="col-6">
-                <div class="form-check form-switch fs-6">
-                    <input class="form-check-input  me-0" type="hidden" id="toggle-dark">
-                    <label class="form-check-label"></label>
-                </div>
+                <input class="form-check-input  me-0" type="hidden" id="toggle-dark">
                 <div id="auth-left">
-                    <a href="index.html"><img src="{{ asset('') }}" alt="Logo"></a>
+                    <a href=""><img src="{{ asset('assets/images/logo.png') }}" alt="Logo" width="120"></a>
                     <h1 class="auth-title">Log in.</h1>
                     <p class="auth-subtitle mb-5">Log in with your data that you entered during registration.</p>
                     <div id="loginForm">
@@ -47,11 +44,11 @@
 
             // validation 
             if (email.length <= 0) {
-                return Swal.fire('Please check your email address')
+                return showToastWarningAlert('Please check your email address')
             }
 
             if (password.length <= 0) {
-                return Swal.fire('Please check your password')
+                return showToastWarningAlert('Please check your password')
             }
 
             let data = {
@@ -68,14 +65,15 @@
                 },
                 data: JSON.stringify(data),
                 success: function(r) {
-                    console.log("masuk siiiiniii?")
                     if (r) {
-                        window.location = "{{ url('dashboard') }}";
+                        showSuccessAlert("Login success", window.location = "{{ url('dashboard') }}")
                     }
                 },
                 error: function(e) {
-                    console.log("keluar sini")
-                    console.log(e.responseText)
+                    const response = e.responseJSON
+                    const message = response.message
+                    console.log(response)
+                    showToastErrorAlert(message)
                 }
             })
         }

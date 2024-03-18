@@ -100,7 +100,8 @@
 
     <script>
         let map, directionsRenderer, userMarker, userPosition, infoWindow
-        let baseUrl = '<?= url('') ?>'
+        let baseUrl = '{{ url('') }}'
+        console.log(baseUrl)
         let mapStyles = [{
             featureType: "poi",
             elementType: "labels",
@@ -149,7 +150,7 @@
                     lat: -0.948994,
                     lng: 100.464795
                 },
-                zoom: 6.8,
+                zoom: 18,
                 clickableIcons: false
             });
             // map.setOptions({
@@ -237,6 +238,7 @@
         // Add user marker
         function addUserMarkerToMap(location) {
             let userPosition = location
+            console.log(location)
             if (userMarker) {
                 userMarker.setPosition(userPosition)
             } else {
@@ -249,7 +251,8 @@
                     map: map,
                 });
 
-                content = `Your Location <div class="text-center"></div>`
+                content =
+                    `<div class="text-center">Your Location</div><div class="text-center">Lat : ${location.lat}, Lng: ${location.lng}</div>`
                 userMarker.addListener('click', () => {
                     openInfoWindow(userMarker, content)
                 })

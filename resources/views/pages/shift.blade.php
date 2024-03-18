@@ -243,7 +243,7 @@
                 },
                 data: JSON.stringify(data),
                 success: function(response) {
-                    showSuccessAlert("New Shift dded!")
+                    showSuccessAlert("New Shift Added!")
                     closeModal()
                     return showTable()
                 },
