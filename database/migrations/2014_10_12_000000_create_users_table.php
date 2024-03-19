@@ -25,7 +25,8 @@ return new class extends Migration
             $table->string('departmen')->nullable();
             $table->string('password');
             $table->enum('status', ['active', 'inactive']);
-            $table->point('location')->nullable();
+            $table->geography('location', subtype: 'point', srid: 4326)->nullable()->change();
+            // $table->point('location')->nullable();
             $table->rememberToken();
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();

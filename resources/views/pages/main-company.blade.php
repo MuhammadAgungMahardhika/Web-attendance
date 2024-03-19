@@ -291,8 +291,11 @@
     <script>
         let selectedShape, selectedMarker, drawingManager, geomData
 
-        let locationRadius = JSON.parse('{!! $data['location_radius'] !!}')
-        console.log(locationRadius)
+        let locationRadius = '{!! $data['location_radius'] != null ? $data['location_radius'] : null !!}'
+
+        if (locationRadius) {
+            locationRadius = JSON.parse(locationRadius)
+        }
 
 
         $(document).ready(function() {

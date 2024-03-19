@@ -20,7 +20,8 @@ return new class extends Migration
             $table->date('date');
             $table->enum("status", ["in", "out", "late"])->nullable();
             $table->enum("work_from", ["office", "home"])->nullable();
-            $table->point("location")->nullable();
+            $table->geography('location', subtype: 'point', srid: 4326)->nulable();
+            // $table->point("location")->nullable();
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();
             $table->timestamps();
