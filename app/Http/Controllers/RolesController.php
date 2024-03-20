@@ -6,6 +6,7 @@ use App\Models\Role;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 class RolesController extends Controller
@@ -25,9 +26,13 @@ class RolesController extends Controller
         if ($id != null) {
             $items = $this->model::findOrFail($id);
         } else {
-            $items = $this->model->get();
+            if (Auth::user()->role_id == 2) {
+                $items = $this->model->where('id', '!=', 1)->get();
+            } else {
+                $items = $this->model->get();
+            }
         }
-        return response(['data' => $items, 'status' => 200]);
+        return jsonResponse($items, Response::HTTP_OK);
     }
 
     public function store(Request $request)
@@ -38,24 +43,17 @@ class RolesController extends Controller
                 'name' => 'required',
             ]);
 
-            $role = $this->model::create(
+            $items = $this->model::create(
                 [
                     "role_id" => $request->role_id,
                     "name" => $request->name,
                 ]
             );
-            // event(new AddKandangEvent( $this->model->get() ));
-            return response()->json([
-                'message' => 'success created account',
-                'role' => $role
-            ], Response::HTTP_CREATED);
+            return jsonResponse($items, Response::HTTP_CREATED, "success created account");
         } catch (ValidationException $e) {
-            return response()->json([
-                'message' => 'Validation Error',
-                'errors' => $e->errors()
-            ], 422);
+            return jsonResponse($e->errors(), Response::HTTP_UNPROCESSABLE_ENTITY, "Validation Error");
         } catch (QueryException $th) {
-            return $this->handleQueryException($th);
+            return jsonResponse($th->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, "Query Error");
         }
     }
 
@@ -67,35 +65,26 @@ class RolesController extends Controller
                 'name' => 'required',
             ]);
 
-            $role = $this->model::where('id', $id)->update([
+            $items = $this->model::where('id', $id)->update([
                 "role_id" => $request->role_id,
                 "name" => $request->name,
             ]);
-            // event(new AddKandangEvent( $this->model->get() ));
-            return response()->json([
-                'message' => 'success update account',
-                'data' => $role
-            ], Response::HTTP_OK);
+
+            return jsonResponse($items, Response::HTTP_CREATED, "success update account");
         } catch (ValidationException $e) {
-            return response()->json([
-                'message' => 'Validation Error',
-                'errors' => $e->errors()
-            ], 422);
+            return jsonResponse($e->errors(), Response::HTTP_UNPROCESSABLE_ENTITY, "Validation Error");
         } catch (QueryException $th) {
-            return $th->getMessage();
+            return jsonResponse($th->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, "Query Error");
         }
     }
 
     public function delete($id)
     {
         try {
-            $role = $this->model->deleteRole($id);
-            return response()->json([
-                'message' => 'success delete account',
-                'data' => $role
-            ], Response::HTTP_OK);
+            $items = $this->model->deleteRole($id);
+            return jsonResponse($items, Response::HTTP_OK, "success delete account");
         } catch (QueryException $th) {
-            return $th->getMessage();
+            return jsonResponse($th->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
 }

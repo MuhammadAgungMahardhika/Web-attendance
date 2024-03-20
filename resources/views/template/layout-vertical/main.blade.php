@@ -36,7 +36,6 @@
     {{-- Datatable --}}
     <script src="{{ asset('assets/extensions/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/extensions/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
-
     <!-- DateRangepicker CSS -->
     <link rel="stylesheet" href="{{ asset('assets/extensions/daterangepicker/daterangepicker.css') }}">
     <!-- DateRangePicker JS -->

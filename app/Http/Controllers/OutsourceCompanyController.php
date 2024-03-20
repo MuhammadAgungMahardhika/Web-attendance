@@ -28,7 +28,7 @@ class OutsourceCompanyController extends Controller
         } else {
             $items = $this->model::withCount('users')->orderBy('id', 'ASC')->get();
         }
-        return response(['data' => $items, 'status' => 200]);
+        return jsonResponse($items, Response::HTTP_OK);
     }
 
     public function store(Request $request)
@@ -45,20 +45,11 @@ class OutsourceCompanyController extends Controller
                 "created_by" => Auth::user()->name,
             ]);
 
-            return response()->json([
-                'message' => 'success created outsource company',
-                'data' => $outsourceCompany
-            ], Response::HTTP_CREATED);
+            return jsonResponse($outsourceCompany, Response::HTTP_CREATED, "success created outsource company");
         } catch (ValidationException $e) {
-            return response()->json([
-                'message' => 'Validation Error',
-                'errors' => $e->errors()
-            ], 422);
+            return jsonResponse($e->errors(), Response::HTTP_UNPROCESSABLE_ENTITY, "Validation Error");
         } catch (QueryException $e) {
-            return response()->json([
-                'message' => 'Query Error',
-                'errors' => $e->getMessage()
-            ], 422);
+            return jsonResponse($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, "Query Error");
         }
     }
 
@@ -76,21 +67,11 @@ class OutsourceCompanyController extends Controller
                 "address" => $request->address,
                 "updated_by" => Auth::user()->name,
             ]);
-
-            return response()->json([
-                'message' => 'success update outsource company',
-                'data' => $outsourceCompany
-            ], Response::HTTP_OK);
+            return jsonResponse($outsourceCompany, Response::HTTP_CREATED, "success update outsource company");
         } catch (ValidationException $e) {
-            return response()->json([
-                'message' => 'Validation Error',
-                'errors' => $e->errors()
-            ], 422);
+            return jsonResponse($e->errors(), Response::HTTP_UNPROCESSABLE_ENTITY, "Validation Error");
         } catch (QueryException $e) {
-            return response()->json([
-                'message' => 'Query Error',
-                'errors' => $e->getMessage()
-            ], 422);
+            return jsonResponse($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, "Query Error");
         }
     }
 
@@ -98,15 +79,9 @@ class OutsourceCompanyController extends Controller
     {
         try {
             $outsourceCompany = $this->model::where('id', $id)->delete();
-            return response()->json([
-                'message' => 'success delete outsource company',
-                'user' => $outsourceCompany
-            ], Response::HTTP_OK);
+            return jsonResponse($outsourceCompany, Response::HTTP_OK, "success delete outsource company");
         } catch (QueryException $e) {
-            return response()->json([
-                'message' => 'Query Error',
-                'errors' => $e->getMessage()
-            ], 422);
+            return jsonResponse($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, "Query Error");
         }
     }
 }

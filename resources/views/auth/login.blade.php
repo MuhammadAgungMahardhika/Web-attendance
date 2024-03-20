@@ -70,10 +70,18 @@
                     }
                 },
                 error: function(e) {
+                    console.log(e)
                     const response = e.responseJSON
-                    const message = response.message
-                    console.log(response)
-                    showToastErrorAlert(message)
+                    const status = e.status
+                    const message = e.responseText
+                    if (status == 401) {
+                        showToastErrorAlert(message)
+                    } else if (status == 422) {
+                        showToastErrorAlert(e.responseJSON.message)
+                    } else {
+                        showToastErrorAlert("Internal Server error")
+                    }
+
                 }
             })
         }

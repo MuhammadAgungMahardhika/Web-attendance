@@ -16,7 +16,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('outsource_company')
                 ->onUpdate('cascade')
-                ->onDelete('cascade');
+                ->onDelete('set null');
         });
     }
 

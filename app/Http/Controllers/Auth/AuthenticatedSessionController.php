@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -15,6 +16,16 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): Response
     {
+        $email = $request->email;
+        $user = User::where('users.email', $email)->first();
+
+        if ($user) {
+            $userStatus = $user->status;
+            if ($userStatus != "active") {
+                return response("Users is not active, please contact admin", Response::HTTP_UNAUTHORIZED);
+            }
+        }
+
         $request->authenticate();
         $request->session()->regenerate();
         return response(Auth::user());

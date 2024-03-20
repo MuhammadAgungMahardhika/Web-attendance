@@ -33,7 +33,7 @@ class AttendanceController extends Controller
                 $query->where('role_id', 3);
             })->orderBy('attendance.id', 'DESC')->get();
         }
-        return response(['data' => $items, 'status' => 200]);
+        return jsonResponse($items, Response::HTTP_OK, "success getting data");
     }
 
 
@@ -48,15 +48,9 @@ class AttendanceController extends Controller
             ->orderBy('id', 'DESC')
             ->get();
         if ($items) {
-            return response()->json([
-                'message' => 'success getting data',
-                'data' => $items
-            ], Response::HTTP_ACCEPTED);
+            return jsonResponse($items, Response::HTTP_OK, "success getting data");
         } else {
-            return response()->json([
-                'message' => 'failed getting data',
-                'data' => $items
-            ], Response::HTTP_NOT_FOUND);
+            return jsonResponse($items, Response::HTTP_NOT_FOUND, "failed getting data");
         }
     }
     public function getAttendanceByDateRange(Request $request)
@@ -73,27 +67,22 @@ class AttendanceController extends Controller
             ->orderBy('id', 'DESC')
             ->get();
         if ($items) {
-            return response()->json([
-                'message' => 'success getting data',
-                'data' => $items
-            ], Response::HTTP_ACCEPTED);
+            return jsonResponse($items, Response::HTTP_OK, "success getting data");
         } else {
-            return response()->json([
-                'message' => 'failed getting data',
-                'data' => $items
-            ], Response::HTTP_NOT_FOUND);
+            return jsonResponse($items, Response::HTTP_NOT_FOUND, "data not found");
         }
     }
 
     public function getAttendanceByUserId($id)
     {
-        $attendanceHistory = $this->model::with("users")->whereHas('user', function ($query) {
-            $query->where('role_id', 3);
-        })->where("user_id", $id)->get();
-        return response()->json([
-            'message' => 'success getting data',
-            'data' => $attendanceHistory
-        ], Response::HTTP_CREATED);
+        try {
+            $attendanceHistory = $this->model::with("user")->whereHas('user', function ($query) {
+                $query->where('role_id', 3);
+            })->where("attendance.user_id", $id)->get();
+            return jsonResponse($attendanceHistory, Response::HTTP_OK);
+        } catch (\Throwable $th) {
+            return jsonResponse(null, Response::HTTP_UNPROCESSABLE_ENTITY, $th->getMessage());
+        }
     }
 
     public function store(Request $request)
@@ -132,15 +121,10 @@ class AttendanceController extends Controller
                         "location" =>  DB::raw("ST_PointFromText('$location')"),
                         "created_by" => $createdBy,
                     ]);
-                    return  response()->json([
-                        'message' => 'success to take attendance',
-                        'data' => $attendance
-                    ], Response::HTTP_CREATED);
+
+                    return jsonResponse($attendance, Response::HTTP_CREATED, "success to take attendance");
                 } else {
-                    return response()->json([
-                        'message' => 'failed not inside main company',
-                        'data' => null
-                    ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                    return jsonResponse(null, Response::HTTP_UNPROCESSABLE_ENTITY, 'failed you are not inside main company');
                 }
             } else {
                 // Jika absen wfh langsung masukan data
@@ -154,21 +138,12 @@ class AttendanceController extends Controller
                     "location" =>  DB::raw("ST_PointFromText('$location')"),
                     "created_by" => $createdBy,
                 ]);
-                return  response()->json([
-                    'message' => 'success to take attendance',
-                    'data' => $attendance
-                ], Response::HTTP_CREATED);
+                return jsonResponse($attendance, Response::HTTP_CREATED, "success to take attendance");
             }
         } catch (ValidationException $e) {
-            return response()->json([
-                'message' => 'Validation Error',
-                'errors' => $e->errors()
-            ], 422);
+            return jsonResponse($e->errors(), Response::HTTP_UNPROCESSABLE_ENTITY, "Validation Error");
         } catch (QueryException $e) {
-            return response()->json([
-                'message' => 'Query Error',
-                'errors' => $e->getMessage()
-            ], 422);
+            return jsonResponse($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, "Query Error");
         }
     }
 
@@ -192,35 +167,20 @@ class AttendanceController extends Controller
                     $attendance->checkout = $checkOut;
                     $attendance->updated_by = $updatedBy;
                     $attendance->save();
-                    return response()->json([
-                        'message' => 'success update data',
-                        'data' => $attendance
-                    ], Response::HTTP_OK);
+                    return jsonResponse($attendance, Response::HTTP_CREATED, "success update data");
                 } else {
-                    return response()->json([
-                        'message' => 'Not in main company location',
-                        'data' => null
-                    ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                    return jsonResponse(null, Response::HTTP_UNPROCESSABLE_ENTITY, "Not in main company location");
                 }
             } else {
                 $attendance->checkout = $checkOut;
                 $attendance->updated_by = $updatedBy;
                 $attendance->save();
-                return response()->json([
-                    'message' => 'success update data',
-                    'data' => $attendance
-                ], Response::HTTP_OK);
+                return jsonResponse($attendance, Response::HTTP_CREATED, "success update data");
             }
         } catch (ValidationException $e) {
-            return response()->json([
-                'message' => 'Validation Error',
-                'errors' => $e->errors()
-            ], 422);
+            return jsonResponse($e->errors(), Response::HTTP_UNPROCESSABLE_ENTITY, "Validation Error");
         } catch (QueryException $e) {
-            return response()->json([
-                'message' => 'Query Error',
-                'errors' => $e->getMessage()
-            ], 422);
+            return jsonResponse($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, "Query Error");
         }
     }
 
@@ -228,15 +188,9 @@ class AttendanceController extends Controller
     {
         try {
             $attendance = $this->model::where('id', $id)->delete();
-            return response()->json([
-                'message' => 'success delete data',
-                'data' => $attendance
-            ], Response::HTTP_OK);
+            return jsonResponse($attendance, Response::HTTP_OK, "success delete data");
         } catch (QueryException $e) {
-            return response()->json([
-                'message' => 'Query Error',
-                'errors' => $e->getMessage()
-            ], 422);
+            return jsonResponse($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, "Query Error");
         }
     }
 }

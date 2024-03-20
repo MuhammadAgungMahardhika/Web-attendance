@@ -31,7 +31,7 @@ class UserProfileController extends Controller
             ->where('users.id', $id)
             ->first();
 
-        return response(['data' => $items, 'status' => 200]);
+        return jsonResponse($items, Response::HTTP_OK);
     }
 
     public function update(Request $request, $id)
@@ -58,12 +58,9 @@ class UserProfileController extends Controller
                 'data' => $user
             ], Response::HTTP_OK);
         } catch (ValidationException $e) {
-            return response()->json([
-                'message' => 'Validation Error',
-                'errors' => $e->errors()
-            ], 422);
-        } catch (QueryException $th) {
-            return $th->getMessage();
+            return jsonResponse($e->errors(), Response::HTTP_UNPROCESSABLE_ENTITY, "Validation Error");
+        } catch (QueryException $e) {
+            return jsonResponse($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, "Query Error");
         }
     }
 }

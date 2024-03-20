@@ -27,9 +27,13 @@ class UserController extends Controller
         if ($id != null) {
             $items = $this->model->where('id', $id)->first();
         } else {
-            $items = $this->model::with('roles')->orderBy('id', 'ASC')->get();
+            if (Auth::user()->role_id == 2) {
+                $items = $this->model::with('roles')->where('users.role_id', '!=', 1)->orderBy('id', 'ASC')->get();
+            } else {
+                $items = $this->model::with('roles')->orderBy('id', 'ASC')->get();
+            }
         }
-        return response(['data' => $items, 'status' => 200]);
+        return jsonResponse($items, Response::HTTP_OK);
     }
 
     public function store(Request $request)
@@ -42,7 +46,7 @@ class UserController extends Controller
                 'phone_number' => 'required|string',
                 'password' => 'required|string',
             ]);
-            $user = $this->model::create([
+            $items = $this->model::create([
                 'role_id' => $request->role_id,
                 'main_company_id' => MainCompany::first()->id,
                 'outsource_company_id' => $request->outsource_company_id,
@@ -57,17 +61,13 @@ class UserController extends Controller
                 "created_by" => Auth::user()->name,
             ]);
 
-            return response()->json([
-                'message' => 'success created account',
-                'data' => $user
-            ], Response::HTTP_CREATED);
+            return jsonResponse($items, Response::HTTP_CREATED, "success created account");
         } catch (ValidationException $e) {
-            return response()->json([
-                'message' => 'Validation Error',
-                'errors' => $e->errors()
-            ], 422);
+            return jsonResponse($e->errors(), Response::HTTP_UNPROCESSABLE_ENTITY, "Validation Error");
+        } catch (QueryException $e) {
+            return jsonResponse($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, "Query Error");
         } catch (\Throwable $th) {
-            return $th->getMessage();
+            return jsonResponse($th->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, "Throwable Error");
         }
     }
 
@@ -82,7 +82,7 @@ class UserController extends Controller
                 'status' => 'required|string',
             ]);
 
-            $user = $this->model::where('id', $id)->update([
+            $items = $this->model::where('id', $id)->update([
                 'role_id' => $request->role_id,
                 'main_company_id' => $request->main_company_id,
                 'outsource_company_id' => $request->outsource_company_id,
@@ -96,30 +96,21 @@ class UserController extends Controller
                 "updated_by" => Auth::user()->name,
             ]);
 
-            return response()->json([
-                'message' => 'success update account',
-                'data' => $user
-            ], Response::HTTP_OK);
+            return jsonResponse($items, Response::HTTP_CREATED, "success update account");
         } catch (ValidationException $e) {
-            return response()->json([
-                'message' => 'Validation Error',
-                'errors' => $e->errors()
-            ], 422);
-        } catch (QueryException $th) {
-            return $th->getMessage();
+            return jsonResponse($e->errors(), Response::HTTP_UNPROCESSABLE_ENTITY, "Validation Error");
+        } catch (QueryException $e) {
+            return jsonResponse($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, "Query Error");
         }
     }
 
     public function delete($id)
     {
         try {
-            $user = $this->model::where('id', $id)->delete();
-            return response()->json([
-                'message' => 'success delete account',
-                'data' => $user
-            ], Response::HTTP_OK);
-        } catch (QueryException $th) {
-            return $th->getMessage();
+            $items = $this->model::where('id', $id)->delete();
+            return jsonResponse($items, Response::HTTP_OK, "success delete account");
+        } catch (QueryException $e) {
+            return jsonResponse($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, "Query Error");
         }
     }
 }

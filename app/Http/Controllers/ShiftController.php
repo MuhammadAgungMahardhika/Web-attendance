@@ -38,27 +38,17 @@ class ShiftController extends Controller
                 'start' => 'required|date_format:H:i',
                 'end' => 'required|date_format:H:i',
             ]);
-            $shift = $this->model::create([
+            $items = $this->model::create([
                 'name' => $request->name,
                 'start' => $request->start,
                 'end' => $request->end,
                 "created_by" => Auth::user()->name,
             ]);
-
-            return response()->json([
-                'message' => 'success created data',
-                'data' => $shift
-            ], Response::HTTP_CREATED);
+            return jsonResponse($items, Response::HTTP_CREATED, "success created data");
         } catch (ValidationException $e) {
-            return response()->json([
-                'message' => 'Validation Error',
-                'errors' => $e->errors()
-            ], 422);
+            return jsonResponse($e->errors(), Response::HTTP_UNPROCESSABLE_ENTITY, "Validation Error");
         } catch (QueryException $e) {
-            return response()->json([
-                'message' => 'Query Error',
-                'errors' => $e->getMessage()
-            ], 422);
+            return jsonResponse($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, "Query Error");
         }
     }
 
@@ -71,27 +61,18 @@ class ShiftController extends Controller
                 'end' => 'required|date_format:H:i',
             ]);
 
-            $shift = $this->model::where('id', $id)->update([
+            $items = $this->model::where('id', $id)->update([
                 'name' => $request->name,
                 'start' => $request->start,
                 'end' => $request->end,
                 "updated_by" => Auth::user()->name,
             ]);
 
-            return response()->json([
-                'message' => 'success update data',
-                'data' => $shift
-            ], Response::HTTP_OK);
+            return jsonResponse($items, Response::HTTP_CREATED, "success update data");
         } catch (ValidationException $e) {
-            return response()->json([
-                'message' => 'Validation Error',
-                'errors' => $e->errors()
-            ], 422);
+            return jsonResponse($e->errors(), Response::HTTP_UNPROCESSABLE_ENTITY, "Validation Error");
         } catch (QueryException $e) {
-            return response()->json([
-                'message' => 'Query Error',
-                'errors' => $e->getMessage()
-            ], 422);
+            return jsonResponse($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, "Query Error");
         }
     }
 
@@ -104,10 +85,7 @@ class ShiftController extends Controller
                 'data' => $shift
             ], Response::HTTP_OK);
         } catch (QueryException $e) {
-            return response()->json([
-                'message' => 'Query Error',
-                'errors' => $e->getMessage()
-            ], 422);
+            return jsonResponse($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, "Query Error");
         }
     }
 }

@@ -29,8 +29,7 @@ class MainCompanyController extends Controller
         } else {
             $items = $this->model::orderBy('id', 'ASC')->get();
         }
-
-        return response(['data' => $items, 'status' => 200]);
+        return jsonResponse($items, Response::HTTP_OK, "success getting data");
     }
 
     public function store(Request $request)
@@ -47,20 +46,11 @@ class MainCompanyController extends Controller
                 "created_by" => Auth::user()->name,
             ]);
 
-            return response()->json([
-                'message' => 'success created account',
-                'data' => $mainCompany
-            ], Response::HTTP_CREATED);
+            return jsonResponse($mainCompany, Response::HTTP_CREATED, "success created account");
         } catch (ValidationException $e) {
-            return response()->json([
-                'message' => 'Validation Error',
-                'errors' => $e->errors()
-            ], 422);
+            return jsonResponse($e->errors(), Response::HTTP_UNPROCESSABLE_ENTITY, "Validation Error");
         } catch (QueryException $e) {
-            return response()->json([
-                'message' => 'Query Error',
-                'errors' => $e->getMessage()
-            ], 422);
+            return jsonResponse($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, "Query Error");
         }
     }
 
@@ -94,16 +84,10 @@ class MainCompanyController extends Controller
             return redirect(url('/main-company'))->with("success", "Success added data");
         } catch (ValidationException $e) {
             DB::rollBack();
-            return response()->json([
-                'message' => 'Validation Error',
-                'errors' => $e->errors()
-            ], 422);
+            return jsonResponse($e->errors(), Response::HTTP_UNPROCESSABLE_ENTITY, "Validation Error");
         } catch (QueryException $e) {
             DB::rollBack();
-            return response()->json([
-                'message' => 'failed update main company',
-                'data' => $e->getMessage()
-            ], 422);
+            return jsonResponse($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, "failed update main company");
         }
     }
 
@@ -111,15 +95,9 @@ class MainCompanyController extends Controller
     {
         try {
             $mainCompany = $this->model::where('id', $id)->delete();
-            return response()->json([
-                'message' => 'success delete main company',
-                'data' => $mainCompany
-            ], Response::HTTP_OK);
+            return jsonResponse($mainCompany, Response::HTTP_OK, "'success delete main company");
         } catch (QueryException $e) {
-            return response()->json([
-                'message' => 'Query Error',
-                'errors' => $e->getMessage()
-            ], 422);
+            return jsonResponse($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, "Query Error");
         }
     }
 }
