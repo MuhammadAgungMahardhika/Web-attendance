@@ -16,7 +16,7 @@
                 <div class="row justify-content-center text-center">
                     {{-- Daftar menu untuk super admin --}}
                     @if (Auth::user()->role_id == '1')
-                        <div class="col-12 col-md-3 col-lg-4">
+                        <div class="col-12 col-md-3 col-lg-3">
                             <div class="card shadow-sm daftarMenu">
                                 <a href="{{ url('main-company') }}">
                                     <div class="card-body">
@@ -31,7 +31,7 @@
 
                     {{-- Daftar menu untuk super admin dan admin --}}
                     @if (Auth::user()->role_id == '1' || Auth::user()->role_id == '2')
-                        <div class="col-12 col-md-3 col-lg-4">
+                        <div class="col-12 col-md-3 col-lg-3">
                             <div class="card shadow-sm daftarMenu">
                                 <a href="{{ url('outsource-company') }}">
                                     <div class="card-body">
@@ -42,7 +42,7 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="col-12 col-md-3 col-lg-4">
+                        <div class="col-12 col-md-3 col-lg-3">
                             <div class="card shadow-sm daftarMenu">
                                 <a href="{{ url('users') }}">
                                     <div class="card-body">
@@ -53,7 +53,7 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="col-12 col-md-3 col-lg-4">
+                        <div class="col-12 col-md-3 col-lg-3">
                             <div class="card shadow-sm daftarMenu">
                                 <a href="{{ url('shift') }}">
                                     <div class="card-body">
@@ -65,8 +65,8 @@
                             </div>
                         </div>
 
-                        <div class="col-12 col-md-3 col-lg-4">
-                            <div class="card shadow-sm daftarMenu">
+                        <div class="col-12 col-md-3 col-lg-3">
+                            <div class="card shadow-sm daftarMenu ">
                                 <a href="{{ url('attendance') }}">
                                     <div class="card-body">
                                         <img src="{{ asset('assets/images/menu/attendance.jpg') }}"
@@ -80,13 +80,13 @@
 
                     {{-- Daftar menu untuk karyawan --}}
                     @if (Auth::user()->role_id == '3')
-                        <div class="col-12 col-md-3 col-lg-4">
+                        <div class="col-12 col-md-3 col-lg-3">
                             <div class="card shadow-sm daftarMenu">
-                                <a href="{{ url('attendance') }}">
+                                <a href="{{ url('profile') }}">
                                     <div class="card-body">
                                         <img src="{{ asset('assets/images/menu/attendance.jpg') }}"
                                             class="card-img-top img-fluid" alt="singleminded">
-                                        <h5 class="card-title mt-4">Attendance History</h5>
+                                        <h5 class="card-title mt-4">Profile</h5>
                                     </div>
                                 </a>
                             </div>

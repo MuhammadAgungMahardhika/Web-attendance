@@ -84,7 +84,9 @@
                     initDataTable('table')
                 },
                 error: function(err) {
-                    console.log(err.responseText)
+                    let errorResponse = JSON.parse(err.responseText)
+                    const errorMessage = errorResponse.message
+                    showToastErrorAlert(errorMessage)
                 }
             })
         }
@@ -180,7 +182,9 @@
                     showModal(modalHeader, modalBody, modalFooter)
                 },
                 error: function(err) {
-                    console.log(err.responseText)
+                    let errorResponse = JSON.parse(err.responseText)
+                    const errorMessage = errorResponse.message
+                    showToastErrorAlert(errorMessage)
                 }
             })
 
@@ -203,7 +207,10 @@
                     item = response.data
                 },
                 error: function(err) {
-                    console.log(err.responseText)
+                    item = null
+                    let errorResponse = JSON.parse(err.responseText)
+                    const errorMessage = errorResponse.message
+                    showToastErrorAlert(errorMessage)
                 }
             })
             return item
@@ -248,8 +255,9 @@
                     return showTable()
                 },
                 error: function(err) {
-                    console.log("gagal")
-                    console.log(err.responseText)
+                    let errorResponse = JSON.parse(err.responseText)
+                    const errorMessage = errorResponse.message
+                    showToastErrorAlert(errorMessage)
                 }
 
             })
@@ -304,7 +312,9 @@
 
                 },
                 error: function(err) {
-                    console.log(err.responseText)
+                    let errorResponse = JSON.parse(err.responseText)
+                    const errorMessage = errorResponse.message
+                    showToastErrorAlert(errorMessage)
                 }
             })
         }
@@ -323,7 +333,9 @@
                     return showTable()
                 },
                 error: function(err) {
-                    console.log(err.responseText)
+                    let errorResponse = JSON.parse(err.responseText)
+                    const errorMessage = errorResponse.message
+                    showToastErrorAlert(errorMessage)
                 }
 
             })

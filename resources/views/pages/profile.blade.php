@@ -7,54 +7,51 @@
             </div>
 
             <div class="card-body table-responsive">
-                <div class="row">
+                <div class="row justify-content-center">
                     <div class="col-md-6 col-lg-6 col-12 shadow-sm  bg-light-success p-4">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="name">Name</label>
+                            </div>
+                            <div class="col-md-8 form-group">
+                                <input type="text" class="form-control" id="name" placeholder="Name">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="email">Email</label>
+                            </div>
+                            <div class="col-md-8 form-group">
+                                <input type="text" class="form-control" id="email" placeholder="Email">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="phoneNumber">Phone Number</label>
+                            </div>
+                            <div class="col-md-8 form-group">
+                                <input type="number" class="form-control" id="phoneNumber" placeholder="Phone Number">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="address">Address</label>
+                            </div>
+                            <div class="col-md-8 form-group">
+                                <input type="text" class="form-control" id="address" placeholder="address">
+                            </div>
 
-                        <div class="form-body">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label for="name">Name</label>
-                                </div>
-                                <div class="col-md-8 form-group">
-                                    <input type="text" class="form-control" id="name" placeholder="Name">
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="email">Email</label>
-                                </div>
-                                <div class="col-md-8 form-group">
-                                    <input type="text" class="form-control" id="email" placeholder="Email">
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="phoneNumber">Phone Number</label>
-                                </div>
-                                <div class="col-md-8 form-group">
-                                    <input type="number" class="form-control" id="phoneNumber" placeholder="Phone Number">
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="address">Address</label>
-                                </div>
-                                <div class="col-md-8 form-group">
-                                    <input type="text" class="form-control" id="address" placeholder="address">
-                                </div>
-
-                                <div class="col-sm-12 d-flex justify-content-end">
+                            <div class="col-sm-12 d-flex justify-content-end">
+                                @if (Auth::user()->role_id == 3)
                                     <button class="btn btn-success me-1 mb-1" onclick="showAttendanceHistory()"><i
                                             class="fa fa-history"></i> Show Attendance
                                         History</button>
-                                    <button type="submit" class="btn btn-primary me-1 mb-1"><i class="fa fa-key"></i>
-                                        Change
-                                        password</button>
-                                    <button type="submit" class="btn btn-success me-1 mb-1" onclick="update()"><i
-                                            class="fa fa-save"></i>
-                                        Save</button>
-                                </div>
+                                @endif
+                                <button type="submit" class="btn btn-primary me-1 mb-1"><i class="fa fa-key"></i>
+                                    Change
+                                    password</button>
+                                <button type="submit" class="btn btn-success me-1 mb-1" onclick="update()"><i
+                                        class="fa fa-save"></i>
+                                    Save</button>
                             </div>
                         </div>
-
                     </div>
-                    <div class="col-md-6 col-lg-6 col-12 shadow-sm bg-light-primary p-4">
-
-                        <div class="form-body">
+                    @if (Auth::user()->role_id == 3)
+                        <div class="col-md-6 col-lg-6 col-12 shadow-sm bg-light-primary p-4">
                             <div class="row">
                                 <div class="col-md-4">
                                     <label for="main_company">Main company</label>
@@ -90,13 +87,14 @@
                                 <div class="col-md-8 form-group">
                                     <input type="text" id="status" class="form-control" placeholder="text" readonly>
                                 </div>
+                                <div class="col-md-8 form-group">
+                                    <span class="text-danger text-sm">*</span> <span class="text-sm">your company
+                                        information only can be change by admin</span>
+                                </div>
                             </div>
                         </div>
-
-                    </div>
-
+                    @endif
                 </div>
-
             </div>
 
         </div>
@@ -113,40 +111,37 @@
                 dataType: "json",
                 url: baseUrl + '/' + `api/profile/{{ Auth::user()->id }}`,
                 success: function(response) {
-                    let userProfile = response.data
-                    const status = response.status
-                    console.log(userProfile);
-                    if (status == 200) {
-                        let {
-                            name,
-                            email,
-                            phone_number,
-                            address,
-                            status,
-                            departmen,
-                            position,
-                            main_company,
-                            outsource_company,
-                        } = userProfile
+                    let userProfileData = response.data
+                    let {
+                        name,
+                        email,
+                        phone_number,
+                        address,
+                        status,
+                        departmen,
+                        position,
+                        main_company,
+                        outsource_company,
+                    } = userProfileData
 
-                        // profile info
-                        $('#name').val(name)
-                        $('#email').val(email)
-                        $('#phoneNumber').val(phone_number)
-                        $('#address').val(address)
-                        $('#status').val(status)
+                    // profile info
+                    $('#name').val(name)
+                    $('#email').val(email)
+                    $('#phoneNumber').val(phone_number)
+                    $('#address').val(address)
+                    $('#status').val(status)
 
 
-                        // company info
-                        if (main_company) {
-                            $('#main_company').val(main_company.name)
-                        }
-                        $('#departmen').val(departmen)
-                        $('#position').val(position)
-                        if (outsource_company) {
-                            $('#outsource_company').val(outsource_company.name)
-                        }
+                    // company info
+                    if (main_company) {
+                        $('#main_company').val(main_company.name)
                     }
+                    $('#departmen').val(departmen)
+                    $('#position').val(position)
+                    if (outsource_company) {
+                        $('#outsource_company').val(outsource_company.name)
+                    }
+
                 },
                 error: function(err) {
                     console.log(err)
@@ -164,34 +159,35 @@
                 url: baseUrl + '/' + `api/attendance-by-user/{{ Auth::user()->id }}`,
                 success: function(response) {
                     let userAttendanceHistory = response.data
-                    const status = response.status
-                    console.log(userAttendanceHistory);
-                    console.log(response)
-                    if (status == 200) {
-                        for (let i = 0; i < userAttendanceHistory.length; i++) {
-                            let {
-                                id,
-                                user_id,
-                                user,
-                                checkin,
-                                checkout,
-                                date,
-                                status,
-                                work_from,
-                            } = userAttendanceHistory[i]
 
-                            let statusBadge = ""
-                            if (status == "in") {
-                                statusBadge = "badge bg-success"
-                            } else if (status == "out") {
-                                statusBadge = "badge bg-danger"
-                            } else if (status == "late") {
-                                statusBadge = "badge bg-warning"
-                            }
-                            data += `
+                    console.log(userAttendanceHistory)
+                    let data = ""
+                    for (let i = 0; i < userAttendanceHistory.length; i++) {
+                        let {
+                            id,
+                            user_id,
+                            user,
+                            shift,
+                            checkin,
+                            checkout,
+                            date,
+                            status,
+                            work_from,
+                        } = userAttendanceHistory[i]
+
+                        let statusBadge = ""
+                        if (status == "in") {
+                            statusBadge = "badge bg-success"
+                        } else if (status == "out") {
+                            statusBadge = "badge bg-danger"
+                        } else if (status == "late") {
+                            statusBadge = "badge bg-warning"
+                        }
+                        data += `
                                     <tr>
                                     <td>${i+1}</td>
                                     <td>${user.name}</td>
+                                    <td>${shift.name}</td>
                                     <td>${checkin != null ? checkin : ''}</td>
                                     <td>${checkout  != null ? checkout : ''}</td>
                                     <td>${date  != null ? date : ''}</td>
@@ -199,9 +195,9 @@
                                     <td>${work_from}</td>
                                     </tr>
                                     `
-                        }
+                    }
 
-                        let table = `
+                    let table = `
                                     <table class="table dataTable no-footer" id="table" aria-describedby="table1_info">
                                         <thead>
                                             <tr>
@@ -210,6 +206,9 @@
                                                 </th>
                                                 <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                                                     aria-label="Name: activate to sort column ascending">Name 
+                                                </th>
+                                                <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                                                    aria-label="Shift: activate to sort column ascending">Shift 
                                                 </th>
                                                 <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                                                     aria-label="checkin: activate to sort column ascending">
@@ -238,23 +237,184 @@
                                         </tbody>
                                     </table>
                                     `
-                        // initDataTable('table')
 
-                        const modalHeader =
-                            `<h4 class="modal-title" id="myModalLabel20">Users Attendance History</h4>`
 
-                        const modalBody = table
-                        const modalFooter = ``
-                        return showFullModal(modalHeader, modalBody, modalFooter)
-                    }
+                    const modalHeader =
+                        `<h4 class="modal-title" id="myModalLabel20">Users Attendance History</h4>`
+
+                    const modalBody = `<div>
+                                            <div class="btn-group me-2 mb-4">
+                                                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"
+                                                    id="dateDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                                    onclick="filterByDate()">
+                                                    <i class="fa fa-calendar"></i> Filter By Date
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="dateDropdown">
+                                                    <div class="row p-2">
+                                                        <div class="col-12 form-group">
+                                                            <input type="text" id="dateFilter" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="table-responsive" id="attendanceHistoryTable">
+                                            ${table}
+                                            </div>
+                                    </div>`
+                    const modalFooter = ``
+                    showFullModal(modalHeader, modalBody, modalFooter)
+                    return initDataTable('table')
+
                 },
                 error: function(err) {
-                    console.log(err)
+                    let errorResponse = JSON.parse(err.responseText)
+                    const errorMessage = errorResponse.message
+                    showToastErrorAlert(errorMessage)
                 }
             })
 
         }
 
+        // Filter data by tanggal
+        function filterByDate() {
+            let dateNow = new Date();
+            $('#dateFilter').daterangepicker({
+                opens: 'left', // Tampilan kalender saat datepicker dibuka (left/right)
+                autoUpdateInput: false, // Otomatis memperbarui input setelah memilih tanggal
+                locale: {
+                    format: 'YYYY-MM-DD', // Format tanggal yang diinginkan
+                    separator: ' to ', // Pemisah untuk rentang tanggal
+                }
+            });
+
+            // Menangani perubahan tanggal
+            $('#dateFilter').on('apply.daterangepicker', function(ev, picker) {
+                $(this).val(picker.startDate.format('YYYY-MM-DD') + ' to ' + picker.endDate.format('YYYY-MM-DD'));
+
+                // Tangkap tanggal awal dan akhir
+                var startDate = picker.startDate.format('YYYY-MM-DD');
+                var endDate = picker.endDate.format('YYYY-MM-DD');
+                // Tampilkan data 
+                new Date(startDate)
+                new Date(endDate)
+
+                // check jika from date kosong
+                if (!startDate) {
+                    return showToastErrorAlert("Please fill the from date")
+                }
+                // check jika to date kosong
+                if (!endDate) {
+                    return showToastErrorAlert("Please fill the end date")
+                }
+
+                let data = {
+                    from: startDate,
+                    to: endDate
+                }
+                $.ajax({
+                    type: "POST",
+                    url: baseUrl + `/api/attendance-by-date-range`,
+                    contentType: "application/json",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: JSON.stringify(data),
+                    success: function(response) {
+                        console.log(response)
+                        let attendanceData = response.data
+
+                        let data = ''
+                        for (let i = 0; i < attendanceData.length; i++) {
+                            let {
+                                id,
+                                user_id,
+                                user,
+                                shift,
+                                checkin,
+                                checkout,
+                                date,
+                                status,
+                                work_from,
+                            } = attendanceData[i]
+
+                            data += `
+                        <tr>
+                        <td>${i+1}</td>
+                        <td>${user.name}</td>
+                        <td>${shift.name}</td>
+                        <td>${checkin != null ? checkin : ''}</td>
+                        <td>${checkout  != null ? checkout : ''}</td>
+                        <td>${date  != null ? date : ''}</td>
+                        <td>${status  != null ? status : ''}</td>
+                        <td>${work_from}</td>
+                        </tr>
+                        `
+                        }
+
+                        let table = `
+                    <table class="table dataTable no-footer" id="table" aria-describedby="table1_info">
+                        <thead>
+                            <tr>
+                                <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                                    aria-label="No: activate to sort column ascending">No
+                                </th>
+                                <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                                    aria-label="Name: activate to sort column ascending">Name 
+                                </th>
+                                <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                                    aria-label="Shift: activate to sort column ascending">Shift 
+                                </th>
+                                <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                                    aria-label="checkin: activate to sort column ascending">
+                                                    checkin
+                                </th>
+                                <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                                    aria-label="checkout: activate to sort column ascending">
+                                                    checkout
+                                </th>
+                                <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                                    aria-label="date: activate to sort column ascending">
+                                                    date
+                                </th>
+                                <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                                    aria-label="status: activate to sort column ascending">
+                                                    status
+                                </th>
+                                <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                                    aria-label="work_from: activate to sort column ascending">
+                                                    work_from
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data}
+                        </tbody>
+                    </table>
+                    `
+                        $('#attendanceHistoryTable').html(table)
+                        initDataTable('table')
+
+                    }
+                })
+            });
+
+            // Menangani reset tanggal
+            $('#dateFilter').on('cancel.daterangepicker', function(ev, picker) {
+                $(this).val('');
+            });
+        }
+
+
+        function initDataTable(id) {
+            let jquery_datatable = $(`#${id}`).DataTable({
+                responsive: true,
+                aLengthMenu: [
+                    [10, 25, 50, 75, 100, 200, -1],
+                    [10, 25, 50, 75, 100, 200, "All"],
+                ],
+                pageLength: 10,
+            });
+        }
 
         function getOutsourcedCompany() {
             let result
@@ -271,7 +431,10 @@
 
                 },
                 error: function(err) {
-                    return console.log(err.responseText)
+                    result = null
+                    let errorResponse = JSON.parse(err.responseText)
+                    const errorMessage = errorResponse.message
+                    showToastErrorAlert(errorMessage)
                 }
             });
             return result
@@ -370,7 +533,9 @@
 
                 },
                 error: function(err) {
-                    console.log(err.responseText)
+                    let errorResponse = JSON.parse(err.responseText)
+                    const errorMessage = errorResponse.message
+                    showToastErrorAlert(errorMessage)
                 }
             })
         }

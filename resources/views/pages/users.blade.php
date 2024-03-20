@@ -96,7 +96,9 @@
                     initDataTable('table')
                 },
                 error: function(err) {
-                    console.log(err.responseText)
+                    let errorResponse = JSON.parse(err.responseText)
+                    const errorMessage = errorResponse.message
+                    showToastErrorAlert(errorMessage)
                 }
             })
         }
@@ -229,7 +231,10 @@
 
                 },
                 error: function(err) {
-                    return console.log(err.responseText)
+                    result = null
+                    let errorResponse = JSON.parse(err.responseText)
+                    const errorMessage = errorResponse.message
+                    showToastErrorAlert(errorMessage)
                 }
             });
             return result
@@ -349,7 +354,9 @@
 
                 },
                 error: function(err) {
-                    console.log(err.responseText)
+                    let errorResponse = JSON.parse(err.responseText)
+                    const errorMessage = errorResponse.message
+                    showToastErrorAlert(errorMessage)
                 }
             })
 
@@ -372,7 +379,10 @@
                     item = response.data
                 },
                 error: function(err) {
-                    return console.log(err.responseText)
+                    item = null
+                    let errorResponse = JSON.parse(err.responseText)
+                    const errorMessage = errorResponse.message
+                    showToastErrorAlert(errorMessage)
                 }
             })
             return item
@@ -489,8 +499,9 @@
                     })
                 },
                 error: function(err) {
-                    console.log("gagal")
-                    console.log(err.responseText)
+                    let errorResponse = JSON.parse(err.responseText)
+                    const errorMessage = errorResponse.message
+                    showToastErrorAlert(errorMessage)
                 }
 
             })
@@ -587,7 +598,9 @@
 
                 },
                 error: function(err) {
-                    console.log(err.responseText)
+                    let errorResponse = JSON.parse(err.responseText)
+                    const errorMessage = errorResponse.message
+                    showToastErrorAlert(errorMessage)
                 }
             })
         }
@@ -613,7 +626,9 @@
                     })
                 },
                 error: function(err) {
-                    console.log(err.responseText)
+                    let errorResponse = JSON.parse(err.responseText)
+                    const errorMessage = errorResponse.message
+                    showToastErrorAlert(errorMessage)
                 }
 
             })

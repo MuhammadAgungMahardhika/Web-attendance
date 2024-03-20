@@ -348,7 +348,7 @@
                 fillColor: color,
                 strokeWeight: 2,
                 strokeColor: color,
-                editable: true
+                editable: false
             })
 
             geomData = geom
@@ -390,7 +390,7 @@
                     fillColor: color,
                     strokeWeight: 2,
                     strokeColor: color,
-                    editable: true,
+                    editable: false,
                 },
                 map: map
             };

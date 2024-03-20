@@ -76,12 +76,14 @@ class AttendanceController extends Controller
     public function getAttendanceByUserId($id)
     {
         try {
-            $attendanceHistory = $this->model::with("user")->whereHas('user', function ($query) {
+            $attendanceHistory = $this->model::with(["user", "shift"])->whereHas('user', function ($query) {
                 $query->where('role_id', 3);
             })->where("attendance.user_id", $id)->get();
             return jsonResponse($attendanceHistory, Response::HTTP_OK);
         } catch (\Throwable $th) {
             return jsonResponse(null, Response::HTTP_UNPROCESSABLE_ENTITY, $th->getMessage());
+        } catch (QueryException $e) {
+            return jsonResponse($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, "Query Error");
         }
     }
 
