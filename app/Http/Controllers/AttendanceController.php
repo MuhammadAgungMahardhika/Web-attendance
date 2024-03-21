@@ -111,9 +111,12 @@ class AttendanceController extends Controller
             if ($workFrom == "office") {
                 $mainCompanyData = MainCompany::selectRaw("{$this->geom_area}")->first();
                 $companyWkt = $mainCompanyData->wkt;
+                if (!$companyWkt) {
+                    return jsonResponse(null, Response::HTTP_UNPROCESSABLE_ENTITY, "Main company area is not set yet, please contact admin to set it!");
+                }
+
                 $isInsideCompany = MainCompany::whereRaw("ST_Contains(ST_GeomFromText('$companyWkt'), ST_GeomFromText('$location'))")->exists();
                 if ($isInsideCompany) {
-                    // return jsonResponse($isInsideCompany, Response::HTTP_CREATED, "success to take attendance");
                     $attendance = $this->model::create([
                         'user_id' => $userId,
                         'shift_id' =>  $shiftId,
@@ -124,13 +127,12 @@ class AttendanceController extends Controller
                         "location" =>  DB::raw("ST_GeomFromText('$location', 4326)"),
                         "created_by" => $createdBy,
                     ]);
-
                     return jsonResponse($attendance, Response::HTTP_CREATED, "success to take attendance");
                 } else {
-                    return jsonResponse(null, Response::HTTP_UNPROCESSABLE_ENTITY, 'failed you are not inside main company');
+                    return jsonResponse(null, Response::HTTP_UNPROCESSABLE_ENTITY, 'You work from office, but you are not inside the main company area');
                 }
             } else {
-                // Jika absen wfh langsung masukan data
+                // Jika absen dari rumah langsung masukan data
                 $attendance = $this->model::create([
                     'user_id' =>  $userId,
                     'shift_id' => $shiftId,
@@ -138,7 +140,7 @@ class AttendanceController extends Controller
                     'date' => $date,
                     "status" => $status,
                     "work_from" =>  $workFrom,
-                    "location" =>  DB::raw("ST_PointFromText('$location')"),
+                    "location" =>  DB::raw("ST_GeomFromText('$location', 4326)"),
                     "created_by" => $createdBy,
                 ]);
                 return jsonResponse($attendance, Response::HTTP_CREATED, "success to take attendance");
@@ -161,10 +163,18 @@ class AttendanceController extends Controller
             $updatedBy = $request->updated_by;
             $location = $request->location;
             $attendance = $this->model::find($id);
+            if (!$attendance) {
+                return jsonResponse(null, Response::HTTP_NOT_FOUND, "Attendance data is not found");
+            }
             $workFrom = $attendance->work_from;
             if ($workFrom == "office") {
                 $mainCompanyData = MainCompany::selectRaw("{$this->geom_area}")->first();
                 $companyWkt = $mainCompanyData->wkt;
+
+                if (!$companyWkt) {
+                    return jsonResponse(null, Response::HTTP_UNPROCESSABLE_ENTITY, "Main company area is not set yet, please contact admin to set it!");
+                }
+
                 $isInsideCompany = MainCompany::whereRaw("ST_Contains(ST_GeomFromText('$companyWkt'), ST_GeomFromText('$location'))")->exists();
                 if ($isInsideCompany) {
                     $attendance->checkout = $checkOut;
