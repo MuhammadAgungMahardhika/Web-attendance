@@ -113,6 +113,7 @@ class AttendanceController extends Controller
                 $companyWkt = $mainCompanyData->wkt;
                 $isInsideCompany = MainCompany::whereRaw("ST_Contains(ST_GeomFromText('$companyWkt'), ST_GeomFromText('$location'))")->exists();
                 if ($isInsideCompany) {
+                    // return jsonResponse($isInsideCompany, Response::HTTP_CREATED, "success to take attendance");
                     $attendance = $this->model::create([
                         'user_id' => $userId,
                         'shift_id' =>  $shiftId,
@@ -120,7 +121,7 @@ class AttendanceController extends Controller
                         'date' => $date,
                         "status" =>  $status,
                         "work_from" =>  $workFrom,
-                        "location" =>  DB::raw("ST_PointFromText('$location')"),
+                        "location" =>  DB::raw("ST_GeomFromText('$location', 4326)"),
                         "created_by" => $createdBy,
                     ]);
 
@@ -169,15 +170,15 @@ class AttendanceController extends Controller
                     $attendance->checkout = $checkOut;
                     $attendance->updated_by = $updatedBy;
                     $attendance->save();
-                    return jsonResponse($attendance, Response::HTTP_CREATED, "success update data");
+                    return jsonResponse(true, Response::HTTP_CREATED, "success to checkout from office");
                 } else {
-                    return jsonResponse(null, Response::HTTP_UNPROCESSABLE_ENTITY, "Not in main company location");
+                    return jsonResponse(null, Response::HTTP_UNPROCESSABLE_ENTITY, "You need to checout in main company location, because you are work from office today");
                 }
             } else {
                 $attendance->checkout = $checkOut;
                 $attendance->updated_by = $updatedBy;
                 $attendance->save();
-                return jsonResponse($attendance, Response::HTTP_CREATED, "success update data");
+                return jsonResponse(true, Response::HTTP_CREATED, "success to checkout from home");
             }
         } catch (ValidationException $e) {
             return jsonResponse($e->errors(), Response::HTTP_UNPROCESSABLE_ENTITY, "Validation Error");
