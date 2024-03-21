@@ -8,7 +8,7 @@
 
             <div class="card-body table-responsive">
                 <div class="row justify-content-center">
-                    <div class="col-md-6 col-lg-6 col-12 shadow-sm  bg-light-success p-4">
+                    <div class="col-md-6 col-lg-6 col-12 shadow-sm   p-4">
                         <div class="row">
                             <div class="col-md-4">
                                 <label for="name">Name</label>
@@ -34,7 +34,12 @@
                             <div class="col-md-8 form-group">
                                 <input type="text" class="form-control" id="address" placeholder="address">
                             </div>
-
+                            <div class="col-md-4">
+                                <label for="status">Status</label>
+                            </div>
+                            <div class="col-md-8 form-group">
+                                <input type="text" id="status" class="form-control" placeholder="text" readonly>
+                            </div>
                             <div class="col-sm-12 d-flex justify-content-end">
                                 @if (Auth::user()->role_id == 3)
                                     <button class="btn btn-success me-1 mb-1" onclick="showAttendanceHistory()"><i
@@ -80,12 +85,6 @@
                                 <div class="col-md-8 form-group">
                                     <input type="text" class="form-control" id="outsource_company"
                                         placeholder="Outsource company" readonly>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="status">Status</label>
-                                </div>
-                                <div class="col-md-8 form-group">
-                                    <input type="text" id="status" class="form-control" placeholder="text" readonly>
                                 </div>
                                 <div class="col-md-8 form-group">
                                     <span class="text-danger text-sm">*</span> <span class="text-sm">your company
@@ -153,10 +152,11 @@
 
 
         function showAttendanceHistory() {
+            let userId = '{{ Auth::user()->id }}'
             $.ajax({
                 type: "GET",
                 dataType: "json",
-                url: baseUrl + '/' + `api/attendance-by-user/{{ Auth::user()->id }}`,
+                url: baseUrl + '/' + `api/attendance-by-user/${userId}`,
                 success: function(response) {
                     let userAttendanceHistory = response.data
 
@@ -337,6 +337,13 @@
                                 work_from,
                             } = attendanceData[i]
 
+                            if (status == "in") {
+                                statusBadge = "badge bg-success"
+                            } else if (status == "out") {
+                                statusBadge = "badge bg-danger"
+                            } else if (status == "late") {
+                                statusBadge = "badge bg-warning"
+                            }
                             data += `
                         <tr>
                         <td>${i+1}</td>
@@ -345,7 +352,7 @@
                         <td>${checkin != null ? checkin : ''}</td>
                         <td>${checkout  != null ? checkout : ''}</td>
                         <td>${date  != null ? date : ''}</td>
-                        <td>${status  != null ? status : ''}</td>
+                        <td><span class="${statusBadge}">${status  != null ? status : ''} </span></td>
                         <td>${work_from}</td>
                         </tr>
                         `
@@ -447,6 +454,7 @@
             let email = $('#email').val()
             let phoneNumber = $('#phoneNumber').val()
             let status = $('#status').val()
+            console.log(status)
             let address = $('#address').val()
             // validasi nama
             if (!name) {

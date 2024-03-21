@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::name('api')->group(function () {
+Route::middleware('auth')->name('api')->group(function () {
     // profile
     Route::get('profile/{id}', [UserProfileController::class, 'get']);
     Route::put('profile/{id}', [UserProfileController::class, 'update']);
@@ -72,4 +72,4 @@ Route::name('api')->group(function () {
     Route::post('attendance', [AttendanceController::class, 'store']);
     Route::put('attendance/{id}', [AttendanceController::class, 'update']);
     Route::delete('attendance/{id}', [AttendanceController::class, 'delete']);
-})->middleware('auth');
+});

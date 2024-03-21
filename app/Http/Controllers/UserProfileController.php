@@ -41,7 +41,6 @@ class UserProfileController extends Controller
                 'name' => 'required',
                 'email' => 'required|string',
                 'phone_number' => 'required|string',
-                'status' => 'required|string',
             ]);
 
             $user = $this->model::findOrFail($id);

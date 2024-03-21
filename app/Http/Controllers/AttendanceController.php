@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Attendance;
 use App\Models\MainCompany;
+use App\Models\Shift;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Database\QueryException;
@@ -25,13 +26,17 @@ class AttendanceController extends Controller
     public function get($id = null)
     {
         if ($id != null) {
-            $items = $this->model::with(["user", "shift"])->whereHas('user', function ($query) {
-                $query->where('role_id', 3);
-            })->orderBy("attendance.id", "DESC")->where('attendance.id', $id)->first();
+            $items = $this->model::with(["user", "shift"])
+                ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status', 'work_from')
+                ->whereHas('user', function ($query) {
+                    $query->where('role_id', 3);
+                })->orderBy("attendance.id", "DESC")->where('attendance.id', $id)->first();
         } else {
-            $items = $this->model::with(["user", "shift"])->whereHas('user', function ($query) {
-                $query->where('role_id', 3);
-            })->orderBy('attendance.id', 'DESC')->get();
+            $items = $this->model::with(["user", "shift"])
+                ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status', 'work_from')
+                ->whereHas('user', function ($query) {
+                    $query->where('role_id', 3);
+                })->orderBy('attendance.id', 'DESC')->get();
         }
         return jsonResponse($items, Response::HTTP_OK, "success getting data");
     }
@@ -76,9 +81,14 @@ class AttendanceController extends Controller
     public function getAttendanceByUserId($id)
     {
         try {
-            $attendanceHistory = $this->model::with(["user", "shift"])->whereHas('user', function ($query) {
-                $query->where('role_id', 3);
-            })->where("attendance.user_id", $id)->get();
+            $attendanceHistory = $this->model::with(["user", "shift"])
+                ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status', 'work_from')
+                ->whereHas('user', function ($query) {
+                    $query->where('role_id', 3);
+                })->where("attendance.user_id", $id)
+                ->orderBy('id', 'DESC')
+                ->get();
+
             return jsonResponse($attendanceHistory, Response::HTTP_OK);
         } catch (\Throwable $th) {
             return jsonResponse(null, Response::HTTP_UNPROCESSABLE_ENTITY, $th->getMessage());
@@ -94,7 +104,6 @@ class AttendanceController extends Controller
                 'user_id' => 'required',
                 'checkin' => 'required|date_format:H:i',
                 'date' => 'required|date',
-                'status' => 'required|in:in,out,late',
                 'work_from' => 'required|in:office,home',
             ]);
 
@@ -102,10 +111,20 @@ class AttendanceController extends Controller
             $shiftId = $request->shift_id;
             $checkIn = $request->checkin;
             $date = $request->date;
-            $status = $request->status;
             $workFrom = $request->work_from;
             $location = $request->location;
             $createdBy = $request->created_by;
+
+            // check status dari jadwal shift
+            $start = Shift::findOrFail($shiftId)->start;
+            $startCheck =  strtotime($start);
+            $checkInCheck = strtotime($checkIn);
+
+            if ($checkInCheck <= $startCheck) {
+                $status = "in";
+            } else {
+                $status = "late";
+            }
 
             // jika ambil absen dari kantor, lakukan pengecheckan lokasi
             if ($workFrom == "office") {
