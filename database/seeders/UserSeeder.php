@@ -17,6 +17,7 @@ class UserSeeder extends Seeder
 
         DB::table('users')->insert([
             'role_id' => 1,
+            'main_company_id' => 1,
             'name' => 'Super Admin',
             'email' => 'superadmin@gmail.com',
             'status' => 'active',
@@ -25,6 +26,7 @@ class UserSeeder extends Seeder
 
         DB::table('users')->insert([
             'role_id' => 3,
+            'main_company_id' => 3,
             'name' => 'karyawan1',
             'email' => 'karyawan1@gmail.com',
             'status' => 'active',

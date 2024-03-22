@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\DB;
 
 class PageController extends Controller
 {
-    public function profile()
+    public function account()
     {
-        return view('pages/profile');
+        return view('pages/account');
     }
     public function dashboard()
     {

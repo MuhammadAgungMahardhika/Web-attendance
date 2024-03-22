@@ -46,6 +46,10 @@
     <title>Attendance</title>
 </head>
 
+<script>
+    let baseUrl = '{{ url('') }}'
+</script>
+
 <body class="light">
     <script src="assets/static/js/initTheme.js"></script>
     <div id="app">
@@ -72,7 +76,6 @@
 
         </div>
     </div>
-
     <script src="{{ asset('assets/static/js/components/dark.js') }} "></script>
     <script src="{{ asset('assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ asset('assets/compiled/js/app.js') }} "></script>

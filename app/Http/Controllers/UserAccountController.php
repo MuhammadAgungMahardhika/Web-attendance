@@ -9,7 +9,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
-class UserProfileController extends Controller
+class UserAccountController extends Controller
 {
     protected $model;
     /**

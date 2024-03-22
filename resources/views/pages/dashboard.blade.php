@@ -82,11 +82,11 @@
                     @if (Auth::user()->role_id == '3')
                         <div class="col-12 col-md-3 col-lg-3">
                             <div class="card shadow-sm daftarMenu">
-                                <a href="{{ url('profile') }}">
+                                <a href="{{ url('account') }}">
                                     <div class="card-body">
                                         <img src="{{ asset('assets/images/menu/attendance.jpg') }}"
                                             class="card-img-top img-fluid" alt="singleminded">
-                                        <h5 class="card-title mt-4">Profile</h5>
+                                        <h5 class="card-title mt-4">Account</h5>
                                     </div>
                                 </a>
                             </div>

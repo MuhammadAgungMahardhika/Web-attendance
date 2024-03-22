@@ -6,6 +6,7 @@ use App\Http\Controllers\OutsourceCompanyController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\ShiftController;
+use App\Http\Controllers\UserAccountController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserProfileController;
 use App\Models\MainCompany;
@@ -28,8 +29,8 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 });
 Route::middleware('auth')->name('api')->group(function () {
     // profile
-    Route::get('profile/{id}', [UserProfileController::class, 'get']);
-    Route::put('profile/{id}', [UserProfileController::class, 'update']);
+    Route::get('profile/{id}', [UserAccountController::class, 'get']);
+    Route::put('profile/{id}', [UserAccountController::class, 'update']);
 
     // user
     Route::get('users', [UserController::class, 'get']);
