@@ -6,7 +6,7 @@ function showProfileData() {
     $.ajax({
         type: "GET",
         dataType: "json",
-        url: baseUrl + "/" + `api/profile/${userId}`,
+        url: baseUrl + "/" + `api/account/${userId}`,
         success: function (response) {
             let userProfileData = response.data;
             let {
@@ -140,6 +140,32 @@ function showAttendanceHistory() {
             showToastErrorAlert(errorMessage);
         },
     });
+}
+
+function changePasswordModal(id) {
+    const modalHeader = `New Password`;
+    const modalBody = `<div class="row">
+                            <div class="col-md-4">
+                                <label for="password">Current Password</label>
+                            </div>
+                            <div class="col-md-8 form-group">
+                                <input type="password" class="form-control" id="password" placeholder="password">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="new-password">New Password</label>
+                            </div>
+                            <div class="col-md-8 form-group">
+                                <input type="password" class="form-control" id="new-password" placeholder="new-password">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="confirm-new-password">Confim New Password</label>
+                            </div>
+                            <div class="col-md-8 form-group">
+                                <input type="password" class="form-control" id="confirm-new-password" placeholder="confirm-new-password">
+                            </div>
+                        </div>`;
+    const modalFooter = `<button class="btn btn-success" onclick="updatePassword('${id}')"><i class="fa fa-key"></i> Save new password</button>`;
+    showModal(modalHeader, modalBody, modalFooter);
 }
 
 // Filter data by tanggal
@@ -391,7 +417,7 @@ function update() {
 
     $.ajax({
         type: "PUT",
-        url: baseUrl + `/api/profile/${userId}`,
+        url: baseUrl + `/api/account/${userId}`,
         data: JSON.stringify(data),
         contentType: "application/json",
         headers: {
@@ -415,4 +441,96 @@ function update() {
             showToastErrorAlert(errorMessage);
         },
     });
+}
+
+function updatePassword(id) {
+    const password = $("#password").val();
+    const newPassword = $("#new-password").val();
+    const newPasswordConfirmation = $("#confirm-new-password").val();
+
+    // valiadasi password tidak boleh kosong
+    if (!password) {
+        return showToastErrorAlert("Password cannot be empty!");
+    }
+
+    // validasi password baru tidak boleh kosong
+    if (!newPassword) {
+        return showToastErrorAlert("New password cannot be empty!");
+    }
+    if (!newPasswordConfirmation) {
+        return showToastErrorAlert("Confirmation password cannot be empty!");
+    }
+
+    // validasi apakah konfirmasi password sama dengan password
+    if (newPasswordConfirmation != newPassword) {
+        return showToastErrorAlert(
+            "Confirmation password is not same with the password!"
+        );
+    }
+
+    // validasi password lama
+    const isValidPassword = checkValidPassword(id, password);
+
+    if (!isValidPassword) {
+        return showToastErrorAlert("Your current password is not valid");
+    }
+
+    let data = {
+        id: id,
+        password: newPassword,
+    };
+
+    $.ajax({
+        type: "POST",
+        url: baseUrl + `/api/account/update-password`,
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+        success: function (response) {
+            const responseCode = response.code;
+            const responseMessage = response.message;
+            if (responseCode == 201) {
+                showToastSuccessAlert(responseMessage);
+                closeModal();
+            }
+        },
+        error: function (err) {
+            result = null;
+            let errorResponse = JSON.parse(err.responseText);
+            const errorMessage = errorResponse.message;
+            showToastErrorAlert(errorMessage);
+        },
+    });
+}
+
+function checkValidPassword(id, password) {
+    let result;
+    let data = {
+        id: id,
+        password: password,
+    };
+
+    $.ajax({
+        type: "POST",
+        url: baseUrl + `/api/account/check-password`,
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        async: false,
+
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+        success: function (response) {
+            result = response.data;
+        },
+        error: function (err) {
+            result = null;
+            let errorResponse = JSON.parse(err.responseText);
+            const errorMessage = errorResponse.message;
+            showToastErrorAlert(errorMessage);
+        },
+    });
+    return result;
 }

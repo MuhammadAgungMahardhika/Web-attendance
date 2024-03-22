@@ -49,12 +49,8 @@
                                 <input type="text" id="status" class="form-control" placeholder="text" readonly>
                             </div>
                             <div class="col-sm-12 d-flex justify-content-end">
-                                @if ($userRoleId == 3)
-                                    <button class="btn btn-success me-1 mb-1" onclick="showAttendanceHistory()"><i
-                                            class="fa fa-history"></i> Show Attendance
-                                        History</button>
-                                @endif
-                                <button type="submit" class="btn btn-primary me-1 mb-1"><i class="fa fa-key"></i>
+                                <button type="submit" class="btn btn-primary me-1 mb-1"
+                                    onclick="changePasswordModal('{{ $userId }}')"><i class="fa fa-key"></i>
                                     Change
                                     password</button>
                                 <button type="submit" class="btn btn-success me-1 mb-1" onclick="update()"><i

@@ -28,9 +28,11 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::middleware('auth')->name('api')->group(function () {
-    // profile
-    Route::get('profile/{id}', [UserAccountController::class, 'get']);
-    Route::put('profile/{id}', [UserAccountController::class, 'update']);
+    // account
+    Route::get('account/{id}', [UserAccountController::class, 'get']);
+    Route::post('account/check-password', [UserAccountController::class, 'checkPassword']);
+    Route::post('account/update-password', [UserAccountController::class, 'updatePassword']);
+    Route::put('account/{id}', [UserAccountController::class, 'update']);
 
     // user
     Route::get('users', [UserController::class, 'get']);
