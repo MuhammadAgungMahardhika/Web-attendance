@@ -37,7 +37,11 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', function () {
         return view('auth/login');
     });
+    Route::get('/forgot-password', function () {
+        return view('auth/forgot-password');
+    });
 });
+
 
 // Menu
 Route::get('/dashboard', [PageController::class, 'dashboard'])->middleware('auth');

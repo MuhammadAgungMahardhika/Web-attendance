@@ -55,6 +55,7 @@ function showMap() {
         zoom: 18,
         clickableIcons: false,
     });
+
     // map.setOptions({
     //     styles: mapStyles
     // })
@@ -82,10 +83,17 @@ function legend() {
 
     let legend = document.createElement("div");
     legend.id = "legendPanel";
+    legend.classList.add("bg-white");
+    legend.classList.add("m-2");
+    legend.classList.add("p-2");
+    legend.classList.add("shadow");
     let content = [];
     content.push('<h6 class="text-center">Legend</h6>');
     content.push(
         `<p><img src="https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi.png" width="15"></img> You</p>`
+    );
+    content.push(
+        `<p><img src="${baseUrl}/assets/images/marker-icon/main_company_area.png" width="15"></img> Company Area</p>`
     );
 
     legend.innerHTML = content.join("");

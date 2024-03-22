@@ -32,6 +32,8 @@
                         <button type="submit" onclick="login()" class="btn btn-primary btn-block btn-lg shadow-lg mt-5"
                             id="btnLogin">Log
                             in</button>
+                        <a type="submit" href="{{ url('forgot-password') }}" class="mt-4" id="btnLogin">Forgot password
+                            ?</a>
                     </div>
                 </div>
             </div>
