@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::middleware('auth')->name('api')->group(function () {
+Route::name('api')->group(function () {
     // account
     Route::get('account/{id}', [UserAccountController::class, 'get']);
     Route::post('account/check-password', [UserAccountController::class, 'checkPassword']);

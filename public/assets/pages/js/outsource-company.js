@@ -4,9 +4,6 @@ showTable();
 function showTable() {
     $.ajax({
         type: "GET",
-        headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-        },
         url: baseUrl + `/api/outsource-company`,
         success: function (response) {
             let outsourceCompanyData = response.data;
