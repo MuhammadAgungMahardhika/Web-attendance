@@ -7,7 +7,7 @@
                 <div id="auth-left">
                     <a href=""><img src="{{ asset('assets/images/logo.png') }}" alt="Logo" width="120"></a>
                     <h1 class="auth-title">Log in.</h1>
-                    <p class="auth-subtitle mb-5">Log in with your data that you entered during registration.</p>
+                    <p class="auth-subtitle mb-5">Log in with your data that you entered durings registration.</p>
                     <div id="loginForm">
                         <div class="form-group position-relative has-icon-left mb-4">
                             <input class="form-control form-control-xl" type="email" name="email" placeholder="Email"
