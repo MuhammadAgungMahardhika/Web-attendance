@@ -52,7 +52,7 @@
                 @if (Auth::user()->role_id == '1')
                     <li class="sidebar-item {{ request()->is('main-company') ? 'active' : '' }}">
                         <a href="{{ url('main-company') }}" class="sidebar-link">
-                            <i class="bi bi-grid-fill"></i>
+                            <i class="bi bi-building-fill"></i>
                             <span>Main Company</span>
                         </a>
                     </li>
@@ -60,25 +60,25 @@
                 @if (Auth::user()->role_id == '1' || Auth::user()->role_id == '2')
                     <li class="sidebar-item {{ request()->is('outsource-company') ? 'active' : '' }}">
                         <a href="{{ url('outsource-company') }}" class="sidebar-link">
-                            <i class="bi bi-grid-fill"></i>
+                            <i class="bi bi-buildings-fill"></i>
                             <span>Outsource Company</span>
                         </a>
                     </li>
                     <li class="sidebar-item {{ request()->is('users') ? 'active' : '' }}">
                         <a href="{{ url('users') }}" class="sidebar-link">
-                            <i class="bi bi-grid-fill"></i>
+                            <i class="bi bi-people-fill"></i>
                             <span>Users</span>
                         </a>
                     </li>
                     <li class="sidebar-item {{ request()->is('shift') ? 'active' : '' }}">
                         <a href="{{ url('shift') }}" class="sidebar-link">
-                            <i class="bi bi-grid-fill"></i>
+                            <i class="bi bi-alarm-fill"></i>
                             <span>Shift</span>
                         </a>
                     </li>
                     <li class="sidebar-item {{ request()->is('attendance') ? 'active' : '' }}">
                         <a href="{{ url('attendance') }}" class="sidebar-link">
-                            <i class="bi bi-grid-fill"></i>
+                            <i class="bi bi-bell-fill"></i>
                             <span>Attendance</span>
                         </a>
                     </li>
