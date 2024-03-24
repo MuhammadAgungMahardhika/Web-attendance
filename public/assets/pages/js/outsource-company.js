@@ -211,7 +211,7 @@ function save() {
 
     $.ajax({
         type: "POST",
-        url: `api/outsource-company`,
+        url: baseUrl + `/api/outsource-company`,
         contentType: "application/json",
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
