@@ -70,8 +70,9 @@ Route::middleware('auth')->name('api')->group(function () {
     Route::get('attendance', [AttendanceController::class, 'get']);
     Route::get('attendance/{id}', [AttendanceController::class, 'get']);
     Route::get('attendance-by-date/{date}', [AttendanceController::class, 'getAttendanceByDate']);
-    Route::post('attendance-by-date-range', [AttendanceController::class, 'getAttendanceByDateRange']);
+    Route::get('attendance-by-shift/{shift}', [AttendanceController::class, 'getAttendanceByShift']);
     Route::get('attendance-by-user/{id}', [AttendanceController::class, 'getAttendanceByUserId']);
+    Route::post('attendance-by-date-range', [AttendanceController::class, 'getAttendanceByDateRange']);
     Route::post('attendance', [AttendanceController::class, 'store']);
     Route::put('attendance/{id}', [AttendanceController::class, 'update']);
     Route::delete('attendance/{id}', [AttendanceController::class, 'delete']);

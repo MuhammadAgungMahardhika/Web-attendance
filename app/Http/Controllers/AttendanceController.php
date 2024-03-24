@@ -77,6 +77,34 @@ class AttendanceController extends Controller
             return jsonResponse($items, Response::HTTP_NOT_FOUND, "data not found");
         }
     }
+    public function getAttendanceByShift($shift = null)
+    {
+
+        if ($shift != null) {
+            $items = $this->model::with(['user', 'shift'])
+                ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status', 'work_from')
+                ->whereHas('user', function ($query) {
+                    $query->where('role_id', 3);
+                })
+                ->where('attendance.shift_id', $shift)
+                ->orderBy('id', 'DESC')
+                ->get();
+        } else {
+            $items = $this->model::with(['user', 'shift'])
+                ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status', 'work_from')
+                ->whereHas('user', function ($query) {
+                    $query->where('role_id', 3);
+                })
+                ->orderBy('id', 'DESC')
+                ->get();
+        }
+
+        if ($items) {
+            return jsonResponse($items, Response::HTTP_OK, "success getting data");
+        } else {
+            return jsonResponse($items, Response::HTTP_NOT_FOUND, "data not found");
+        }
+    }
 
     public function getAttendanceByUserId($id)
     {

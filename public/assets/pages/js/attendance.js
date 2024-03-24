@@ -1,5 +1,6 @@
 // menampilkan data table
 showTable();
+openShiftOption();
 // Filter data by tanggal
 function filterByDate() {
     let dateNow = new Date();
@@ -141,10 +142,234 @@ function filterByDate() {
     });
 }
 
-function showTable() {
+function filterByDateToday() {
     $.ajax({
         type: "GET",
         url: baseUrl + `/api/attendance-by-date/${dateNow()}`,
+        success: function (response) {
+            console.log(response);
+            let attendanceData = response.data;
+
+            let data = "";
+            for (let i = 0; i < attendanceData.length; i++) {
+                let {
+                    id,
+                    user_id,
+                    user,
+                    shift,
+                    checkin,
+                    checkout,
+                    date,
+                    status,
+                    work_from,
+                } = attendanceData[i];
+
+                let statusBadge = "";
+                if (status == "in") {
+                    statusBadge = "badge bg-success";
+                } else if (status == "out") {
+                    statusBadge = "badge bg-danger";
+                } else if (status == "late") {
+                    statusBadge = "badge bg-warning";
+                }
+                data += `
+                <tr>
+                <td>${i + 1}</td>
+                <td>${user.name}</td>
+                <td>${shift.name}</td>
+                <td>${checkin != null ? checkin : ""}</td>
+                <td>${checkout != null ? checkout : ""}</td>
+                <td>${date != null ? date : ""}</td>
+                <td><span class="${statusBadge}">${
+                    status != null ? status : ""
+                } </span></td>
+                <td>${work_from}</td>
+                <td>
+                    <a title="Edit" class="btn btn-outline-primary btn-sm me-1"  onclick="editModal('${id}')"><i class="fa fa-edit"></i> </a>
+                    <a title="Delete" class="btn btn-outline-danger btn-sm me-1"  onclick="deleteModal('${id}')"><i class="fa fa-trash"></i></a>
+                </td>
+                </tr>
+                `;
+            }
+
+            let table = `
+            <table class="table dataTable no-footer" id="table" aria-describedby="table1_info">
+                <thead>
+                    <tr>
+                        <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                            aria-label="No: activate to sort column ascending">No
+                        </th>
+                        <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                            aria-label="Name: activate to sort column ascending">Name 
+                        </th>
+                        <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                            aria-label="Shift: activate to sort column ascending">Shift 
+                        </th>
+                        <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                            aria-label="checkin: activate to sort column ascending">
+                                            checkin
+                        </th>
+                        <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                            aria-label="checkout: activate to sort column ascending">
+                                            checkout
+                        </th>
+                        <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                            aria-label="date: activate to sort column ascending">
+                                            date
+                        </th>
+                        <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                            aria-label="status: activate to sort column ascending">
+                                            status
+                        </th>
+                        <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                            aria-label="work_from: activate to sort column ascending">
+                                            work_from
+                        </th>
+                        <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                            aria-label="Action: activate to sort column ascending">
+                                            Action
+                        </th>
+                    
+                    </tr>
+                </thead>
+                <tbody>
+                    ${data}
+                </tbody>
+            </table>
+            `;
+            $("#tableData").html(table);
+            initDataTable("table");
+        },
+        error: function (err) {
+            console.log(err.responseText);
+        },
+    });
+}
+
+function openShiftOption() {
+    $.ajax({
+        type: "GET",
+        url: baseUrl + `/api/shift/`,
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+        success: function (response) {
+            console.log(response);
+            const responseData = response.data;
+            let option = `<option selected="" value="">All...</option>`;
+            responseData.forEach((r) => {
+                option += `<option value="${r.id}">${r.name}</option>`;
+            });
+            $("#selectShiftOption").html(option);
+        },
+        error: function (err) {
+            console.log(err.responseText);
+        },
+    });
+}
+function filterByShift(shiftId) {
+    if (!shiftId) {
+        console.log("masuk sini");
+        return showTable();
+    }
+
+    $.ajax({
+        type: "GET",
+        url: baseUrl + `/api/attendance-by-shift/${shiftId}`,
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+        success: function (response) {
+            console.log(response);
+            let attendanceData = response.data;
+
+            let data = "";
+            for (let i = 0; i < attendanceData.length; i++) {
+                let {
+                    id,
+                    user_id,
+                    user,
+                    shift,
+                    checkin,
+                    checkout,
+                    date,
+                    status,
+                    work_from,
+                } = attendanceData[i];
+
+                data += `
+            <tr>
+            <td>${i + 1}</td>
+            <td>${user.name}</td>
+            <td>${shift.name}</td>
+            <td>${checkin != null ? checkin : ""}</td>
+            <td>${checkout != null ? checkout : ""}</td>
+            <td>${date != null ? date : ""}</td>
+            <td>${status != null ? status : ""}</td>
+            <td>${work_from}</td>
+            <td>
+                <a title="Edit" class="btn btn-outline-primary btn-sm me-1"  onclick="editModal('${id}')"><i class="fa fa-edit"></i> </a>
+                <a title="Delete" class="btn btn-outline-danger btn-sm me-1"  onclick="deleteModal('${id}')"><i class="fa fa-trash"></i></a>
+            </td>
+            </tr>
+            `;
+            }
+
+            let table = `
+        <table class="table dataTable no-footer" id="table" aria-describedby="table1_info">
+            <thead>
+                <tr>
+                    <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                        aria-label="No: activate to sort column ascending">No
+                    </th>
+                    <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                        aria-label="Name: activate to sort column ascending">Name 
+                    </th>
+                    <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                        aria-label="Shift: activate to sort column ascending">Shift 
+                    </th>
+                    <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                        aria-label="checkin: activate to sort column ascending">
+                                        checkin
+                    </th>
+                    <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                        aria-label="checkout: activate to sort column ascending">
+                                        checkout
+                    </th>
+                    <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                        aria-label="date: activate to sort column ascending">
+                                        date
+                    </th>
+                    <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                        aria-label="status: activate to sort column ascending">
+                                        status
+                    </th>
+                    <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                        aria-label="work_from: activate to sort column ascending">
+                                        work_from
+                    </th>
+                    <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                        aria-label="Action: activate to sort column ascending">
+                                        Action
+                    </th>
+                
+                </tr>
+            </thead>
+            <tbody>
+                ${data}
+            </tbody>
+        </table>
+        `;
+            $("#tableData").html(table);
+            initDataTable("table");
+        },
+    });
+}
+
+function showTable() {
+    $.ajax({
+        type: "GET",
+        url: baseUrl + `/api/attendance`,
         success: function (response) {
             console.log(response);
             let attendanceData = response.data;

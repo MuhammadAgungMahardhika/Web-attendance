@@ -13,6 +13,10 @@
                             <p>Filter Data</p>
                             {{-- Filter by date --}}
                             <div class="btn-group me-2 mb-2">
+                                <button class="btn btn-outline-secondary btn-sm " type="button"
+                                    onclick="filterByDateToday()">
+                                    <i class="fa fa-calendar"></i> Today
+                                </button>
                                 <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"
                                     id="dateDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                                     onclick="filterByDate()">
@@ -31,12 +35,18 @@
                                 <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"
                                     id="shiftDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                                     onclick="">
-                                    <i class="fa fa-calendar"></i> Filter By Shift
+                                    <i class="fa fa-clock"></i> Filter By Shift
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="shiftDropdown">
                                     <div class="row p-2">
-                                        <div class="col-12 form-group">
-                                            <input type="text" id="shiftFilter" class="form-control">
+                                        <div class="col-12">
+                                            <div class="input-group mb-3">
+                                                <select class="form-select" id="selectShiftOption"
+                                                    onchange="filterByShift(this.value)">
+
+                                                </select>
+                                                <label class="input-group-text" for="selectShiftOption">Shift</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
