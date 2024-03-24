@@ -1,5 +1,9 @@
 @extends('template.layout-1-column.main')
 @section('container')
+    <script>
+        let checkTheme = localStorage.getItem("theme");
+        checkTheme == "dark" ? localStorage.setItem("theme", "light") : ""
+    </script>
     <div class="container">
         <div class="row">
             <div class="col-6">
