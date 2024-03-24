@@ -5,10 +5,6 @@ function showTable() {
     $.ajax({
         type: "GET",
         url: baseUrl + `/api/outsource-company`,
-        contentType: "application/json",
-        headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-        },
         success: function (response) {
             let outsourceCompanyData = response.data;
 
@@ -228,7 +224,6 @@ function save() {
         },
         error: function (err) {
             let errorResponse = JSON.parse(err.responseText);
-            console.log(errorResponse);
             const errorMessage = errorResponse.message;
             showToastErrorAlert(errorMessage);
         },
