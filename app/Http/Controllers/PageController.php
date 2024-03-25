@@ -13,29 +13,22 @@ class PageController extends Controller
 {
     public function account()
     {
-        return view('pages/account');
+        return view('pages.account');
     }
     public function dashboard()
     {
-        return view('pages/dashboard');
+        return view('pages.dashboard');
     }
     public function user()
     {
-        return view('pages/users');
+        return view('pages.users');
     }
     public function mainCompany()
     {
-        $data = DB::table('main_company')
-            ->selectRaw('id, name, contact, address, ST_AsGeoJSON(location_radius) AS location_radius')
-            ->get();
-        $data = (array) $data;
-        $send = [
-            'data' => $data
-        ];
-        return view('pages/main-company', $send);
+        return view('pages.main-company');
     }
 
-    public function mainCompanyUpdate($id)
+    public function mainCompanyMap($id)
     {
         $data = DB::table('main_company')
             ->selectRaw('id, name, contact, address, ST_AsGeoJSON(location_radius) AS location_radius')
@@ -45,18 +38,18 @@ class PageController extends Controller
             'data' => $data
         ];
 
-        return view('pages/main-company-update/' . $id, $send);
+        return view('pages.main-company-map', $send);
     }
     public function outsourceCompany()
     {
-        return view('pages/outsource-company');
+        return view('pages.outsource-company');
     }
     public function shift()
     {
-        return view('pages/shift');
+        return view('pages.shift');
     }
     public function attendance()
     {
-        return view('pages/attendance');
+        return view('pages.attendance');
     }
 }

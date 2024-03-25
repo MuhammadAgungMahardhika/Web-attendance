@@ -7,19 +7,23 @@ function showTable() {
         url: baseUrl + `/api/main-company`,
         success: function (response) {
             let mainCompanyData = response.data;
-
+            console.log(mainCompanyData);
             let data = "";
             for (let i = 0; i < mainCompanyData.length; i++) {
-                let { id, name, start, end } = main - companyData[i];
+                let { id, name, contact, status, address, total_users } =
+                    mainCompanyData[i];
 
                 data += `
                 <tr>
                 <td>${i + 1}</td>
                 <td>${name}</td>
-                <td>${start != null ? start : ""}</td>
-                <td>${end != null ? end : ""}</td>
+                <td>${total_users != null ? total_users : ""}</td>
+                <td>${contact != null ? contact : ""}</td>
+                <td>${status != null ? status : ""}</td>
+                <td>${address != null ? address : ""}</td>
                 <td>
-                    <a title="Edit" class="btn btn-outline-primary btn-sm me-1" href="${baseUrl}/main-company-update/${id}"><i class="fa fa-edit"></i> </a>
+                    <a title="Edit" class="btn btn-outline-primary btn-sm me-1" href="${baseUrl}/main-company/${id}"><i class="fa fa-map"></i> </a>
+                    <a title="Edit" class="btn btn-outline-primary btn-sm me-1" onclick="editModal('${id}')" ><i class="fa fa-edit"></i> </a>
                     <a title="Delete" class="btn btn-outline-danger btn-sm me-1"  onclick="deleteModal('${id}')"><i class="fa fa-trash"></i></a>
                 </td>
                 </tr>
@@ -37,12 +41,21 @@ function showTable() {
                                             aria-label="Name: activate to sort column ascending">Name 
                         </th>
                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                            aria-label="address: activate to sort column ascending">Employee
+                                                     
+                         </th>
+                        <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                             aria-label="contact: activate to sort column ascending">
-                                            start
+                                            contact
                         </th>
                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                             aria-label="address: activate to sort column ascending">
-                                            end
+                                            status
+                        </th>
+                       
+                        <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                            aria-label="address: activate to sort column ascending">
+                                            address
                         </th>
                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                             aria-label="Action: activate to sort column ascending">
@@ -91,16 +104,25 @@ function addModal() {
                         <input type="text" id="name" class="form-control" placeholder="name" autocomplete="off">
                     </div>
                     <div class="col-md-4">
-                        <label for="start">start</label>
+                        <label for="contact">contact</label>
                     </div>
                     <div class="col-md-8 form-group">
-                        <input type="time" id="start" class="form-control" placeholder="start">
+                        <input type="text" id="contact" class="form-control" placeholder="contact">
                     </div>
                     <div class="col-md-4">
-                        <label for="end">end</label>
+                        <label for="status">status</label>
                     </div>
                     <div class="col-md-8 form-group">
-                        <input type="time" id="end" class="form-control" placeholder="end">
+                        <select class="form-control" id="status">    
+                            <option value="branch">Branch Company</option>
+                            <option value="parent">Parent Company</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="address">address</label>
+                    </div>
+                    <div class="col-md-8 form-group">
+                        <input type="text" id="address" class="form-control" placeholder="address">
                     </div>
                 </div>
             </div>
@@ -115,12 +137,7 @@ function editModal(id) {
         type: "GET",
         url: baseUrl + `/api/main-company/${id}`,
         success: function (response) {
-            let { id, name, start, end } = response.data;
-            // convert string json to time format H:I
-            start = convertTimeToHiFormat(start);
-            end = convertTimeToHiFormat(end);
-
-            console.log(typeof start);
+            let { id, name, contact, status, address } = response.data;
             const modalHeader = "Edit Main Company";
             const modalBody = `
             <form class="form form-horizontal">
@@ -133,19 +150,32 @@ function editModal(id) {
                                 <input type="text" id="name" value="${name}" class="form-control">
                             </div>
                             <div class="col-md-4">
-                                <label for="start">start</label>
+                                <label for="contact">contact</label>
                             </div>
                             <div class="col-md-8 form-group">
-                                <input type="time" id="start" value="${
-                                    start != null ? start : ""
+                                <input type="text" id="contact" value="${
+                                    contact != null ? contact : ""
                                 }" class="form-control">
                             </div>
                             <div class="col-md-4">
-                                <label for="end">end</label>
+                                <label for="status">status</label>
                             </div>
                             <div class="col-md-8 form-group">
-                                <input type="time" id="end" value="${
-                                    end != null ? end : ""
+                                <select class="form-control" id="status">    
+                                    <option value="branch" ${
+                                        status == "branch" ? "selected" : ""
+                                    }>Branch Company</option>
+                                    <option value="parent" ${
+                                        status == "parent" ? "selected" : ""
+                                    }>Parent Company</option>
+                                 </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="address">address</label>
+                            </div>
+                            <div class="col-md-8 form-group">
+                                <input type="text" id="address" value="${
+                                    address != null ? address : ""
                                 }" class="form-control">
                             </div>
                     
@@ -153,7 +183,7 @@ function editModal(id) {
                     </div>
                 </form>
             `;
-            const modalFooter = `<a class="btn btn-success btn-sm" onclick="update('${id}')">Ubah</a>`;
+            const modalFooter = `<a class="btn btn-success btn-sm" onclick="update('${id}')">Edit</a>`;
             showModal(modalHeader, modalBody, modalFooter);
         },
         error: function (err) {
@@ -192,27 +222,26 @@ function getRoles() {
 
 // API
 function save() {
-    let name = $("#name").val();
-    let start = $("#start").val();
-    let end = $("#end").val();
+    const name = $("#name").val();
+    const contact = $("#contact").val();
+    const status = $("#status").val();
+    const address = $("#address").val();
 
     // validasi nama
     if (!name) {
         return showErrorAlert("name cannot be empty");
     }
-    // validasi start time
-    if (!start) {
-        return showErrorAlert("start time cannot be empty");
-    }
-    // validasi nama
-    if (!end) {
-        return showErrorAlert("end time cannot be empty");
+
+    // validasi status perusahaan
+    if (!status) {
+        return showErrorAlert("company status cannot be empty");
     }
 
     let data = {
         name: name,
-        start: start,
-        end: end,
+        contact: contact,
+        status: status,
+        address: address,
     };
 
     $.ajax({
@@ -237,31 +266,25 @@ function save() {
 }
 
 function update(id) {
-    let name = $("#name").val();
-    let start = $("#start").val();
-    let end = $("#end").val();
+    const name = $("#name").val();
+    const contact = $("#contact").val();
+    const status = $("#status").val();
+    const address = $("#address").val();
 
     // validasi nama
     if (!name) {
         return showErrorAlert("name cannot be empty");
     }
-    // validasi start time
-    if (!start) {
-        return showErrorAlert("start time cannot be empty");
-    }
-    // validasi nama
-    if (!end) {
-        return showErrorAlert("end time cannot be empty");
-    }
 
     let data = {
         name: name,
-        start: start,
-        end: end,
+        contact: contact,
+        status: status,
+        address: address,
     };
 
     $.ajax({
-        type: "PUT",
+        type: "PATCH",
         url: baseUrl + `/api/main-company/${id}`,
         data: JSON.stringify(data),
         contentType: "application/json",
@@ -269,16 +292,19 @@ function update(id) {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },
         success: function (response) {
-            Swal.fire({
-                position: "top-end",
-                icon: "success",
-                title: "Data edited",
-                showConfirmButton: false,
-                timer: 1500,
-            }).then(() => {
-                closeModal();
-                showTable();
-            });
+            const responseCode = response.code;
+            if (responseCode == 201) {
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "Data edited",
+                    showConfirmButton: false,
+                    timer: 1500,
+                }).then(() => {
+                    closeModal();
+                    showTable();
+                });
+            }
         },
         error: function (err) {
             let errorResponse = JSON.parse(err.responseText);

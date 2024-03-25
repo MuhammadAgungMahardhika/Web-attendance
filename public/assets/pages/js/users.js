@@ -182,7 +182,7 @@ function addModal() {
     showModal(modalHeader, modalBody, modalFooter);
 }
 
-function selectRole() {
+function selectRole(roleId = null) {
     const roleOptionLenght = $("#role option").length;
     if (roleOptionLenght != 0) {
         return;
@@ -196,10 +196,13 @@ function selectRole() {
         },
         success: function (response) {
             const responseData = response.data;
-            console.log(response);
+
             let dataOption = `<option value=""></option>`;
             responseData.forEach((r) => {
-                dataOption += `<option value="${r.id}">${r.role}</option>`;
+                dataOption += `<option value="${r.id}"
+                ${roleId != null && roleId == r.id ? "selected" : ""}>
+                ${r.role}
+                </option>`;
             });
             $("#role").html(dataOption);
         },
@@ -211,7 +214,7 @@ function selectRole() {
         },
     });
 }
-function selectOutsourceCompany() {
+function selectOutsourceCompany(outsourceCompanyId = null) {
     const outsourceCompanyOptionLenght = $("#outsourceCompany option").length;
     if (outsourceCompanyOptionLenght != 0) {
         return;
@@ -225,10 +228,14 @@ function selectOutsourceCompany() {
         },
         success: function (response) {
             const responseData = response.data;
-            console.log(response);
+
             let dataOption = `<option value=""></option>`;
             responseData.forEach((r) => {
-                dataOption += `<option value="${r.id}">${r.name}</option>`;
+                dataOption += `<option value="${r.id}" ${
+                    outsourceCompanyId != null && outsourceCompanyId == r.id
+                        ? "selected"
+                        : ""
+                }>${r.name}</option>`;
             });
             $("#outsourceCompany").html(dataOption);
         },
@@ -240,7 +247,7 @@ function selectOutsourceCompany() {
         },
     });
 }
-function selectMainCompany() {
+function selectMainCompany(mainCompanyId = null) {
     const mainCompanyOptionLenght = $("#mainCompany option").length;
     if (mainCompanyOptionLenght != 0) {
         return;
@@ -254,10 +261,13 @@ function selectMainCompany() {
         },
         success: function (response) {
             const responseData = response.data;
-            console.log(response);
             let dataOption = `<option value=""></option>`;
             responseData.forEach((r) => {
-                dataOption += `<option value="${r.id}">${r.name}</option>`;
+                dataOption += `<option value="${r.id}" ${
+                    mainCompanyId != null && mainCompanyId == r.id
+                        ? "selected"
+                        : ""
+                }>${r.name}</option>`;
             });
             $("#mainCompany").html(dataOption);
         },
@@ -268,29 +278,6 @@ function selectMainCompany() {
             showToastErrorAlert(errorMessage);
         },
     });
-}
-
-function getOutsourcedCompany() {
-    let result;
-    $.ajax({
-        type: "GET",
-        url: baseUrl + `/api/outsource-company`,
-        async: false,
-        contentType: "application/json",
-        headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-        },
-        success: function (response) {
-            result = response.data;
-        },
-        error: function (err) {
-            result = null;
-            let errorResponse = JSON.parse(err.responseText);
-            const errorMessage = errorResponse.message;
-            showToastErrorAlert(errorMessage);
-        },
-    });
-    return result;
 }
 
 function editModal(id) {
@@ -311,27 +298,6 @@ function editModal(id) {
                 status,
             } = response.data;
 
-            // Roles data
-            let allRole = getRoles();
-            let roleData = "";
-            allRole.forEach((r) => {
-                roleData += `<option ${
-                    role_id == r.id ? "selected" : ""
-                } value="${r.id}">${r.role}</option>`;
-            });
-
-            // main company data
-
-            // Outsource company data
-            let allOutsourceCompany = getOutsourcedCompany();
-            let outsourceCompanyData = "";
-
-            allOutsourceCompany.forEach((r) => {
-                outsourceCompanyData += `<option ${
-                    outsource_company_id == r.id ? "selected" : ""
-                } value="${r.id}">${r.name}</option>`;
-            });
-
             const modalHeader = "Edit User";
             const modalBody = `
             <form class="form form-horizontal">
@@ -342,16 +308,23 @@ function editModal(id) {
                             </div>
                             <div class="col-md-8 form-group">
                                 <select class="form-select" id="role">
-                                ${roleData}
+                                  
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <label for="role">Outsource Company</label>
+                                <label for="mainCompany">Main Company</label>
+                            </div>
+                            <div class="col-md-8 form-group">
+                                <select class="form-select" id="mainCompany">
+                                    
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="outsourceCompany">Outsource Company</label>
                             </div>
                             <div class="col-md-8 form-group">
                                 <select class="form-select" id="outsourceCompany">
-                                    <option></option>
-                                    ${outsourceCompanyData}
+                                   
                                 </select>
                             </div>
                             <div class="col-md-4">
@@ -417,6 +390,9 @@ function editModal(id) {
             `;
             const modalFooter = `<a class="btn btn-success btn-sm" onclick="update('${id}')">Edit</a>`;
             showModal(modalHeader, modalBody, modalFooter);
+            selectRole(role_id);
+            selectMainCompany(main_company_id);
+            selectOutsourceCompany(outsource_company_id);
         },
         error: function (err) {
             let errorResponse = JSON.parse(err.responseText);
@@ -431,25 +407,6 @@ function deleteModal(id) {
     const modalBody = "Are you sure to delete this user";
     const modalFooter = `<a class="btn btn-danger btn-sm" onclick="deleteItem('${id}')">Delete</a>`;
     showModal(modalHeader, modalBody, modalFooter);
-}
-
-function getRoles() {
-    let item;
-    $.ajax({
-        type: "GET",
-        url: baseUrl + `/api/roles`,
-        async: false,
-        success: function (response) {
-            item = response.data;
-        },
-        error: function (err) {
-            item = null;
-            let errorResponse = JSON.parse(err.responseText);
-            const errorMessage = errorResponse.message;
-            showToastErrorAlert(errorMessage);
-        },
-    });
-    return item;
 }
 
 // API
@@ -508,27 +465,6 @@ function save() {
             position: "top-end",
             icon: "error",
             title: "Email is not valid",
-            showConfirmButton: false,
-            timer: 1500,
-        });
-    }
-
-    // validasi nomor telfon
-    if (!phoneNumber) {
-        return Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: "Phone number cannot be empty",
-            showConfirmButton: false,
-            timer: 1500,
-        });
-    }
-    // validasi nomor telfon kurang dari 10 digit
-    if (phoneNumber.length < 11) {
-        return Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: "Phone number cannot less than 10 digits",
             showConfirmButton: false,
             timer: 1500,
         });
@@ -627,27 +563,6 @@ function update(id) {
             position: "top-end",
             icon: "error",
             title: "Your email is not valid",
-            showConfirmButton: false,
-            timer: 1500,
-        });
-    }
-
-    // validasi nomor telfon
-    if (!phoneNumber) {
-        return Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: "Phone number cannot be empty",
-            showConfirmButton: false,
-            timer: 1500,
-        });
-    }
-    // validasi nomor telfon kurang dari 10 digit
-    if (phoneNumber.length < 11) {
-        return Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: "Your phone number is less than 10 digits",
             showConfirmButton: false,
             timer: 1500,
         });

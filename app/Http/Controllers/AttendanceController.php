@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Attendance;
 use App\Models\MainCompany;
 use App\Models\Shift;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Database\QueryException;
@@ -156,7 +157,9 @@ class AttendanceController extends Controller
 
             // jika ambil absen dari kantor, lakukan pengecheckan lokasi
             if ($workFrom == "office") {
-                $mainCompanyData = MainCompany::selectRaw("{$this->geom_area}")->first();
+                $user = User::findOrFail($userId);
+                $userMainCompanyId = $user->main_company_id;
+                $mainCompanyData = MainCompany::selectRaw("{$this->geom_area}")->where('id', $userMainCompanyId)->first();
                 $companyWkt = $mainCompanyData->wkt;
                 if (!$companyWkt) {
                     return jsonResponse(null, Response::HTTP_UNPROCESSABLE_ENTITY, "Main company area is not set yet, please contact admin to set it!");
@@ -215,7 +218,9 @@ class AttendanceController extends Controller
             }
             $workFrom = $attendance->work_from;
             if ($workFrom == "office") {
-                $mainCompanyData = MainCompany::selectRaw("{$this->geom_area}")->first();
+                $user = User::findOrFail($attendance->user_id);
+                $userMainCompanyId = $user->main_company_id;
+                $mainCompanyData = MainCompany::selectRaw("{$this->geom_area}")->where('id', $userMainCompanyId)->first();
                 $companyWkt = $mainCompanyData->wkt;
 
                 if (!$companyWkt) {

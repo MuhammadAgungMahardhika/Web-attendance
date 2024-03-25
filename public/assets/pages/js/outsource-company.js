@@ -17,9 +17,9 @@ function showTable() {
                 <tr>
                 <td>${i + 1}</td>
                 <td>${name}</td>
+                <td>${users_count}</td>
                 <td>${contact != null ? contact : ""}</td>
                 <td>${address != null ? address : ""}</td>
-                <td>${users_count}</td>
                 <td>
                     <a title="Edit" class="btn btn-outline-primary btn-sm me-1"  onclick="editModal('${id}')"><i class="fa fa-edit"></i> </a>
                     <a title="Delete" class="btn btn-outline-danger btn-sm me-1"  onclick="deleteModal('${id}')"><i class="fa fa-trash"></i></a>
@@ -39,16 +39,16 @@ function showTable() {
                                             aria-label="Name: activate to sort column ascending">Name 
                         </th>
                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                        aria-label="Outsourced Workers: activate to sort column ascending">
+                        Outsourced Workers
+                        </th>
+                        <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                             aria-label="contact: activate to sort column ascending">
                                             contact
                         </th>
                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                             aria-label="address: activate to sort column ascending">
                                             address
-                        </th>
-                        <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                            aria-label="Outsourced Workers: activate to sort column ascending">
-                                            Outsourced Workers
                         </th>
                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                             aria-label="Action: activate to sort column ascending">

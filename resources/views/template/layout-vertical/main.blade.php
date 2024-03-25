@@ -51,7 +51,7 @@
 </script>
 
 <body class="light">
-    <script src="assets/static/js/initTheme.js"></script>
+    <script src="{{ url('assets/static/js/initTheme.js') }}"></script>
     <div id="app">
         @include('components.fullscreen-modal')
         @include('components.normal-modal')

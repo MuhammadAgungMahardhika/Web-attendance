@@ -44,9 +44,13 @@ class UserController extends Controller
                 'main_company_id' => 'required',
                 'name' => 'required',
                 'email' => 'required|string',
-                'phone_number' => 'required|string',
                 'password' => 'required|string',
             ]);
+
+            $checkEmail = $this->model::where("email", $request->email)->exists();
+            if ($checkEmail) {
+                return jsonResponse(null, Response::HTTP_UNPROCESSABLE_ENTITY, "Email Already Exist!");
+            }
             $items = $this->model::create([
                 'role_id' => $request->role_id,
                 'main_company_id' => $request->main_company_id,
@@ -80,7 +84,6 @@ class UserController extends Controller
                 'main_company_id' => 'required',
                 'name' => 'required',
                 'email' => 'required|string',
-                'phone_number' => 'required|string',
                 'status' => 'required|string',
             ]);
 

@@ -16,6 +16,7 @@ class MainCompany extends Model
         'id',
         'name',
         'contact',
+        'status',
         'address',
         'location_radius',
         'created_by',
@@ -23,4 +24,9 @@ class MainCompany extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function users()
+    {
+        return $this->hasMany(User::class, "main_company_id");
+    }
 }

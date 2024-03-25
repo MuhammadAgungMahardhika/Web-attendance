@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('contact')->nullable();
             $table->string('address')->nullable();
+            $table->enum('status', ['parent', 'branch'])->nullable();
             $table->geometry('location_radius')->nullable();
             // $table->polygon('location_radius')->nullable();
             $table->string('created_by')->nullable();
