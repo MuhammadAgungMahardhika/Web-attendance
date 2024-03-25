@@ -27,13 +27,25 @@ class PageController extends Controller
     {
         $data = DB::table('main_company')
             ->selectRaw('id, name, contact, address, ST_AsGeoJSON(location_radius) AS location_radius')
-            ->first();
+            ->get();
         $data = (array) $data;
         $send = [
             'data' => $data
         ];
-        // dd($data);
         return view('pages/main-company', $send);
+    }
+
+    public function mainCompanyUpdate($id)
+    {
+        $data = DB::table('main_company')
+            ->selectRaw('id, name, contact, address, ST_AsGeoJSON(location_radius) AS location_radius')
+            ->where('id', $id)->first();
+        $data = (array) $data;
+        $send = [
+            'data' => $data
+        ];
+
+        return view('pages/main-company-update/' . $id, $send);
     }
     public function outsourceCompany()
     {
