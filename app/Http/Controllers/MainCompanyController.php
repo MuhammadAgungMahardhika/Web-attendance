@@ -25,9 +25,9 @@ class MainCompanyController extends Controller
     public function get($id = null)
     {
         if ($id != null) {
-            $items = $this->model::where('id', $id)->first();
+            $items = $this->model::selectRaw('id,name,contact,address')->where('id', $id)->first();
         } else {
-            $items = $this->model::orderBy('id', 'ASC')->get();
+            $items = $this->model::selectRaw('id,name,contact,address')->orderBy('id', 'ASC')->get();
         }
         return jsonResponse($items, Response::HTTP_OK, "success getting data");
     }

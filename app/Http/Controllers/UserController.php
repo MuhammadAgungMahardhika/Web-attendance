@@ -41,6 +41,7 @@ class UserController extends Controller
         try {
             $request->validate([
                 'role_id' => 'required',
+                'main_company_id' => 'required',
                 'name' => 'required',
                 'email' => 'required|string',
                 'phone_number' => 'required|string',
@@ -48,7 +49,7 @@ class UserController extends Controller
             ]);
             $items = $this->model::create([
                 'role_id' => $request->role_id,
-                'main_company_id' => MainCompany::first()->id,
+                'main_company_id' => $request->main_company_id,
                 'outsource_company_id' => $request->outsource_company_id,
                 'name' => $request->name,
                 'email' => $request->email,
@@ -76,6 +77,7 @@ class UserController extends Controller
         try {
             $request->validate([
                 'role_id' => 'required',
+                'main_company_id' => 'required',
                 'name' => 'required',
                 'email' => 'required|string',
                 'phone_number' => 'required|string',

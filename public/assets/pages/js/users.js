@@ -96,20 +96,6 @@ function showAttendanceHistory(id) {
 }
 
 function addModal() {
-    // get roles data
-    let roles = getRoles();
-    let roleData = "";
-    roles.forEach((r) => {
-        roleData += `<option value="${r.id}">${r.role}</option>`;
-    });
-
-    // get oursource company data
-    let outsourceCompany = getOutsourcedCompany();
-    let outsourceCompanyData = "";
-    outsourceCompany.forEach((r) => {
-        outsourceCompanyData += `<option value="${r.id}">${r.name}</option>`;
-    });
-
     const modalHeader = "Add User";
     const modalBody = `
             <form class="form form-horizontal">
@@ -119,17 +105,24 @@ function addModal() {
                         <label for="role">Role</label>
                     </div>
                     <div class="col-md-8 form-group">
-                        <select class="form-select" id="role">
-                        ${roleData}
+                        <select class="form-select" id="role" onclick="selectRole()">
+                       
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <label for="role">Outsource Company</label>
+                        <label for="mainCompany">Main Company</label>
                     </div>
                     <div class="col-md-8 form-group">
-                        <select class="form-select" id="outsourceCompany">
-                            <option></option>
-                        ${outsourceCompanyData}
+                        <select class="form-select" id="mainCompany" onclick="selectMainCompany()">
+                           
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                     <label for="outsourceCompany">Outsource Company</label>
+                    </div>
+                    <div class="col-md-8 form-group">
+                        <select class="form-select" id="outsourceCompany" onclick="selectOutsourceCompany()">
+                            
                         </select>
                     </div>
                     <div class="col-md-4">
@@ -189,6 +182,94 @@ function addModal() {
     showModal(modalHeader, modalBody, modalFooter);
 }
 
+function selectRole() {
+    const roleOptionLenght = $("#role option").length;
+    if (roleOptionLenght != 0) {
+        return;
+    }
+    $.ajax({
+        type: "GET",
+        url: baseUrl + `/api/roles`,
+        dataType: "json",
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+        success: function (response) {
+            const responseData = response.data;
+            console.log(response);
+            let dataOption = `<option value=""></option>`;
+            responseData.forEach((r) => {
+                dataOption += `<option value="${r.id}">${r.role}</option>`;
+            });
+            $("#role").html(dataOption);
+        },
+        error: function (err) {
+            result = null;
+            let errorResponse = JSON.parse(err.responseText);
+            const errorMessage = errorResponse.message;
+            showToastErrorAlert(errorMessage);
+        },
+    });
+}
+function selectOutsourceCompany() {
+    const outsourceCompanyOptionLenght = $("#outsourceCompany option").length;
+    if (outsourceCompanyOptionLenght != 0) {
+        return;
+    }
+    $.ajax({
+        type: "GET",
+        url: baseUrl + `/api/outsource-company`,
+        dataType: "json",
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+        success: function (response) {
+            const responseData = response.data;
+            console.log(response);
+            let dataOption = `<option value=""></option>`;
+            responseData.forEach((r) => {
+                dataOption += `<option value="${r.id}">${r.name}</option>`;
+            });
+            $("#outsourceCompany").html(dataOption);
+        },
+        error: function (err) {
+            result = null;
+            let errorResponse = JSON.parse(err.responseText);
+            const errorMessage = errorResponse.message;
+            showToastErrorAlert(errorMessage);
+        },
+    });
+}
+function selectMainCompany() {
+    const mainCompanyOptionLenght = $("#mainCompany option").length;
+    if (mainCompanyOptionLenght != 0) {
+        return;
+    }
+    $.ajax({
+        type: "GET",
+        url: baseUrl + `/api/main-company`,
+        dataType: "json",
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+        success: function (response) {
+            const responseData = response.data;
+            console.log(response);
+            let dataOption = `<option value=""></option>`;
+            responseData.forEach((r) => {
+                dataOption += `<option value="${r.id}">${r.name}</option>`;
+            });
+            $("#mainCompany").html(dataOption);
+        },
+        error: function (err) {
+            result = null;
+            let errorResponse = JSON.parse(err.responseText);
+            const errorMessage = errorResponse.message;
+            showToastErrorAlert(errorMessage);
+        },
+    });
+}
+
 function getOutsourcedCompany() {
     let result;
     $.ajax({
@@ -238,6 +319,8 @@ function editModal(id) {
                     role_id == r.id ? "selected" : ""
                 } value="${r.id}">${r.role}</option>`;
             });
+
+            // main company data
 
             // Outsource company data
             let allOutsourceCompany = getOutsourcedCompany();
@@ -372,6 +455,7 @@ function getRoles() {
 // API
 function save() {
     let roleId = $("#role").val();
+    let mainCompanyId = $("#mainCompany").val();
     let outsourceCompanyId = $("#outsourceCompany").val();
     let name = $("#name").val();
     let email = $("#email").val();
@@ -382,6 +466,27 @@ function save() {
     let password = $("#password").val();
     let konfirmasiPassword = $("#konfirmasiPassword").val();
 
+    // validasi role
+    if (!roleId) {
+        return Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: "Role cannot be empty",
+            showConfirmButton: false,
+            timer: 1500,
+        });
+    }
+
+    // validasi main company
+    if (!mainCompanyId) {
+        return Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: "Main company cannot be empty",
+            showConfirmButton: false,
+            timer: 1500,
+        });
+    }
     // validasi nama
     if (!name) {
         return Swal.fire({
@@ -392,6 +497,7 @@ function save() {
             timer: 1500,
         });
     }
+
     // validasi email
     if (
         !email.match(
@@ -451,6 +557,7 @@ function save() {
 
     let data = {
         role_id: roleId,
+        main_company_id: mainCompanyId,
         outsource_company_id: outsourceCompanyId,
         name: name,
         email: email,
