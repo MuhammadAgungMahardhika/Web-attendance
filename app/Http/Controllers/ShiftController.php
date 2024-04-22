@@ -27,7 +27,7 @@ class ShiftController extends Controller
         } else {
             $items = $this->model->orderBy('id', 'ASC')->get();
         }
-        return response(['data' => $items, 'status' => 200]);
+        return jsonResponse($items, 200);
     }
 
     public function store(Request $request)
