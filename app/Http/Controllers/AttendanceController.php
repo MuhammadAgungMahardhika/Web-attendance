@@ -107,6 +107,26 @@ class AttendanceController extends Controller
         }
     }
 
+    public function getAttendanceTodayByUserId($id)
+    {
+        try {
+            $date = now()->toDateString();
+            $attendanceHistory = $this->model::with(["user", "shift"])
+                ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status', 'work_from')
+                ->whereHas('user', function ($query) {
+                    $query->where('role_id', 3);
+                })->where("attendance.user_id", $id)
+                ->where('date', $date)
+                ->orderBy('id', 'DESC')
+                ->get();
+
+            return jsonResponse($attendanceHistory, Response::HTTP_OK);
+        } catch (\Throwable $th) {
+            return jsonResponse(null, Response::HTTP_UNPROCESSABLE_ENTITY, $th->getMessage());
+        } catch (QueryException $e) {
+            return jsonResponse($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, "Query Error");
+        }
+    }
     public function getAttendanceByUserId($id)
     {
         try {
