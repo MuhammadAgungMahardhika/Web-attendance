@@ -119,8 +119,20 @@ class AttendanceController extends Controller
                 ->where('date', $date)
                 ->orderBy('id', 'DESC')
                 ->get();
-
-            return jsonResponse($attendanceHistory, Response::HTTP_OK);
+            if (count($attendanceHistory) > 0) {
+                return jsonResponse($attendanceHistory, Response::HTTP_OK);
+            } else {
+                $attendanceHistoryNull = new Attendance();
+                $attendanceHistoryNull->user_id = $id;
+                $attendanceHistoryNull->shift_id = null;
+                $attendanceHistoryNull->check_in = null;
+                $attendanceHistoryNull->date = null;
+                $attendanceHistoryNull->work_from = null;
+                $attendanceHistoryNull->status = "unattended";
+                $attendanceHistoryNull->location = null;
+                $attendanceHistoryNull->created_by = null;
+                return jsonResponse($attendanceHistoryNull, Response::HTTP_OK);
+            }
         } catch (\Throwable $th) {
             return jsonResponse(null, Response::HTTP_UNPROCESSABLE_ENTITY, $th->getMessage());
         } catch (QueryException $e) {
