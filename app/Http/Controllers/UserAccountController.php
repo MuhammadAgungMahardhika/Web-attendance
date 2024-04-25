@@ -54,7 +54,12 @@ class UserAccountController extends Controller
             $user->updated_by = Auth::user()->id;
             $user->save();
 
-            return jsonResponse($user, Response::HTTP_CREATED, 'success update account');
+            if ($user) {
+                return jsonResponse($user, Response::HTTP_CREATED, 'success update account');
+            } else {
+                $userNull = new User();
+                return jsonResponse($userNull, Response::HTTP_UNPROCESSABLE_ENTITY, 'failed update account');
+            }
         } catch (ValidationException $e) {
             return jsonResponse($e->errors(), Response::HTTP_UNPROCESSABLE_ENTITY, "Validation Error");
         } catch (QueryException $e) {
