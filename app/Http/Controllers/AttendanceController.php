@@ -212,7 +212,8 @@ class AttendanceController extends Controller
                     $attendance->location = null;
                     return jsonResponse($attendance, Response::HTTP_CREATED, "success to take attendance");
                 } else {
-                    return jsonResponse(null, Response::HTTP_UNPROCESSABLE_ENTITY, 'You work from office, but you are not inside the main company area');
+                    $attendanceNull = new Attendance();
+                    return jsonResponse($attendanceNull, Response::HTTP_UNPROCESSABLE_ENTITY, 'You work from office, but you are not inside the main company area');
                 }
             } else {
                 // Jika absen dari rumah langsung masukan data
