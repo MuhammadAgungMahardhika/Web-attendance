@@ -118,7 +118,7 @@ class AttendanceController extends Controller
                 })->where("attendance.user_id", $id)
                 ->where('date', $date)
                 ->orderBy('id', 'DESC')
-                ->get();
+                ->first();
             if (count($attendanceHistory) > 0) {
                 return jsonResponse($attendanceHistory, Response::HTTP_OK);
             } else {
