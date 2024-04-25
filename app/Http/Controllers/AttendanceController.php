@@ -209,6 +209,7 @@ class AttendanceController extends Controller
                         "location" =>  DB::raw("ST_GeomFromText('$location', 4326)"),
                         "created_by" => $createdBy,
                     ]);
+                    $attendance->location = null;
                     return jsonResponse($attendance, Response::HTTP_CREATED, "success to take attendance");
                 } else {
                     return jsonResponse(null, Response::HTTP_UNPROCESSABLE_ENTITY, 'You work from office, but you are not inside the main company area');
@@ -225,6 +226,7 @@ class AttendanceController extends Controller
                     "location" =>  DB::raw("ST_GeomFromText('$location', 4326)"),
                     "created_by" => $createdBy,
                 ]);
+                $attendance->location = null;
                 return jsonResponse($attendance, Response::HTTP_CREATED, "success to take attendance");
             }
         } catch (ValidationException $e) {
