@@ -209,11 +209,9 @@ class AttendanceController extends Controller
                         "location" =>  DB::raw("ST_GeomFromText('$location', 4326)"),
                         "created_by" => $createdBy,
                     ]);
-                    $attendance->location = null;
-                    return jsonResponse($attendance, Response::HTTP_CREATED, "success to take attendance");
+                    return jsonResponse(true, Response::HTTP_CREATED, "success to take attendance");
                 } else {
-                    $attendanceNull = new Attendance();
-                    return jsonResponse($attendanceNull, Response::HTTP_UNPROCESSABLE_ENTITY, 'You work from office, but you are not inside the main company area');
+                    return jsonResponse(false, Response::HTTP_UNPROCESSABLE_ENTITY, 'You work from office, but you are not inside the main company area');
                 }
             } else {
                 // Jika absen dari rumah langsung masukan data
@@ -227,8 +225,7 @@ class AttendanceController extends Controller
                     "location" =>  DB::raw("ST_GeomFromText('$location', 4326)"),
                     "created_by" => $createdBy,
                 ]);
-                $attendance->location = null;
-                return jsonResponse($attendance, Response::HTTP_CREATED, "success to take attendance");
+                return jsonResponse(true, Response::HTTP_CREATED, "success to take attendance");
             }
         } catch (ValidationException $e) {
             return jsonResponse($e->errors(), Response::HTTP_UNPROCESSABLE_ENTITY, "Validation Error");
@@ -269,7 +266,7 @@ class AttendanceController extends Controller
                     $attendance->save();
                     return jsonResponse(true, Response::HTTP_CREATED, "success to checkout from office");
                 } else {
-                    return jsonResponse(null, Response::HTTP_UNPROCESSABLE_ENTITY, "You need to checout in main company location, because you are work from office today");
+                    return jsonResponse(false, Response::HTTP_UNPROCESSABLE_ENTITY, "You need to checout in main company location, because you are work from office today");
                 }
             } else {
                 $attendance->checkout = $checkOut;

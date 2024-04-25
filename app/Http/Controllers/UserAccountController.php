@@ -55,10 +55,9 @@ class UserAccountController extends Controller
             $user->save();
 
             if ($user) {
-                return jsonResponse($user, Response::HTTP_CREATED, 'success update account');
+                return jsonResponse(true, Response::HTTP_CREATED, 'success update account');
             } else {
-                $userNull = new User();
-                return jsonResponse($userNull, Response::HTTP_UNPROCESSABLE_ENTITY, 'failed update account');
+                return jsonResponse(false, Response::HTTP_UNPROCESSABLE_ENTITY, 'failed update account');
             }
         } catch (ValidationException $e) {
             return jsonResponse($e->errors(), Response::HTTP_UNPROCESSABLE_ENTITY, "Validation Error");
@@ -93,7 +92,11 @@ class UserAccountController extends Controller
             $user = $this->model::findOrFail($id);
             $user->password = $password;
             $user->save();
-            return jsonResponse($user, Response::HTTP_CREATED, "New password updated!");
+            if ($user) {
+                return jsonResponse(true, Response::HTTP_CREATED, "New password updated!");
+            } else {
+                return jsonResponse(false,  Response::HTTP_UNPROCESSABLE_ENTITY, "Failed to update password");
+            }
         } catch (QueryException $e) {
             return jsonResponse($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, "Query Error");
         } catch (\Throwable $th) {
