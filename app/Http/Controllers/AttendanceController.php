@@ -6,6 +6,7 @@ use App\Models\Attendance;
 use App\Models\MainCompany;
 use App\Models\Shift;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Database\QueryException;
@@ -110,7 +111,7 @@ class AttendanceController extends Controller
     public function getAttendanceTodayByUserId($id)
     {
         try {
-            $date = now()->toDateString();
+            $date = Carbon::now()->setTimezone('Asia/Jakarta')->toDateString();
             $attendanceHistory = $this->model::with(["user", "shift"])
                 ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status_login', 'status_attendance', 'work_from')
                 ->whereHas('user', function ($query) {
@@ -119,6 +120,7 @@ class AttendanceController extends Controller
                 ->where('date', $date)
                 ->orderBy('id', 'DESC')
                 ->first();
+
             if ($attendanceHistory) {
                 return jsonResponse($attendanceHistory, Response::HTTP_OK);
             } else {
