@@ -112,7 +112,7 @@ class AttendanceController extends Controller
         try {
             $date = now()->toDateString();
             $attendanceHistory = $this->model::with(["user", "shift"])
-                ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status_attendance', 'work_from')
+                ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status_login', 'status_attendance', 'work_from')
                 ->whereHas('user', function ($query) {
                     $query->where('role_id', 3);
                 })->where("attendance.user_id", $id)
