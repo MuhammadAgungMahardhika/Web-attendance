@@ -51,7 +51,7 @@ class UserAccountController extends Controller
             $user->phone_number = $request->phone_number;
             $user->address = $request->address;
             $user->status = $request->status;
-            $user->updated_by = Auth::user()->id;
+            $user->updated_by = $id;
             $user->save();
 
             if ($user) {
