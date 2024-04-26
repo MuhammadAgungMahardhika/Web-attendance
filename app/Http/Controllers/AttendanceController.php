@@ -256,6 +256,7 @@ class AttendanceController extends Controller
                 if ($isInsideCompany) {
                     $attendance->checkout = $checkOut;
                     $attendance->updated_by = $updatedBy;
+                    $attendance->status = "out";
                     $attendance->save();
                     return jsonResponse(true, Response::HTTP_CREATED, "success to checkout from office");
                 } else {
