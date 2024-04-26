@@ -18,7 +18,8 @@ return new class extends Migration
             $table->time('checkin')->nullable();
             $table->time('checkout')->nullable();
             $table->date('date');
-            $table->enum("status", ["in", "out", "late"])->nullable();
+            $table->enum("status_login", ["checkin", "checkout"])->nullable();
+            $table->enum("status_attendance", ["on time", "late"])->nullable();
             $table->enum("work_from", ["office", "home"])->nullable();
             $table->geography('location')->nulable();
             // $table->point("location")->nullable();

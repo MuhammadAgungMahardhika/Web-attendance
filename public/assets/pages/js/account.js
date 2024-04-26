@@ -63,16 +63,14 @@ function showAttendanceHistory() {
                     checkin,
                     checkout,
                     date,
-                    status,
+                    status_attendance,
                     work_from,
                 } = userAttendanceHistory[i];
 
                 let statusBadge = "";
-                if (status == "in") {
+                if (status_attendance == "on time") {
                     statusBadge = "badge bg-success";
-                } else if (status == "out") {
-                    statusBadge = "badge bg-danger";
-                } else if (status == "late") {
+                }  else {
                     statusBadge = "badge bg-warning";
                 }
                 data += `
@@ -84,7 +82,7 @@ function showAttendanceHistory() {
                             <td>${checkout != null ? checkout : ""}</td>
                             <td>${date != null ? date : ""}</td>
                             <td><span class="${statusBadge}">${
-                    status != null ? status : ""
+                                status_attendance != null ? status_attendance : ""
                 } </span></td>
                             <td>${work_from}</td>
                             </tr>
@@ -117,8 +115,8 @@ function showAttendanceHistory() {
                                                             date
                                         </th>
                                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                                            aria-label="status: activate to sort column ascending">
-                                                            status
+                                                            aria-label="status attendance: activate to sort column ascending">
+                                                            status attendance
                                         </th>
                                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                                             aria-label="work_from: activate to sort column ascending">
@@ -230,15 +228,13 @@ function filterByDate() {
                         checkin,
                         checkout,
                         date,
-                        status,
+                        status_attendance,
                         work_from,
                     } = attendanceData[i];
 
-                    if (status == "in") {
+                    if (status_attendance == "on time") {
                         statusBadge = "badge bg-success";
-                    } else if (status == "out") {
-                        statusBadge = "badge bg-danger";
-                    } else if (status == "late") {
+                    }else {
                         statusBadge = "badge bg-warning";
                     }
                     data += `
@@ -250,7 +246,7 @@ function filterByDate() {
                 <td>${checkout != null ? checkout : ""}</td>
                 <td>${date != null ? date : ""}</td>
                 <td><span class="${statusBadge}">${
-                        status != null ? status : ""
+                        status_attendance != null ? status_attendance : ""
                     } </span></td>
                 <td>${work_from}</td>
                 </tr>
@@ -283,8 +279,8 @@ function filterByDate() {
                                             date
                         </th>
                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                            aria-label="status: activate to sort column ascending">
-                                            status
+                                            aria-label="status attendance: activate to sort column ascending">
+                                            status attendance
                         </th>
                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                             aria-label="work_from: activate to sort column ascending">

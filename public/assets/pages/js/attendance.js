@@ -63,7 +63,7 @@ function filterByDate() {
                         checkin,
                         checkout,
                         date,
-                        status,
+                        status_attendance,
                         work_from,
                     } = attendanceData[i];
 
@@ -75,7 +75,7 @@ function filterByDate() {
                 <td>${checkin != null ? checkin : ""}</td>
                 <td>${checkout != null ? checkout : ""}</td>
                 <td>${date != null ? date : ""}</td>
-                <td>${status != null ? status : ""}</td>
+                <td>${status_attendance != null ? status_attendance : ""}</td>
                 <td>${work_from}</td>
                 <td>
                     <a title="Edit" class="btn btn-outline-primary btn-sm me-1"  onclick="editModal('${id}')"><i class="fa fa-edit"></i> </a>
@@ -111,8 +111,8 @@ function filterByDate() {
                                             date
                         </th>
                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                            aria-label="status: activate to sort column ascending">
-                                            status
+                                            aria-label="status_attendance: activate to sort column ascending">
+                                            status attendance
                         </th>
                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                             aria-label="work_from: activate to sort column ascending">
@@ -160,17 +160,15 @@ function filterByDateToday() {
                     checkin,
                     checkout,
                     date,
-                    status,
+                    status_attendance,
                     work_from,
                 } = attendanceData[i];
 
-                let statusBadge = "";
-                if (status == "in") {
-                    statusBadge = "badge bg-success";
-                } else if (status == "out") {
-                    statusBadge = "badge bg-danger";
-                } else if (status == "late") {
-                    statusBadge = "badge bg-warning";
+                let statusAttendanceBadge = "";
+                if (status_attendance == "on time") {
+                    statusAttendanceBadge = "badge bg-success";
+                } else if (status_attendance == "late") {
+                    statusAttendanceBadge = "badge bg-warning";
                 }
                 data += `
                 <tr>
@@ -180,8 +178,8 @@ function filterByDateToday() {
                 <td>${checkin != null ? checkin : ""}</td>
                 <td>${checkout != null ? checkout : ""}</td>
                 <td>${date != null ? date : ""}</td>
-                <td><span class="${statusBadge}">${
-                    status != null ? status : ""
+                <td><span class="${statusAttendanceBadge}">${
+                    status_attendance != null ? status_attendance : ""
                 } </span></td>
                 <td>${work_from}</td>
                 <td>
@@ -218,8 +216,8 @@ function filterByDateToday() {
                                             date
                         </th>
                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                            aria-label="status: activate to sort column ascending">
-                                            status
+                                            aria-label="status attendance: activate to sort column ascending">
+                                            status attendance
                         </th>
                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                             aria-label="work_from: activate to sort column ascending">
@@ -293,7 +291,7 @@ function filterByShift(shiftId) {
                     checkin,
                     checkout,
                     date,
-                    status,
+                    status_attendance,
                     work_from,
                 } = attendanceData[i];
 
@@ -305,7 +303,7 @@ function filterByShift(shiftId) {
             <td>${checkin != null ? checkin : ""}</td>
             <td>${checkout != null ? checkout : ""}</td>
             <td>${date != null ? date : ""}</td>
-            <td>${status != null ? status : ""}</td>
+            <td>${status_attendance != null ? status_attendance : ""}</td>
             <td>${work_from}</td>
             <td>
                 <a title="Edit" class="btn btn-outline-primary btn-sm me-1"  onclick="editModal('${id}')"><i class="fa fa-edit"></i> </a>
@@ -341,8 +339,8 @@ function filterByShift(shiftId) {
                                         date
                     </th>
                     <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                        aria-label="status: activate to sort column ascending">
-                                        status
+                                        aria-label="status attendance: activate to sort column ascending">
+                                        status attendance
                     </th>
                     <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                         aria-label="work_from: activate to sort column ascending">
@@ -384,17 +382,15 @@ function showTable() {
                     checkin,
                     checkout,
                     date,
-                    status,
+                    status_attendance,
                     work_from,
                 } = attendanceData[i];
 
-                let statusBadge = "";
-                if (status == "in") {
-                    statusBadge = "badge bg-success";
-                } else if (status == "out") {
-                    statusBadge = "badge bg-danger";
-                } else if (status == "late") {
-                    statusBadge = "badge bg-warning";
+                let statusAttendanceBadge = "";
+                if (status_attendance == "on time") {
+                    statusAttendanceBadge = "badge bg-success";
+                } else  {
+                    statusAttendanceBadge = "badge bg-warning";
                 }
                 data += `
                 <tr>
@@ -404,8 +400,8 @@ function showTable() {
                 <td>${checkin != null ? checkin : ""}</td>
                 <td>${checkout != null ? checkout : ""}</td>
                 <td>${date != null ? date : ""}</td>
-                <td><span class="${statusBadge}">${
-                    status != null ? status : ""
+                <td><span class="${statusAttendanceBadge}">${
+                    status_attendance != null ? status_attendance : ""
                 } </span></td>
                 <td>${work_from}</td>
                 <td>
@@ -442,8 +438,8 @@ function showTable() {
                                             date
                         </th>
                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                            aria-label="status: activate to sort column ascending">
-                                            status
+                                            aria-label="status attendance: activate to sort column ascending">
+                                            status attendance
                         </th>
                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                             aria-label="work_from: activate to sort column ascending">

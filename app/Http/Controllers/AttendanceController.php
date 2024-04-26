@@ -28,13 +28,13 @@ class AttendanceController extends Controller
     {
         if ($id != null) {
             $items = $this->model::with(["user", "shift"])
-                ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status', 'work_from')
+                ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status_attendance', 'work_from')
                 ->whereHas('user', function ($query) {
                     $query->where('role_id', 3);
                 })->orderBy("attendance.id", "DESC")->where('attendance.id', $id)->first();
         } else {
             $items = $this->model::with(["user", "shift"])
-                ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status', 'work_from')
+                ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status_attendance', 'work_from')
                 ->whereHas('user', function ($query) {
                     $query->where('role_id', 3);
                 })->orderBy('attendance.id', 'DESC')->get();
@@ -46,7 +46,7 @@ class AttendanceController extends Controller
     public function getAttendanceByDate($date)
     {
         $items = $this->model::with(['user', 'shift'])
-            ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status', 'work_from')
+            ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status_attendance', 'work_from')
             ->whereHas('user', function ($query) {
                 $query->where('role_id', 3);
             })
@@ -65,7 +65,7 @@ class AttendanceController extends Controller
         $to = $request->to;
 
         $items = $this->model::with(['user', 'shift'])
-            ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status', 'work_from')
+            ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status_attendance', 'work_from')
             ->whereHas('user', function ($query) {
                 $query->where('role_id', 3);
             })
@@ -83,7 +83,7 @@ class AttendanceController extends Controller
 
         if ($shift != null) {
             $items = $this->model::with(['user', 'shift'])
-                ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status', 'work_from')
+                ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status_attendance', 'work_from')
                 ->whereHas('user', function ($query) {
                     $query->where('role_id', 3);
                 })
@@ -92,7 +92,7 @@ class AttendanceController extends Controller
                 ->get();
         } else {
             $items = $this->model::with(['user', 'shift'])
-                ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status', 'work_from')
+                ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status_attendance', 'work_from')
                 ->whereHas('user', function ($query) {
                     $query->where('role_id', 3);
                 })
@@ -112,7 +112,7 @@ class AttendanceController extends Controller
         try {
             $date = now()->toDateString();
             $attendanceHistory = $this->model::with(["user", "shift"])
-                ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status', 'work_from')
+                ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status_attendance', 'work_from')
                 ->whereHas('user', function ($query) {
                     $query->where('role_id', 3);
                 })->where("attendance.user_id", $id)
@@ -123,7 +123,7 @@ class AttendanceController extends Controller
                 return jsonResponse($attendanceHistory, Response::HTTP_OK);
             } else {
                 $attendanceHistoryNull = new Attendance();
-                $attendanceHistoryNull->status = "unattended";
+                $attendanceHistoryNull->status_login = "unattended";
                 return jsonResponse($attendanceHistoryNull, Response::HTTP_OK);
             }
         } catch (\Throwable $th) {
@@ -136,7 +136,7 @@ class AttendanceController extends Controller
     {
         try {
             $attendanceHistory = $this->model::with(["user", "shift"])
-                ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status', 'work_from')
+                ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status_attendance', 'work_from')
                 ->whereHas('user', function ($query) {
                     $query->where('role_id', 3);
                 })->where("attendance.user_id", $id)
@@ -169,15 +169,15 @@ class AttendanceController extends Controller
             $location = $request->location;
             $createdBy = $request->created_by;
 
-            // check status dari jadwal shift
+            // check status_attendance dari jadwal shift
             $start = Shift::findOrFail($shiftId)->start;
             $startCheck =  strtotime($start);
             $checkInCheck = strtotime($checkIn);
 
             if ($checkInCheck <= $startCheck) {
-                $status = "in";
+                $statusAttendance = "on time";
             } else {
-                $status = "late";
+                $statusAttendance = "late";
             }
 
             // jika ambil absen dari kantor, lakukan pengecheckan lokasi
@@ -197,7 +197,8 @@ class AttendanceController extends Controller
                         'shift_id' =>  $shiftId,
                         'checkin' => $checkIn,
                         'date' => $date,
-                        "status" =>  $status,
+                        "status_login" => "checkin",
+                        "status_attendance" => $statusAttendance,
                         "work_from" =>  $workFrom,
                         "location" =>  DB::raw("ST_GeomFromText('$location', 4326)"),
                         "created_by" => $createdBy,
@@ -213,7 +214,8 @@ class AttendanceController extends Controller
                     'shift_id' => $shiftId,
                     'checkin' => $checkIn,
                     'date' => $date,
-                    "status" => $status,
+                    "status_login" => "checkin",
+                    "status_attendance" => $statusAttendance,
                     "work_from" =>  $workFrom,
                     "location" =>  DB::raw("ST_GeomFromText('$location', 4326)"),
                     "created_by" => $createdBy,
@@ -255,8 +257,8 @@ class AttendanceController extends Controller
                 $isInsideCompany = MainCompany::whereRaw("ST_Contains(ST_GeomFromText('$companyWkt'), ST_GeomFromText('$location'))")->exists();
                 if ($isInsideCompany) {
                     $attendance->checkout = $checkOut;
+                    $attendance->status_login = "checkout";
                     $attendance->updated_by = $updatedBy;
-                    $attendance->status = "out";
                     $attendance->save();
                     return jsonResponse(true, Response::HTTP_CREATED, "success to checkout from office");
                 } else {
@@ -264,6 +266,7 @@ class AttendanceController extends Controller
                 }
             } else {
                 $attendance->checkout = $checkOut;
+                $attendance->status_login = "checkout";
                 $attendance->updated_by = $updatedBy;
                 $attendance->save();
                 return jsonResponse(true, Response::HTTP_CREATED, "success to checkout from home");
