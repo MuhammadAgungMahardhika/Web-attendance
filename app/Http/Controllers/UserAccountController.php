@@ -50,7 +50,6 @@ class UserAccountController extends Controller
             $user->email = $request->email;
             $user->phone_number = $request->phone_number;
             $user->address = $request->address;
-            $user->status = $request->status;
             $user->updated_by = $id;
             $user->save();
 
