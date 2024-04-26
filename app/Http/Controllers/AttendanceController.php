@@ -187,7 +187,7 @@ class AttendanceController extends Controller
                 $mainCompanyData = MainCompany::selectRaw("{$this->geom_area}")->where('id', $userMainCompanyId)->first();
                 $companyWkt = $mainCompanyData->wkt;
                 if (!$companyWkt) {
-                    return jsonResponse(null, Response::HTTP_UNPROCESSABLE_ENTITY, "Main company area is not set yet, please contact admin to set it!");
+                    return jsonResponse(false, Response::HTTP_UNPROCESSABLE_ENTITY, "Main company area is not set yet, please contact admin to set it!");
                 }
 
                 $isInsideCompany = MainCompany::whereRaw("ST_Contains(ST_GeomFromText('$companyWkt'), ST_GeomFromText('$location'))")->exists();
