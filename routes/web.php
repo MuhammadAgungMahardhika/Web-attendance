@@ -56,4 +56,4 @@ Route::get('/attendance', [PageController::class, 'attendance'])->middleware('au
 Route::get('/account', [PageController::class, 'account'])->middleware('auth');
 
 // mobile webview
-Route::get('/mobile/{user_id}', [PageController::class, 'getMobileAttendanceHistory']);
+Route::get('/mobile/attendance/{user_id}', [PageController::class, 'getMobileAttendanceHistory']);
