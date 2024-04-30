@@ -54,3 +54,6 @@ Route::get('/outsource-company', [PageController::class, 'outsourceCompany'])->m
 Route::get('/shift', [PageController::class, 'shift'])->middleware(['auth', 'check.role:1,2']);
 Route::get('/attendance', [PageController::class, 'attendance'])->middleware('auth');
 Route::get('/account', [PageController::class, 'account'])->middleware('auth');
+
+// mobile webview
+Route::get('/mobile/{user_id}', [PageController::class, 'getMobileAttendanceHistory']);

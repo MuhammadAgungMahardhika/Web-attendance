@@ -52,4 +52,9 @@ class PageController extends Controller
     {
         return view('pages.attendance');
     }
+
+    public function getMobileAttendanceHistory($userId)
+    {
+        return view('mobile.attendance-history', [$userId]);
+    }
 }
