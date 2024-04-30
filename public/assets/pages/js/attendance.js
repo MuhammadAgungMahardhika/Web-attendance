@@ -67,6 +67,12 @@ function filterByDate() {
                         work_from,
                     } = attendanceData[i];
 
+                    let statusAttendanceBadge = "";
+                    if (status_attendance == "on time") {
+                        statusAttendanceBadge = "badge bg-success";
+                    } else if (status_attendance == "late") {
+                        statusAttendanceBadge = "badge bg-warning";
+                    }
                     data += `
                 <tr>
                 <td>${i + 1}</td>
@@ -75,7 +81,9 @@ function filterByDate() {
                 <td>${checkin != null ? checkin : ""}</td>
                 <td>${checkout != null ? checkout : ""}</td>
                 <td>${date != null ? date : ""}</td>
-                <td>${status_attendance != null ? status_attendance : ""}</td>
+                <td><span class="${statusAttendanceBadge}">${
+                    status_attendance != null ? status_attendance : ""
+                } </span></td>
                 <td>${work_from}</td>
                 <td>
                     <a title="Edit" class="btn btn-outline-primary btn-sm me-1"  onclick="editModal('${id}')"><i class="fa fa-edit"></i> </a>
@@ -294,7 +302,12 @@ function filterByShift(shiftId) {
                     status_attendance,
                     work_from,
                 } = attendanceData[i];
-
+                let statusAttendanceBadge = "";
+                if (status_attendance == "on time") {
+                    statusAttendanceBadge = "badge bg-success";
+                } else if (status_attendance == "late") {
+                    statusAttendanceBadge = "badge bg-warning";
+                }
                 data += `
             <tr>
             <td>${i + 1}</td>
@@ -303,7 +316,9 @@ function filterByShift(shiftId) {
             <td>${checkin != null ? checkin : ""}</td>
             <td>${checkout != null ? checkout : ""}</td>
             <td>${date != null ? date : ""}</td>
-            <td>${status_attendance != null ? status_attendance : ""}</td>
+            <td><span class="${statusAttendanceBadge}">${
+                status_attendance != null ? status_attendance : ""
+            } </span></td>
             <td>${work_from}</td>
             <td>
                 <a title="Edit" class="btn btn-outline-primary btn-sm me-1"  onclick="editModal('${id}')"><i class="fa fa-edit"></i> </a>
