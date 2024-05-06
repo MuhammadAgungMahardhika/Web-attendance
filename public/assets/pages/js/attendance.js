@@ -50,7 +50,7 @@ function filterByDate() {
             },
             data: JSON.stringify(data),
             success: function (response) {
-                console.log(response);
+                
                 let attendanceData = response.data;
 
                 let data = "";
@@ -149,7 +149,7 @@ function filterByDateToday() {
         type: "GET",
         url: baseUrl + `/api/attendance-by-date/${dateNow()}`,
         success: function (response) {
-            console.log(response);
+          
             let attendanceData = response.data;
 
             let data = "";
@@ -248,7 +248,7 @@ function openShiftOption() {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },
         success: function (response) {
-            console.log(response);
+           
             const responseData = response.data;
             let option = `<option selected="" value="">All...</option>`;
             responseData.forEach((r) => {
@@ -263,7 +263,7 @@ function openShiftOption() {
 }
 function filterByShift(shiftId) {
     if (!shiftId) {
-        console.log("masuk sini");
+     
         return showTable();
     }
 
@@ -274,7 +274,7 @@ function filterByShift(shiftId) {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },
         success: function (response) {
-            console.log(response);
+           
             let attendanceData = response.data;
 
             let data = "";
@@ -364,7 +364,7 @@ function showTable() {
         type: "GET",
         url: baseUrl + `/api/attendance`,
         success: function (response) {
-            console.log(response);
+         
             let attendanceData = response.data;
 
             let data = "";
