@@ -85,10 +85,7 @@ function filterByDate() {
                     status_attendance != null ? status_attendance : ""
                 } </span></td>
                 <td>${work_from}</td>
-                <td>
-                    <a title="Edit" class="btn btn-outline-primary btn-sm me-1"  onclick="editModal('${id}')"><i class="fa fa-edit"></i> </a>
-                    <a title="Delete" class="btn btn-outline-danger btn-sm me-1"  onclick="deleteModal('${id}')"><i class="fa fa-trash"></i></a>
-                </td>
+            
                 </tr>
                 `;
                 }
@@ -126,10 +123,7 @@ function filterByDate() {
                                             aria-label="work_from: activate to sort column ascending">
                                             work_from
                         </th>
-                        <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                            aria-label="Action: activate to sort column ascending">
-                                            Action
-                        </th>
+                       
                     
                     </tr>
                 </thead>
@@ -190,10 +184,7 @@ function filterByDateToday() {
                     status_attendance != null ? status_attendance : ""
                 } </span></td>
                 <td>${work_from}</td>
-                <td>
-                    <a title="Edit" class="btn btn-outline-primary btn-sm me-1"  onclick="editModal('${id}')"><i class="fa fa-edit"></i> </a>
-                    <a title="Delete" class="btn btn-outline-danger btn-sm me-1"  onclick="deleteModal('${id}')"><i class="fa fa-trash"></i></a>
-                </td>
+            
                 </tr>
                 `;
             }
@@ -231,10 +222,7 @@ function filterByDateToday() {
                                             aria-label="work_from: activate to sort column ascending">
                                             work_from
                         </th>
-                        <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                            aria-label="Action: activate to sort column ascending">
-                                            Action
-                        </th>
+                        
                     
                     </tr>
                 </thead>
@@ -320,10 +308,6 @@ function filterByShift(shiftId) {
                 status_attendance != null ? status_attendance : ""
             } </span></td>
             <td>${work_from}</td>
-            <td>
-                <a title="Edit" class="btn btn-outline-primary btn-sm me-1"  onclick="editModal('${id}')"><i class="fa fa-edit"></i> </a>
-                <a title="Delete" class="btn btn-outline-danger btn-sm me-1"  onclick="deleteModal('${id}')"><i class="fa fa-trash"></i></a>
-            </td>
             </tr>
             `;
             }
@@ -361,11 +345,7 @@ function filterByShift(shiftId) {
                                         aria-label="work_from: activate to sort column ascending">
                                         work_from
                     </th>
-                    <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                        aria-label="Action: activate to sort column ascending">
-                                        Action
-                    </th>
-                
+                    
                 </tr>
             </thead>
             <tbody>
@@ -419,10 +399,7 @@ function showTable() {
                     status_attendance != null ? status_attendance : ""
                 } </span></td>
                 <td>${work_from}</td>
-                <td>
-                    <a title="Edit" class="btn btn-outline-primary btn-sm me-1"  onclick="editModal('${id}')"><i class="fa fa-edit"></i> </a>
-                    <a title="Delete" class="btn btn-outline-danger btn-sm me-1"  onclick="deleteModal('${id}')"><i class="fa fa-trash"></i></a>
-                </td>
+        
                 </tr>
                 `;
             }
@@ -460,10 +437,7 @@ function showTable() {
                                             aria-label="work_from: activate to sort column ascending">
                                             work_from
                         </th>
-                        <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                            aria-label="Action: activate to sort column ascending">
-                                            Action
-                        </th>
+                        
                     
                     </tr>
                 </thead>
@@ -497,10 +471,11 @@ function editModal(id) {
         type: "GET",
         url: baseUrl + `/api/attendance/${id}`,
         success: function (response) {
-            let { id, main_company_id, name, contact, address, users_count } =
+            console.log(response)
+            let { id, checkin, checkout, date, shift_id, status_attendance,work_from } =
                 response.data;
 
-            const modalHeader = "Edit User";
+            const modalHeader = "Edit Attendance";
             const modalBody = `
             <form class="form form-horizontal">
                     <div class="form-body">
@@ -565,41 +540,7 @@ function getRoles() {
 }
 
 // API
-function save() {
-    let name = $("#name").val();
-    let contact = $("#contact").val();
-    let address = $("#address").val();
 
-    // validasi nama
-    if (!name) {
-        return showToastErrorAlert("name cannot be empty");
-    }
-
-    let data = {
-        name: name,
-        contact: contact,
-        address: address,
-    };
-
-    $.ajax({
-        type: "POST",
-        url: `api/attendance`,
-        contentType: "application/json",
-        headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-        },
-        data: JSON.stringify(data),
-        success: function (response) {
-            showToastSuccessAlert("New Attendance Company Added!");
-            closeModal();
-            return showTable();
-        },
-        error: function (err) {
-            console.log("gagal");
-            console.log(err.responseText);
-        },
-    });
-}
 
 function update(id) {
     let mainCompanyId = $("#mainCompanyId").val();

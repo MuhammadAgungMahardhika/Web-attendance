@@ -245,6 +245,14 @@ class AttendanceController extends Controller
             if (!$attendance) {
                 return jsonResponse(null, Response::HTTP_NOT_FOUND, "Attendance data is not found");
             }
+            $endTime = Shift::where('id', $attendance->shift_id)->first()['end'];
+            $isValidCheckOutTime = $this->isValidCheckOut($checkOut, $endTime);
+
+            if (!$isValidCheckOutTime) {
+                return jsonResponse(null, Response::HTTP_UNPROCESSABLE_ENTITY, "Not the time yet");
+            }
+
+
             $workFrom = $attendance->work_from;
             if ($workFrom == "office") {
                 $user = User::findOrFail($attendance->user_id);
@@ -258,6 +266,7 @@ class AttendanceController extends Controller
 
                 $isInsideCompany = MainCompany::whereRaw("ST_Contains(ST_GeomFromText('$companyWkt'), ST_GeomFromText('$location'))")->exists();
                 if ($isInsideCompany) {
+
                     $attendance->checkout = $checkOut;
                     $attendance->status_login = "checkout";
                     $attendance->updated_by = $updatedBy;
@@ -277,6 +286,18 @@ class AttendanceController extends Controller
             return jsonResponse($e->errors(), Response::HTTP_UNPROCESSABLE_ENTITY, "Validation Error");
         } catch (QueryException $e) {
             return jsonResponse($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, "Query Error");
+        }
+    }
+
+    private function isValidCheckOut($checkoutTime, $endTime)
+    {
+        $strToTimeCheckOutTime = date('H:i', strtotime($checkoutTime));
+        $strToTimeEndTime = date('H:i', strtotime($endTime));
+
+        if ($strToTimeCheckOutTime >= $strToTimeEndTime) {
+            return true;
+        } else {
+            return false;
         }
     }
 
