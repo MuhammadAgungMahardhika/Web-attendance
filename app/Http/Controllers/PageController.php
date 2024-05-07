@@ -55,6 +55,6 @@ class PageController extends Controller
 
     public function getMobileAttendanceHistory($userId)
     {
-        return view('mobile.attendance-history', [$userId]);
+        return view('mobile.attendance-history', ["user_id" => $userId]);
     }
 }
