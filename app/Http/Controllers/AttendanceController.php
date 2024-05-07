@@ -114,9 +114,10 @@ class AttendanceController extends Controller
             $date = Carbon::now()->setTimezone('Asia/Jakarta')->toDateString();
             $attendanceHistory = $this->model::with(["user", "shift"])
                 ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status_login', 'status_attendance', 'work_from')
-                ->whereHas('user', function ($query) {
-                    $query->where('role_id', 3);
-                })->where("attendance.user_id", $id)
+                ->where("attendance.user_id", $id)
+                // ->whereHas('user', function ($query) {
+                //     $query->where('role_id', 3);
+                // })
                 ->where('date', $date)
                 ->orderBy('id', 'DESC')
                 ->first();
