@@ -1,6 +1,6 @@
 @extends('template.layout-1-column.main')
 @section('container')
-    <section class="section p-2">
+    <section class="section p-4">
         <div class="row" id="row-history">
 
         </div>
