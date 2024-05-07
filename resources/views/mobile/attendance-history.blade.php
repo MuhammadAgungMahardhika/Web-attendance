@@ -49,7 +49,7 @@
                             statusBadge = "badge bg-warning";
                         }
                         data += `
-                        <div class="col-12 col-sm-12 col-md-4 col-lg3">
+                        <div class="col-12">
                             <div class="card shadow-sm bg-primary">
                                 <div class="card-body table-responsive">
                                     <table class="table table-borderless">
