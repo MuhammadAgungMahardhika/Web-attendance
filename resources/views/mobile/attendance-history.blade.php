@@ -49,48 +49,43 @@
                             statusBadge = "badge bg-warning";
                         }
                         data += `
-                                <tr>
-                                    <td class="text-white">Date</td>
-                                    <td colspan="2" class="text-white">${date != null ? date : ''}</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-white">Checkin</td>
-                                    <td colspan="2" class="text-white">${checkin != null ? checkin : ''}</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-white">Checkout</td>
-                                    <td colspan="2" class="text-white">${checkout != null ? checkout : ''}</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-white">Shift</td>
-                                    <td colspan="2" class="text-white">${shift.name} (${shift.start} - ${shift.end})</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-white"> Work From </td>
-                                    <td colspan="2" class="text-white">${work_from != null ? work_from : ''}</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-white">Status</td>
-                                    <td colspan="2" class="text-white"><span class="${statusBadge}">${status_attendance != null ? status_attendance : ''}</span></td>
-                                </tr>
-                            `;
-                    }
-
-
-                    let table = `
-                    <div class="col-12 col-sm-12 col-md-4 col-lg3">
-                        <div class="card shadow-sm bg-primary">
-                            <div class="card-body table-responsive">
-                                <table class="table table-borderless">
-                                    <tbody class="text-sm" id="table-history">
-                                        ${data}
-                                    </tbody>
-                                </table>
+                        <div class="col-12 col-sm-12 col-md-4 col-lg3">
+                            <div class="card shadow-sm bg-primary">
+                                <div class="card-body table-responsive">
+                                    <table class="table table-borderless">
+                                        <tbody class="text-sm" id="table-history">
+                                            <tr>
+                                                <td class="text-white">Date</td>
+                                                <td colspan="2" class="text-white">${date != null ? date : ''}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-white">Checkin</td>
+                                                <td colspan="2" class="text-white">${checkin != null ? checkin : ''}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-white">Checkout</td>
+                                                <td colspan="2" class="text-white">${checkout != null ? checkout : ''}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-white">Shift</td>
+                                                <td colspan="2" class="text-white">${shift.name} (${shift.start} - ${shift.end})</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-white"> Work From </td>
+                                                <td colspan="2" class="text-white">${work_from != null ? work_from : ''}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-white">Status</td>
+                                                <td colspan="2" class="text-white"><span class="${statusBadge}">${status_attendance != null ? status_attendance : ''}</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
-                    </div>
                             `;
-                    return $("#row-history").html(table);
+                    }
+                    return $("#row-history").html(data);
 
                 },
                 error: function(err) {
