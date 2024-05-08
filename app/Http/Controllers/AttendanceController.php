@@ -30,15 +30,17 @@ class AttendanceController extends Controller
         if ($id != null) {
             $items = $this->model::with(["user", "shift"])
                 ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status_attendance', 'work_from')
-                ->whereHas('user', function ($query) {
-                    $query->where('role_id', 3);
-                })->orderBy("attendance.id", "DESC")->where('attendance.id', $id)->first();
+                // ->whereHas('user', function ($query) {
+                //     $query->where('role_id', 3);
+                // })
+                ->orderBy("attendance.id", "DESC")->where('attendance.id', $id)->first();
         } else {
             $items = $this->model::with(["user", "shift"])
                 ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status_attendance', 'work_from')
-                ->whereHas('user', function ($query) {
-                    $query->where('role_id', 3);
-                })->orderBy('attendance.id', 'DESC')->get();
+                // ->whereHas('user', function ($query) {
+                //     $query->where('role_id', 3);
+                // })
+                ->orderBy('attendance.id', 'DESC')->get();
         }
         return jsonResponse($items, Response::HTTP_OK, "success getting data");
     }
@@ -48,9 +50,9 @@ class AttendanceController extends Controller
     {
         $items = $this->model::with(['user', 'shift'])
             ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status_attendance', 'work_from')
-            ->whereHas('user', function ($query) {
-                $query->where('role_id', 3);
-            })
+            // ->whereHas('user', function ($query) {
+            //     $query->where('role_id', 3);
+            // })
             ->whereRaw('DATE(date) = ?', $date)
             ->orderBy('id', 'DESC')
             ->get();
@@ -67,9 +69,9 @@ class AttendanceController extends Controller
 
         $items = $this->model::with(['user', 'shift'])
             ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status_attendance', 'work_from')
-            ->whereHas('user', function ($query) {
-                $query->where('role_id', 3);
-            })
+            // ->whereHas('user', function ($query) {
+            //     $query->where('role_id', 3);
+            // })
             ->whereRaw('DATE(date) >= ? AND DATE(date) <= ?', [$from, $to])
             ->orderBy('id', 'DESC')
             ->get();
@@ -85,18 +87,18 @@ class AttendanceController extends Controller
         if ($shift != null) {
             $items = $this->model::with(['user', 'shift'])
                 ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status_attendance', 'work_from')
-                ->whereHas('user', function ($query) {
-                    $query->where('role_id', 3);
-                })
+                // ->whereHas('user', function ($query) {
+                //     $query->where('role_id', 3);
+                // })
                 ->where('attendance.shift_id', $shift)
                 ->orderBy('id', 'DESC')
                 ->get();
         } else {
             $items = $this->model::with(['user', 'shift'])
                 ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status_attendance', 'work_from')
-                ->whereHas('user', function ($query) {
-                    $query->where('role_id', 3);
-                })
+                // ->whereHas('user', function ($query) {
+                //     $query->where('role_id', 3);
+                // })
                 ->orderBy('id', 'DESC')
                 ->get();
         }
@@ -140,9 +142,10 @@ class AttendanceController extends Controller
         try {
             $attendanceHistory = $this->model::with(["user", "shift"])
                 ->select('id', 'user_id', 'shift_id', 'checkin', 'checkout', 'date', 'status_attendance', 'work_from')
-                ->whereHas('user', function ($query) {
-                    $query->where('role_id', 3);
-                })->where("attendance.user_id", $id)
+                // ->whereHas('user', function ($query) {
+                //     $query->where('role_id', 3);
+                // })
+                ->where("attendance.user_id", $id)
                 ->orderBy('id', 'DESC')
                 ->get();
 
