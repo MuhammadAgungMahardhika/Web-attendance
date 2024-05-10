@@ -24,7 +24,6 @@ function showTable() {
                 <td>${email}</td>
                 <td>${status}</td>
                 <td>
-                  
                     <a title="Edit" class="btn btn-outline-primary btn-sm me-1" onclick="editModal('${id}')"><i class="fa fa-edit"></i> </a>
                     <a title="Delete" class="btn btn-outline-danger btn-sm me-1" onclick="deleteModal('${id}')"><i class="fa fa-trash"></i></a>
                 </td>
