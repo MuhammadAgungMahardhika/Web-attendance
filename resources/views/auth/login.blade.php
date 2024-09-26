@@ -6,7 +6,7 @@
     </script>
     <div class="container">
         <div class="row">
-            <div class="col-6">
+            <div class="col-12 col-md-6 ">
                 <input class="form-check-input  me-0" type="hidden" id="toggle-dark">
                 <div id="auth-left">
                     <a href=""><img src="{{ asset('assets/images/logo.png') }}" alt="Logo" width="120"></a>
