@@ -27,56 +27,55 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::name('api')->group(function () {
-    // account
-    Route::get('account/{id}', [UserAccountController::class, 'get']);
-    Route::post('account/check-password', [UserAccountController::class, 'checkPassword']);
-    Route::post('account/update-password', [UserAccountController::class, 'updatePassword']);
-    Route::put('account/{id}', [UserAccountController::class, 'update']);
 
-    // user
-    Route::get('users', [UserController::class, 'get']);
-    Route::get('user/{id}', [UserController::class, 'get']);
-    Route::post('user', [UserController::class, 'store']);
-    Route::put('user/{id}', [UserController::class, 'update']);
-    Route::delete('user/{id}', [UserController::class, 'delete']);
+// account
+Route::get('account/{id}', [UserAccountController::class, 'get']);
+Route::post('account/check-password', [UserAccountController::class, 'checkPassword']);
+Route::post('account/update-password', [UserAccountController::class, 'updatePassword']);
+Route::put('account/{id}', [UserAccountController::class, 'update']);
+
+// user
+Route::get('users', [UserController::class, 'get']);
+Route::get('user/{id}', [UserController::class, 'get']);
+Route::post('user', [UserController::class, 'store']);
+Route::put('user/{id}', [UserController::class, 'update']);
+Route::delete('user/{id}', [UserController::class, 'delete']);
 
 
-    // role
-    Route::get('roles', [RolesController::class, 'get']);
-    Route::get('roles/{id}', [RolesController::class, 'get']);
+// role
+Route::get('roles', [RolesController::class, 'get']);
+Route::get('roles/{id}', [RolesController::class, 'get']);
 
-    // Main company 
-    Route::get('main-company', [MainCompanyController::class, 'get']);
-    Route::get('main-company/{id}', [MainCompanyController::class, 'get']);
-    Route::post('main-company', [MainCompanyController::class, 'store']);
-    Route::patch('main-company/{id}', [MainCompanyController::class, 'update']);
-    Route::patch('main-company/map/{id}', [MainCompanyController::class, 'updateMap']);
-    Route::delete('main-company/{id}', [MainCompanyController::class, 'delete']);
+// Main company 
+Route::get('main-company', [MainCompanyController::class, 'get']);
+Route::get('main-company/{id}', [MainCompanyController::class, 'get']);
+Route::post('main-company', [MainCompanyController::class, 'store']);
+Route::patch('main-company/{id}', [MainCompanyController::class, 'update']);
+Route::patch('main-company/map/{id}', [MainCompanyController::class, 'updateMap']);
+Route::delete('main-company/{id}', [MainCompanyController::class, 'delete']);
 
-    // Outsource company 
-    Route::get('outsource-company', [OutsourceCompanyController::class, 'get']);
-    Route::get('outsource-company/{id}', [OutsourceCompanyController::class, 'get']);
-    Route::post('outsource-company', [OutsourceCompanyController::class, 'store']);
-    Route::put('outsource-company/{id}', [OutsourceCompanyController::class, 'update']);
-    Route::delete('outsource-company/{id}', [OutsourceCompanyController::class, 'delete']);
+// Outsource company 
+Route::get('outsource-company', [OutsourceCompanyController::class, 'get']);
+Route::get('outsource-company/{id}', [OutsourceCompanyController::class, 'get']);
+Route::post('outsource-company', [OutsourceCompanyController::class, 'store']);
+Route::put('outsource-company/{id}', [OutsourceCompanyController::class, 'update']);
+Route::delete('outsource-company/{id}', [OutsourceCompanyController::class, 'delete']);
 
-    // Shift  
-    Route::get('shift', [ShiftController::class, 'get']);
-    Route::get('shift/{id}', [ShiftController::class, 'get']);
-    Route::post('shift', [ShiftController::class, 'store']);
-    Route::put('shift/{id}', [ShiftController::class, 'update']);
-    Route::delete('shift/{id}', [ShiftController::class, 'delete']);
+// Shift  
+Route::get('shift', [ShiftController::class, 'get']);
+Route::get('shift/{id}', [ShiftController::class, 'get']);
+Route::post('shift', [ShiftController::class, 'store']);
+Route::put('shift/{id}', [ShiftController::class, 'update']);
+Route::delete('shift/{id}', [ShiftController::class, 'delete']);
 
-    // Attendance  
-    Route::get('attendance', [AttendanceController::class, 'get']);
-    Route::get('attendance/{id}', [AttendanceController::class, 'get']);
-    Route::get('attendance-today-by-user/{id}', [AttendanceController::class, 'getAttendanceTodayByUserId']);
-    Route::get('attendance-by-date/{date}', [AttendanceController::class, 'getAttendanceByDate']);
-    Route::get('attendance-by-shift/{shift}', [AttendanceController::class, 'getAttendanceByShift']);
-    Route::get('attendance-by-user/{id}', [AttendanceController::class, 'getAttendanceByUserId']);
-    Route::post('attendance-by-date-range', [AttendanceController::class, 'getAttendanceByDateRange']);
-    Route::post('attendance', [AttendanceController::class, 'store']);
-    Route::put('attendance/{id}', [AttendanceController::class, 'update']);
-    Route::delete('attendance/{id}', [AttendanceController::class, 'delete']);
-});
+// Attendance  
+Route::get('attendance', [AttendanceController::class, 'get']);
+Route::get('attendance/{id}', [AttendanceController::class, 'get']);
+Route::get('attendance-today-by-user/{id}', [AttendanceController::class, 'getAttendanceTodayByUserId']);
+Route::get('attendance-by-date/{date}', [AttendanceController::class, 'getAttendanceByDate']);
+Route::get('attendance-by-shift/{shift}', [AttendanceController::class, 'getAttendanceByShift']);
+Route::get('attendance-by-user/{id}', [AttendanceController::class, 'getAttendanceByUserId']);
+Route::post('attendance-by-date-range', [AttendanceController::class, 'getAttendanceByDateRange']);
+Route::post('attendance', [AttendanceController::class, 'store']);
+Route::put('attendance/{id}', [AttendanceController::class, 'update']);
+Route::delete('attendance/{id}', [AttendanceController::class, 'delete']);
